@@ -1,0 +1,30 @@
+{
+  "name": "goalmanager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marxmaler/goalManager.git"
+  },
+  "author": "WooHyuk Kim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marxmaler/goalManager/issues"
+  },
+  "homepage": "https://github.com/marxmaler/goalManager#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/node": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "nodemon": "^2.0.15"
+  }
+}
