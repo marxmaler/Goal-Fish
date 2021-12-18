@@ -55,6 +55,9 @@ block headBlock
         .C {
             color:silver;
         }
+        .hidden {
+            display: none;
+        }
 
 block bodyBlock
     if daily
@@ -108,7 +111,14 @@ block bodyBlock
         function changeOnCheckbox(event){
             progress.value=checkedCnt/checkboxCnt*100;
             progressPoint.innerText = `${Math.round(checkedCnt/checkboxCnt*100)}%`;
-            event.target.setAttribute("name","changed");
+            const id = event.target.value;
+            const td = event.target.parentElement;
+            const input = document.createElement("input");
+            input.setAttribute("class","hidden");
+            input.setAttribute("type","text");
+            input.setAttribute("name","changed");
+            input.setAttribute("value", id);
+            td.appendChild(input);
             form.submit();
         }
 

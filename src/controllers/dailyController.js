@@ -1,3 +1,4 @@
+import e from "express";
 import Daily from "../models/Daily";
 import DailySub from "../models/DailySub";
 import { getToday, getYesterday } from "../values/time";
@@ -18,6 +19,7 @@ export const getHome = async (req, res) => {
 
 export const postHome = async (req, res) => {
     const changedSubId = req.body.changed;
+    console.log(req.body);
     const changedSub = await DailySub.findById(changedSubId);
     if(changedSub.completed) {
         changedSub.completed = false;
@@ -96,35 +98,51 @@ export const getEditDaily = async (req, res) => {
         date: getToday(),
     }).populate("subs");
 
-    if(daily.subs.length<1){
-        return res.redirect("/");
-    }
-
     return res.render("editDaily", {
         daily
     });
 }
-export const postEditDaily = async(req, res) => {
-    const { subs, importances } = req.body;
-    let { newSubs, newImps } = req.body;
-    if(!newSubs) { newSubs = "" };
-    const daily = await Daily.findOne({date: getToday() });
-    const subIds = daily.subs;
 
-    if(typeof(subs)=="object"){
-        for(let i=0; i<subIds.length; i++){
-            const result = await DailySub.findByIdAndUpdate(subIds[i], 
-                { content: subs[i],
-                    importance: importances[i],
-                });
+export const postEditDaily = async(req, res) => {
+
+    const { deletedSubs, newSubs, newImps } = req.body;
+    const rest = Object.keys(req.body);
+    if(deletedSubs){
+        rest.splice(rest.indexOf("deletedSubs"), 1);
+    }
+    if(newSubs){
+        rest.splice(rest.indexOf("newSubs"), 1);
+        rest.splice(rest.indexOf("newImps"), 1);
+    }
+    const daily = await Daily.findOne({date: getToday() });
+    //sub 삭제
+    if(deletedSubs){
+        if(typeof(deletedSubs)==="string") {
+            await DailySub.findByIdAndDelete(deletedSubs);
+        } else {
+            for(let i=0; i<deletedSubs.length; i++){
+                await DailySub.findByIdAndDelete(deletedSubs[i]);
+            }
         }
-    }else {
-        const result = await DailySub.findByIdAndUpdate(subIds[0], { content: subs, importance: importances, });
-        console.log(result);
     }
 
+    //sub 내용 변경
+    for(let i=0; i<rest.length; i++){
+        await DailySub.findByIdAndUpdate(rest[i], 
+            { content: req.body[rest[i]][1],
+                importance: req.body[rest[i]][0],
+            });
+    }
 
-    if(typeof(newSubs)=="object") {
+    if(newSubs){
+        if(typeof(newSubs)==="string"&& newSubs.replace(/ /gi,"").length > 0){
+            const newSub = await DailySub.create({
+                daily: daily._id,
+                content:newSubs,
+                importance: newImps,
+            });
+            subIds.push(newSub._id);
+    } else {
         for(let i=0; i<newSubs.length; i++){
             const newSub = await DailySub.create({
                 daily: daily._id,
@@ -133,35 +151,8 @@ export const postEditDaily = async(req, res) => {
             });
             subIds.push(newSub._id);
         }
-    } else if(typeof(newSubs)=="string" && newSubs.length > 0) {
-        const newSub = await DailySub.create({
-            daily: daily._id,
-            content:newSubs,
-            importance: newImps,
-        });
-        subIds.push(newSub._id);
     }
-
+}
     await daily.save();
     return res.redirect("/");
-}
-
-export const getDeleteDailySub = (req, res) => {
-    return res.render("deleteDailySub");
-}
-
-export const postDeleteDailySub = async (req, res) => {
-    const { id } = req.params;
-    let daily = await Daily.findOne({date: getToday() });
-    const subIds = daily.subs;
-    for(let i=0; i<subIds.length; i++){
-        if(subIds[i] == id){
-            subIds.splice(i, 1);
-            await DailySub.findOneAndDelete({_id:id})
-            break
-        }
-    }
-
-    await daily.save();
-    return res.redirect("/daily/edit");
 }
