@@ -1,0 +1,99 @@
+extends base.pug
+
+block headBlock 
+    style. 
+        ul { 
+            list-style: none; 
+            padding: 0;
+        }
+        .errorMessage {
+            color: red;
+        }
+        .unfinished { 
+            display: none;
+        }
+
+block bodyBlock
+
+    if errorMessage 
+        span(class="errorMessage")=errorMessage
+        p
+
+    form(method="POST")
+        input(type="date", value=today, name="date")
+        ul(class="sub-list")
+            if unfinishedSubs
+                each sub in unfinishedSubs
+                    li(class="unfinished")
+                        select(name="importances")
+                            each option in ["A","B","C"]
+                                if sub.importance == option
+                                    option(value=`${option}`, selected)=`${option}`
+                                else
+                                    option(value=`${option}`)=`${option}`
+                        input(type="text", name="subs", required, value=`${sub.content}`)
+            li
+                select(name="importances")
+                    option(value="A") A
+                    option(value="B") B
+                    option(value="C") C
+                input(type="text", name="subs", required)
+        button(class="addSub-btn") 새 목표 추가
+        input(class="submit-btn", type="submit", value="작성 완료")
+
+
+    script.
+        
+        const form = document.querySelector("form");
+        const subList = document.querySelector(".sub-list");
+        const addSubBtn = document.querySelector(".addSub-btn");
+        const submitBtn = document.querySelector(".submit-btn");
+        const unfinished = document.querySelectorAll(".unfinished");
+        window.onload = function() {
+            let loadUnfinished = false;
+            if(unfinished.length > 0){
+                loadUnfinished = window.confirm("어제의 세운 목표 중 완수하지 못한 목표가 있습니다. 불러오시겠습니까?");
+            }
+            if(loadUnfinished){
+                for(let i=0; i<unfinished.length; i++){
+                    unfinished[i].style.display="list-item";
+                }
+            }else{
+                for(let i=0; i<unfinished.length; i++){
+                    unfinished[i].remove();
+                }  
+            }
+        }
+        function preventSubmit(event) {
+            event.preventDefault();
+        };
+
+        function addSub(){
+            const subLi = document.createElement("li");
+            const subImp = document.createElement("select");
+            const subInput = document.createElement("input");
+            const options = ["A", "B", "C"];
+            for(let i=0; i<options.length; i++){
+                const option = document.createElement("option");
+                option.value = options[i];
+                option.innerText = options[i];
+                subImp.appendChild(option);
+            }
+            subImp.name = "importances";
+            subImp.required = "true";
+            subInput.type = "text";
+            subInput.name = "subs";
+            subInput.required = "true";
+            subLi.appendChild(subImp);
+            subLi.appendChild(subInput);
+            subList.appendChild(subLi);
+        };
+
+        function manualSubmit(){
+            form.submit();
+        }
+
+        form.addEventListener("submit", preventSubmit);
+        addSubBtn.addEventListener("click", addSub);
+        submitBtn.addEventListener("click", manualSubmit);
+

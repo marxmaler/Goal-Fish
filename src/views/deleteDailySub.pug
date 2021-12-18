@@ -1,0 +1,29 @@
+extends base.pug
+
+block headBlock
+
+block bodyBlock
+    h3 삭제하시겠습니까?
+    form(method="POST")
+        button(class="yes-btn") 예
+        button(class="no-btn") 아니오
+
+    script.
+        const form = document.querySelector("form");
+        const yes = document.querySelector(".yes-btn");
+        const no = document.querySelector(".no-btn");
+        
+        function preventSubmit(event){
+            event.preventDefault();
+        }
+
+        function formSubmit(){
+            form.submit();
+        }
+        function goBack(){
+            window.location.href="/daily/edit";
+        }
+
+        form.addEventListener("submit", preventSubmit);
+        yes.addEventListener("click", formSubmit);
+        no.addEventListener("click", goBack);

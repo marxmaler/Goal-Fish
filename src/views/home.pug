@@ -1,0 +1,117 @@
+extends base.pug
+
+block headBlock 
+    style.
+        table {
+            padding: 0;
+            border: 2px solid black;
+            width:fit-content;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        .thead__tr {
+            border-bottom: 2px solid black;
+        }
+        th {
+            border-right: 1px solid black;
+        }
+        th:last-child {
+            border-right: none;
+        }
+        .tbody__tr {
+            border-bottom: 1px solid black;
+        }
+        .tbody__tr:last-child {
+            border-bottom: none;
+        }
+        td {
+            border-right: 1px solid black;
+        }
+        td:last-child {
+            border-right: none;
+            padding: 0px 10px;
+        }
+        
+        input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .errorMessage {
+            color: red;
+        }
+        .checked {
+            text-decoration-line: line-through;
+        }
+        .importance {
+            font-weight:bold;
+            font-style:italic;
+        }
+        .A {
+            color:red;
+        }
+        .B {
+            color:orange;
+        }
+        .C {
+            color:silver;
+        }
+
+block bodyBlock
+    if daily
+        form(method="post") 
+            h2 오늘의 목표
+
+            table
+                thead 
+                    tr(class="thead__tr")
+                        th 중요도
+                        th 완료
+                        th 내용
+                tbody
+                each sub in daily.subs
+                    tr(class="tbody__tr")
+                        if sub.completed
+                            td(class=`importance ${sub.importance}`)=sub.importance
+                            td
+                                input(type="checkbox", value=`${sub._id}`, checked)
+                            td(class="checked")=sub.content
+                        else
+                            td(class=`importance ${sub.importance}`)=sub.importance
+                            td
+                                input(type="checkbox", value=`${sub._id}`)
+                            td=sub.content
+        h4 진행 상황
+        p(class="progress-point")
+        progress(max="100")
+        hr
+        a(href="/daily/edit") 
+            button 수정하기
+    else
+        h1 아직 오늘의 목표를 설정하지 않으셨습니다.
+        h3 지금 새로 만들어보세요! 
+        a(href="/daily/add")
+            span &rarr;새 목표 만들기
+
+    script.
+        const form = document.querySelector("form");
+        const checkboxes = document.querySelectorAll("input[type='checkbox']");
+        const progress = document.querySelector("progress");
+        const progressPoint = document.querySelector(".progress-point");
+        let checkboxCnt = checkboxes.length;
+        let checkedCnt = document.querySelectorAll("input[checked]").length;
+        window.onload = function() {
+            if(progress){
+            progress.value=checkedCnt/checkboxCnt*100;
+            progressPoint.innerText = `${Math.round(checkedCnt/checkboxCnt*100)}%`;
+            }
+        }
+        function changeOnCheckbox(event){
+            progress.value=checkedCnt/checkboxCnt*100;
+            progressPoint.innerText = `${Math.round(checkedCnt/checkboxCnt*100)}%`;
+            event.target.setAttribute("name","changed");
+            form.submit();
+        }
+
+        for(let i=0; i<checkboxes.length; i++){
+            checkboxes[i].addEventListener("change", changeOnCheckbox);
+        }

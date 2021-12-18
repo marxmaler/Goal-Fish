@@ -1,0 +1,83 @@
+extends base.pug
+
+block headBlock
+    style.
+        fieldset {
+            width:fit-content;
+        }
+        ul { 
+            list-style: none; 
+            padding: 0;
+        } 
+        a {
+            text-decoration: none;
+        }
+        span {
+            cursor:pointer;
+        }
+
+block bodyBlock
+    form(method="POST")
+        fieldset 
+            ul(class="sub-list")
+                each sub in daily.subs
+                    li
+                        select(name="importances")
+                            each option in ["A","B","C"]
+                                if sub.importance == option
+                                    option(value=`${option}`, selected)=`${option}`
+                                else
+                                    option(value=`${option}`)=`${option}`
+                        input(type=text, name="subs", value=sub.content)
+                        a(href=`/daily/sub/delete/${sub._id}`) ❌
+            button(class="addSub-btn") 세부 목표 추가
+            input(class="submit-btn", type="submit", value="수정 완료")
+
+    script.
+        const form = document.querySelector("form");
+        const subList = document.querySelector("ul");
+        const addSubBtn = document.querySelector(".addSub-btn");
+        const submitBtn = document.querySelector(".submit-btn");
+
+        function preventSubmit(event){
+            event.preventDefault();
+        }
+
+        function formSubmit(){
+            form.submit();
+        }
+
+        function cancelAdd(event){
+            const subLi = event.target.parentElement;
+            subLi.remove();
+        }
+
+        function addSub(){
+            const subLi = document.createElement("li");
+            const subImp = document.createElement("select");
+            const subInput = document.createElement("input");
+            const options = ["A", "B", "C"];
+            for(let i=0; i<options.length; i++){
+                const option = document.createElement("option");
+                option.value = options[i];
+                option.innerText = options[i];
+                subImp.appendChild(option);
+            }
+            subImp.name = "newImps";
+            subImp.required = "true";
+            subInput.type = "text";
+            subInput.name = "newSubs";
+            subInput.required = "true";
+            const cancelBtn = document.createElement("span");
+            cancelBtn.innerText = "❌";
+            cancelBtn.addEventListener("click", cancelAdd);
+            subLi.appendChild(subImp);
+            subLi.appendChild(subInput);
+            subLi.appendChild(cancelBtn);
+            subList.appendChild(subLi);
+        };
+
+
+        form.addEventListener("submit", preventSubmit);
+        addSubBtn.addEventListener("click", addSub);
+        submitBtn.addEventListener("click", formSubmit);
