@@ -19,7 +19,6 @@ export const getHome = async (req, res) => {
 
 export const postHome = async (req, res) => {
     const changedSubId = req.body.changed;
-    console.log(req.body);
     const changedSub = await DailySub.findById(changedSubId);
     if(changedSub.completed) {
         changedSub.completed = false;
