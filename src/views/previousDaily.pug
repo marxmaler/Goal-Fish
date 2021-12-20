@@ -62,9 +62,7 @@ block headBlock
 block bodyBlock
     if daily
         form(method="post") 
-            h2 오늘의 목표
-            p="남은 시간 "
-                span(class="remainingTime")
+            h2=`일일 목표: ${date}`
             p
             table
                 thead 
@@ -89,16 +87,9 @@ block bodyBlock
         p(class="progress-point")
         progress(max="100")
         p
-        a(href="/daily/edit") 
-            button 수정하기
-    else
-        h1 아직 오늘의 목표를 설정하지 않으셨습니다.
-        h3 지금 새로 만들어보세요! 
-        a(href="/daily/add")
-            span &rarr;새 목표 만들기
-    hr
-    span 이전 목표 조회: 
-        input(type="date", class="previous-daily")
+        hr
+        a(href="/") 
+            button="뒤로 가기"
 
     script.
         const form = document.querySelector("form");
@@ -110,32 +101,7 @@ block bodyBlock
         const remainingTimeSpan = document.querySelector(".remainingTime");
         const previousDaily = document.querySelector(".previous-daily");
 
-        function timeFormat(time){
-            return String(time).padStart(2, "0");
-        }
-
-        function countDown(){
-            const midNight = new Date();
-            midNight.setHours(0, 0, 0, 0);
-            midNight.setDate(midNight.getDate() + 1);
-            const now = new Date();
-            const timeleft = midNight.getTime() - now.getTime();
-            const hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
-            const remaingTime = `${timeFormat(hours)}:${timeFormat(minutes)}:${timeFormat(seconds)}`;
-
-            if(remaingTime === "00:00:00") {
-                window.location.reload();
-            }
-                
-            remainingTimeSpan.innerText = remaingTime;
-        }
-
         window.onload = function() {
-            if(remainingTimeSpan) {
-                countDown();
-            };
                 
             if(progress){
             progress.value=checkedCnt/checkboxCnt*100;
@@ -157,19 +123,6 @@ block bodyBlock
             form.submit();
         }
 
-        function getPreviousDaily(){
-            const date = previousDaily.value;
-            window.location.href=`daily/${date}`;
-        }
-
-
         for(let i=0; i<checkboxes.length; i++){
             checkboxes[i].addEventListener("change", changeOnCheckbox);
-        }
-
-        previousDaily.addEventListener("change", getPreviousDaily);
-
-        if(remainingTimeSpan) {
-            setInterval(countDown, 1000);
-            
         }
