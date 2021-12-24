@@ -18,39 +18,3 @@ block mainBlock
                     button="뒤로 가기"
     else
     //- 해당 날짜에 일일 목표 없을 때 메시지
-
-    script.
-        const form = document.querySelector("form");
-        const checkboxes = document.querySelectorAll("input[type='checkbox']");
-        const progress = document.querySelector("progress");
-        const progressPoint = document.querySelector(".progress-point");
-        let checkboxCnt = checkboxes.length;
-        let checkedCnt = document.querySelectorAll("input[checked]").length;
-        const remainingTimeSpan = document.querySelector(".remainingTime");
-        const previousDaily = document.querySelector(".previous-daily");
-
-        window.onload = function() {
-                
-            if(progress){
-            progress.value=checkedCnt/checkboxCnt*100;
-            progressPoint.innerText = `${Math.round(checkedCnt/checkboxCnt*100)}%`;
-            };
-        }
-
-        function changeOnCheckbox(event){
-            progress.value=checkedCnt/checkboxCnt*100;
-            progressPoint.innerText = `${Math.round(checkedCnt/checkboxCnt*100)}%`;
-            const id = event.target.value;
-            const td = event.target.parentElement;
-            const input = document.createElement("input");
-            input.setAttribute("class","hidden");
-            input.setAttribute("type","text");
-            input.setAttribute("name","changed");
-            input.setAttribute("value", id);
-            td.appendChild(input);
-            form.submit();
-        }
-
-        for(let i=0; i<checkboxes.length; i++){
-            checkboxes[i].addEventListener("change", changeOnCheckbox);
-        }

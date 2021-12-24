@@ -3,6 +3,7 @@ import DailySub from "../models/DailySub";
 import { getToday, getYesterday } from "../functions/time";
 
 export const getHome = async (req, res) => {
+    const pageTitle = "Home";
     const daily = await Daily.findOne({
         date: getToday(),
     }).populate("subs");
@@ -18,7 +19,7 @@ export const getHome = async (req, res) => {
     }
 
     return res.render("home", {
-        daily,
+        daily, pageTitle
     });
 }
 
@@ -38,6 +39,7 @@ export const postHome = async (req, res) => {
 }
 
 export const getNewDaily = async (req, res) => {
+    const pageTitle = "New Daily";
     const lastDaily = await Daily.findOne({
         date: getYesterday()
     }).populate("subs");
@@ -52,10 +54,12 @@ export const getNewDaily = async (req, res) => {
     return res.render("newDaily", {
         today: getToday(),
         unfinishedSubs,
+        pageTitle,
     });
 }
 
 export const postNewDaily = async (req, res) => {
+    const pageTitle = "New Daily";
     const {
         date
     } = req.body;
@@ -67,6 +71,7 @@ export const postNewDaily = async (req, res) => {
         return res.render("newDaily", {
             today: getToday(),
             errorMessage: "동일한 날짜에 대해 이미 설정된 일일 목표가 존재합니다.",
+            pageTitle,
         });
     }
 
@@ -109,12 +114,14 @@ export const postNewDaily = async (req, res) => {
 }
 
 export const getEditDaily = async (req, res) => {
+    const pageTitle = "Edit Daily";
     const daily = await Daily.findOne({
         date: getToday(),
     }).populate("subs");
 
     return res.render("editDaily", {
-        daily
+        daily,
+        pageTitle,
     });
 }
 
@@ -178,11 +185,12 @@ export const postEditDaily = async (req, res) => {
 }
 
 export const getPreviousDaily = async (req, res) => {
+    const pageTitle = "Previous Daily";
     let date = req.params.date;
     const daily = await Daily.findOne({ date }).populate("subs");
     date = date.split("-");
     date = date[0]+"년 " + date[1]+"월 "+date[2]+"일";
-    return res.render("previousDaily", { daily, date });
+    return res.render("previousDaily", { daily, date, pageTitle });
 }
 
 export const postPreviousDaily = async (req, res) => {
