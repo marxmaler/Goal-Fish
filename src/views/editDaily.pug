@@ -1,40 +1,25 @@
 extends base.pug
 
-block headBlock
-    style.
-        fieldset {
-            width:fit-content;
-        }
-        ul { 
-            list-style: none; 
-            padding: 0;
-        } 
-        a {
-            text-decoration: none;
-        }
-        span {
-            cursor:pointer;
-        }
-        .hidden {
-            display: none;
-        }
+block headerBlock
 
-block bodyBlock
+block mainBlock
     form(method="POST")
-        fieldset 
+        div.editDaily__form__form-container 
             ul
                 each sub in daily.subs
                     li
-                        select(name=`${sub._id}`)
-                            each option in ["A","B","C"]
-                                if sub.importance === option
-                                    option(value=`${option}`, selected)=`${option}`
-                                else
-                                    option(value=`${option}`)=`${option}`
-                        input(type=text, name=`${sub._id}`, value=sub.content)
-                        span(class="deleteBtn") ❌
-            button(class="addSub-btn") 세부 목표 추가
-            input(class="submit-btn", type="submit", value="수정 완료")
+                        div.li__container
+                            select(name=`${sub._id}`)
+                                each option in ["A","B","C"]
+                                    if sub.importance === option
+                                        option(value=`${option}`, selected)=`${option}`
+                                    else
+                                        option(value=`${option}`)=`${option}`
+                            input(type=text, name=`${sub._id}`, value=sub.content)
+                            i(class="fas fa-trash-alt deleteBtn")
+            div.editDaily__form__form-container__btn-container
+                button(class="addSub-btn") 세부 목표 추가
+                input(class="submit-btn", type="submit", value="수정 완료")
 
     script.
         const form = document.querySelector("form");
@@ -76,6 +61,7 @@ block bodyBlock
 
         function addSub(){
             const subLi = document.createElement("li");
+            const liContainer = document.createElement("div");
             const subImp = document.createElement("select");
             const subInput = document.createElement("input");
             const options = ["A", "B", "C"];
@@ -85,17 +71,20 @@ block bodyBlock
                 option.innerText = options[i];
                 subImp.appendChild(option);
             }
+            liContainer.className = "li__container"
             subImp.name = "newImps";
             subImp.required = "true";
             subInput.type = "text";
             subInput.name = "newSubs";
             subInput.required = "true";
-            const cancelBtn = document.createElement("span");
-            cancelBtn.innerText = "❌";
+            const cancelBtn = document.createElement("i");
+            cancelBtn.classList.add("fas");
+            cancelBtn.classList.add("fa-trash-alt");
             cancelBtn.addEventListener("click", cancelAdd);
-            subLi.appendChild(subImp);
-            subLi.appendChild(subInput);
-            subLi.appendChild(cancelBtn);
+            liContainer.appendChild(subImp);
+            liContainer.appendChild(subInput);
+            liContainer.appendChild(cancelBtn);
+            subLi.appendChild(liContainer);
             subList.appendChild(subLi);
         };
 

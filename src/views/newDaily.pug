@@ -1,51 +1,44 @@
 extends base.pug
 
-block headBlock 
-    style. 
-        ul { 
-            list-style: none; 
-            padding: 0;
-        }
-        .errorMessage {
-            color: red;
-        }
-        .unfinished { 
-            display: none;
-        }
+block headerBlock
 
-block bodyBlock
-
+block mainBlock
     if errorMessage 
         span(class="errorMessage")=errorMessage
         p
 
-    form(method="POST")
-        input(type="date", value=today, name="date")
-        ul(class="sub-list")
-            if unfinishedSubs
-                each sub in unfinishedSubs
-                    li(class="unfinished")
+    form(method="POST").newDaily__form
+        div.newDaily__form__form-container
+            div.newDaily__form__form-container__date-container
+                input(type="date", value=today, name="date")
+            ul.newDaily__form__form-container__ul
+                if unfinishedSubs
+                    each sub in unfinishedSubs
+                        li(class="unfinished")
+                            div.li__container
+                                select(name="importances")
+                                    each option in ["A","B","C"]
+                                        if sub.importance == option
+                                            option(value=`${option}`, selected)=`${option}`
+                                        else
+                                            option(value=`${option}`)=`${option}`
+                                input(type="text", name="subs", required, value=`${sub.content}`)
+                li
+                    div.li__container
                         select(name="importances")
-                            each option in ["A","B","C"]
-                                if sub.importance == option
-                                    option(value=`${option}`, selected)=`${option}`
-                                else
-                                    option(value=`${option}`)=`${option}`
-                        input(type="text", name="subs", required, value=`${sub.content}`)
-            li
-                select(name="importances")
-                    option(value="A") A
-                    option(value="B") B
-                    option(value="C") C
-                input(type="text", name="subs", required)
-        button(class="addSub-btn") 새 목표 추가
-        input(class="submit-btn", type="submit", value="작성 완료")
+                            option(value="A") A
+                            option(value="B") B
+                            option(value="C") C
+                        input(type="text", name="subs", required)
+            div.newDaily__form__form-container__btn-container
+                button(class="addSub-btn") 새 목표 추가
+                input(class="submit-btn", type="submit", value="작성 완료")
 
 
     script.
-        
-        const form = document.querySelector("form");
-        const subList = document.querySelector(".sub-list");
+       
+        const form = document.querySelector(".newDaily__form");
+        const subList = document.querySelector(".newDaily__form__ul");
         const addSubBtn = document.querySelector(".addSub-btn");
         const submitBtn = document.querySelector(".submit-btn");
         const unfinished = document.querySelectorAll(".unfinished");
@@ -70,6 +63,7 @@ block bodyBlock
 
         function addSub(){
             const subLi = document.createElement("li");
+            const liContainer = document.createElement("div");
             const subImp = document.createElement("select");
             const subInput = document.createElement("input");
             const options = ["A", "B", "C"];
@@ -79,13 +73,15 @@ block bodyBlock
                 option.innerText = options[i];
                 subImp.appendChild(option);
             }
+            liContainer.className = "li__container"
             subImp.name = "importances";
             subImp.required = "true";
             subInput.type = "text";
             subInput.name = "subs";
             subInput.required = "true";
-            subLi.appendChild(subImp);
-            subLi.appendChild(subInput);
+            liContainer.appendChild(subImp);
+            liContainer.appendChild(subInput);
+            subLi.appendChild(liContainer);
             subList.appendChild(subLi);
         };
 

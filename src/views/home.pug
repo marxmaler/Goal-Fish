@@ -1,175 +1,34 @@
 extends base.pug
+include mixins/daily-table.pug
 
-block headBlock 
-    style.
-        table {
-            padding: 0;
-            border: 2px solid black;
-            width:fit-content;
-            border-collapse: collapse;
-            text-align: center;
-        }
-        .thead__tr {
-            border-bottom: 2px solid black;
-        }
-        th {
-            border-right: 1px solid black;
-        }
-        th:last-child {
-            border-right: none;
-        }
-        .tbody__tr {
-            border-bottom: 1px solid black;
-        }
-        .tbody__tr:last-child {
-            border-bottom: none;
-        }
-        td {
-            border-right: 1px solid black;
-        }
-        td:last-child {
-            border-right: none;
-            padding: 0px 10px;
-        }
-        
-        input[type="checkbox"] {
-            margin: 0;
-        }
+block headerBlock
 
-        .errorMessage {
-            color: red;
-        }
-        .checked {
-            text-decoration-line: line-through;
-        }
-        .importance {
-            font-weight:bold;
-            font-style:italic;
-        }
-        .A {
-            color:red;
-        }
-        .B {
-            color:orange;
-        }
-        .C {
-            color:silver;
-        }
-        .hidden {
-            display: none;
-        }
-
-block bodyBlock
+block mainBlock
     if daily
-        form(method="post") 
-            h2 오늘의 목표
-            p="남은 시간 "
-                span(class="remainingTime")
-            p
-            table
-                thead 
-                    tr(class="thead__tr")
-                        th 중요도
-                        th 완료
-                        th 내용
-                tbody
-                each sub in daily.subs
-                    tr(class="tbody__tr")
-                        if sub.completed
-                            td(class=`importance ${sub.importance}`)=sub.importance
-                            td
-                                input(type="checkbox", value=`${sub._id}`, checked)
-                            td(class="checked")=sub.content
-                        else
-                            td(class=`importance ${sub.importance}`)=sub.importance
-                            td
-                                input(type="checkbox", value=`${sub._id}`)
-                            td=sub.content
-        h4 진행 상황
-        p(class="progress-point")
-        progress(max="100")
-        p
-        a(href="/daily/edit") 
-            button 수정하기
+        div.daily-container
+            form(method="post") 
+                h2 오늘의 목표
+                p="남은 시간 "
+                    span(class="remainingTime")
+                p
+                +dailyTable(daily)
+            div.daily-container__progress-bar-container
+                h4 진행 상황: 
+                    span(class="progress-point")
+                progress(max="100")
+            div.daily-container__edit-btn-container
+                a(href="/daily/edit") 
+                    button 수정하기
     else
-        h1 아직 오늘의 목표를 설정하지 않으셨습니다.
-        h3 지금 새로 만들어보세요! 
-        a(href="/daily/add")
-            span &rarr;새 목표 만들기
-    hr
-    span 이전 목표 조회: 
-        input(type="date", class="previous-daily")
+        div.home__no-daily-messeage-box
+            p 아직 오늘의 목표를 설정하지 않으셨습니다.
+            p 지금 새로 만들어보세요! 
+            a(href="/daily/add")
+                button 새 목표 작성
 
-    script.
-        const form = document.querySelector("form");
-        const checkboxes = document.querySelectorAll("input[type='checkbox']");
-        const progress = document.querySelector("progress");
-        const progressPoint = document.querySelector(".progress-point");
-        let checkboxCnt = checkboxes.length;
-        let checkedCnt = document.querySelectorAll("input[checked]").length;
-        const remainingTimeSpan = document.querySelector(".remainingTime");
-        const previousDaily = document.querySelector(".previous-daily");
+    div.home__previous-daily-search
+        p 이전 목표 조회
+        p 
+            input(type="date", class="previous-daily")
 
-        function timeFormat(time){
-            return String(time).padStart(2, "0");
-        }
-
-        function countDown(){
-            const midNight = new Date();
-            midNight.setHours(0, 0, 0, 0);
-            midNight.setDate(midNight.getDate() + 1);
-            const now = new Date();
-            const timeleft = midNight.getTime() - now.getTime();
-            const hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
-            const remaingTime = `${timeFormat(hours)}:${timeFormat(minutes)}:${timeFormat(seconds)}`;
-
-            if(remaingTime === "00:00:00") {
-                window.location.reload();
-            }
-                
-            remainingTimeSpan.innerText = remaingTime;
-        }
-
-        window.onload = function() {
-            if(remainingTimeSpan) {
-                countDown();
-            };
-                
-            if(progress){
-            progress.value=checkedCnt/checkboxCnt*100;
-            progressPoint.innerText = `${Math.round(checkedCnt/checkboxCnt*100)}%`;
-            };
-        }
-
-        function changeOnCheckbox(event){
-            progress.value=checkedCnt/checkboxCnt*100;
-            progressPoint.innerText = `${Math.round(checkedCnt/checkboxCnt*100)}%`;
-            const id = event.target.value;
-            const td = event.target.parentElement;
-            const input = document.createElement("input");
-            input.setAttribute("class","hidden");
-            input.setAttribute("type","text");
-            input.setAttribute("name","changed");
-            input.setAttribute("value", id);
-            td.appendChild(input);
-            form.submit();
-        }
-
-        function getPreviousDaily(){
-            const date = previousDaily.value;
-            window.location.href=`daily/${date}`;
-        }
-
-
-        for(let i=0; i<checkboxes.length; i++){
-            checkboxes[i].addEventListener("change", changeOnCheckbox);
-        }
-
-        previousDaily.addEventListener("change", getPreviousDaily);
-
-        if(remainingTimeSpan) {
-            setInterval(countDown, 1000);
-            
-        }
+    script(src="/assets/js/main.js")

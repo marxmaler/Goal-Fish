@@ -1,0 +1,61 @@
+.daily-table-wrapper {    
+    margin: 15px 0px;
+    background-color: white;
+    padding: 3px 20px 12px 20px;
+    border-radius: 15px;
+    
+    .daily-table {
+        text-align: center;
+        border: none;
+        color: black;
+        thead {
+            // background: rgba(255, 255, 255);
+            color: black;
+            font-weight: 900;
+            font-size: 20px;
+            tr {
+                th {
+                    padding: 15px;
+                    border-bottom: 3px double black;
+                }
+            }
+        }
+        
+        tbody {
+            tr {
+                border-bottom: 0.5px solid black;
+                td {
+                    &:last-child {
+                        padding: 10px 10px;
+                    }
+                }
+                &:last-child {
+                    border-bottom: none;
+                }
+            }
+            .checked {
+                text-decoration-line: line-through;
+            }
+            
+            .importance {
+                font-weight: bold;
+                font-style: italic;
+            }
+            
+            .A {
+                color: red;
+            }
+            
+            .B {
+                color: orange;
+            }
+            
+            .C {
+                color: silver;
+            }
+        }
+        
+        
+    }
+    
+}

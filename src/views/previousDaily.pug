@@ -1,95 +1,23 @@
 extends base.pug
+include mixins/daily-table.pug
 
-block headBlock 
-    style.
-        table {
-            padding: 0;
-            border: 2px solid black;
-            width:fit-content;
-            border-collapse: collapse;
-            text-align: center;
-        }
-        .thead__tr {
-            border-bottom: 2px solid black;
-        }
-        th {
-            border-right: 1px solid black;
-        }
-        th:last-child {
-            border-right: none;
-        }
-        .tbody__tr {
-            border-bottom: 1px solid black;
-        }
-        .tbody__tr:last-child {
-            border-bottom: none;
-        }
-        td {
-            border-right: 1px solid black;
-        }
-        td:last-child {
-            border-right: none;
-            padding: 0px 10px;
-        }
-        
-        input[type="checkbox"] {
-            margin: 0;
-        }
+block headerBlock
 
-        .errorMessage {
-            color: red;
-        }
-        .checked {
-            text-decoration-line: line-through;
-        }
-        .importance {
-            font-weight:bold;
-            font-style:italic;
-        }
-        .A {
-            color:red;
-        }
-        .B {
-            color:orange;
-        }
-        .C {
-            color:silver;
-        }
-        .hidden {
-            display: none;
-        }
-
-block bodyBlock
+block mainBlock
     if daily
-        form(method="post") 
-            h2=`일일 목표: ${date}`
-            p
-            table
-                thead 
-                    tr(class="thead__tr")
-                        th 중요도
-                        th 완료
-                        th 내용
-                tbody
-                each sub in daily.subs
-                    tr(class="tbody__tr")
-                        if sub.completed
-                            td(class=`importance ${sub.importance}`)=sub.importance
-                            td
-                                input(type="checkbox", value=`${sub._id}`, checked)
-                            td(class="checked")=sub.content
-                        else
-                            td(class=`importance ${sub.importance}`)=sub.importance
-                            td
-                                input(type="checkbox", value=`${sub._id}`)
-                            td=sub.content
-        h4 진행 상황
-        p(class="progress-point")
-        progress(max="100")
-        p
-        hr
-        a(href="/") 
-            button="뒤로 가기"
+        div.daily-container
+            form(method="post") 
+                h2.daily-container__previousDaily-date=date
+                +dailyTable(daily)
+            div.daily-container__progress-bar-container
+                h4 진행 상황: 
+                    span(class="progress-point")
+                progress(max="100")
+            div.daily-container__back-btn-container
+                a(href="/")
+                    button="뒤로 가기"
+    else
+    //- 해당 날짜에 일일 목표 없을 때 메시지
 
     script.
         const form = document.querySelector("form");
