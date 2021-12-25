@@ -14,7 +14,7 @@ block mainBlock
             ul.newDaily__form__form-container__ul
                 if unfinishedSubs
                     each sub in unfinishedSubs
-                        li(class="unfinished")
+                        li(class="unfinished hidden")
                             div.li__container
                                 select(name="importances")
                                     each option in ["A","B","C"]

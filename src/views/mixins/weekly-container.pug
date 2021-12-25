@@ -1,0 +1,35 @@
+include weekly-table.pug
+
+mixin weeklyContainer(weekly, pageTitle, date)
+    if weekly
+        div.weekly-container
+            form(method="post")
+                if pageTitle==="Home" 
+                    h2 이번 주 목표
+                    span=`${weekly.term[0]}~${weekly.term[-1]}`
+                    p="남은 시간 "
+                        span.weekly-container__ramaining-time
+                else if pageTitle==="Previous Weekly" 
+                    h2.weekly-container__previousDaily-date=`${weekly.term[0]}~${weekly.term[-1]}`
+                +weeklyTable(weekly)
+            div.weekly-container__progress-bar-container
+                h4 진행 상황: 
+                    span(class="progress-point")
+                progress(max="100")
+            if pageTitle==="Home"
+                div.weekly-container__edit-btn-container
+                    a(href="/weekly/edit") 
+                        button 수정하기
+            else if pageTitle==="Previous Weekly"
+                div.weekly-container__back-btn-container
+                    a(href="/")
+                        button="뒤로 가기"
+    else   
+        div.no-weekly-messeage-box
+            p 아직 이번 주 목표를 설정하지 않으셨습니다.
+            p 지금 새로 만들어보세요! 
+        div.no-weekly-btn-container
+            a(href="/weekly/add")
+                button 새 목표 작성
+            a(href="#")
+                button 지난 주간 목표 확인

@@ -7,7 +7,7 @@ if(pageTitle==="Goal Manager | Home") {
     const progressPoint = document.querySelector(".progress-point");
     let checkboxCnt = checkboxes.length;
     let checkedCnt = document.querySelectorAll("input[checked]").length;
-    const remainingTimeSpan = document.querySelector(".remainingTime");
+    const remainingTimeSpan = document.querySelector(".daily-container__ramaining-time");
     const previousDaily = document.querySelector(".previous-daily");
     
     function timeFormat(time){

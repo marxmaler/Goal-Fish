@@ -1,14 +1,15 @@
-.daily-table-wrapper {    
+.weekly-table-wrapper {    
     margin: 15px 0px;
     background-color: white;
     padding: 3px 20px 12px 20px;
     border-radius: 15px;
     
-    .daily-table {
+    .weekly-table {
         text-align: center;
         border: none;
         color: black;
         thead {
+            // background: rgba(255, 255, 255);
             color: black;
             font-weight: 900;
             font-size: 20px;

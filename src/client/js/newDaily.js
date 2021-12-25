@@ -2,10 +2,11 @@ const pageTitle = document.querySelector("title").innerText;
 
 if(pageTitle==="Goal Manager | New Daily"){
     const form = document.querySelector(".newDaily__form");
-    const subList = document.querySelector(".newDaily__form__ul");
+    const subList = document.querySelector(".newDaily__form__form-container__ul");
     const addSubBtn = document.querySelector(".addSub-btn");
     const submitBtn = document.querySelector(".submit-btn");
     const unfinished = document.querySelectorAll(".unfinished");
+
     window.onload = function() {
         let loadUnfinished = false;
         if(unfinished.length > 0){
@@ -13,7 +14,7 @@ if(pageTitle==="Goal Manager | New Daily"){
         }
         if(loadUnfinished){
             for(let i=0; i<unfinished.length; i++){
-                unfinished[i].style.display="list-item";
+                unfinished[i].classList.remove("hidden");
             }
         }else{
             for(let i=0; i<unfinished.length; i++){
@@ -21,6 +22,7 @@ if(pageTitle==="Goal Manager | New Daily"){
             }  
         }
     }
+
     function preventSubmit(event) {
         event.preventDefault();
     };

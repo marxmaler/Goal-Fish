@@ -1,0 +1,47 @@
+extends base.pug
+
+block headerBlock
+
+block mainBlock
+    if errorMessage 
+        span(class="errorMessage")=errorMessage
+        p
+
+    form(method="POST").newWeekly__form
+        div.newWeekly__form__form-container
+            div.newWeekly__form__form-container__date-container
+                span 시작일: 
+                    input(class="term-start", type="date", value=today, name="termStart")
+                span 종료일: 
+                    input(class="term-end", type="date", value=aWeekFromToday, name="termEnd", disabled)
+            ul.newWeekly__form__form-container__ul
+                input.hidden.sub-num(name="subNum", value="1")
+                if unfinishedSubs
+                    each sub in unfinishedSubs
+                        li(class="unfinished hidden")
+                            div.li__container
+                                select(name="importances")
+                                    each option in ["A","B","C"]
+                                        if sub.importance == option
+                                            option(value=`${option}`, selected)=`${option}`
+                                        else
+                                            option(value=`${option}`)=`${option}`
+                                input(type="text", name="subs", required, value=`${sub.content}`)
+                li
+                    div.li__container.weeklySub-input-container
+                        select(name="importance-1")
+                            option(value="A") A
+                            option(value="B") B
+                            option(value="C") C
+                        input(type="text", name="sub-1", required).sub-input
+                        i.fas.fa-plus-square.add-inter-btn
+                        i.fas.fa-caret-square-up.hide-inter-btn
+                    div.weeklySubInter-input-container
+                        ul
+                            li
+                                input(type="text", name="inters-1", required)
+                                i.fas.fa-minus-square.remove-inter-btn
+            div.newWeekly__form__form-container__btn-container
+                button(class="addSub-btn") 새 목표 추가
+                input(class="submit-btn", type="submit", value="작성 완료")
+

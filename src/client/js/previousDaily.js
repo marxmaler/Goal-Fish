@@ -15,7 +15,7 @@ if(pageTitle==="Goal Manager | Previous Daily"){
         progressPoint.innerText = `${Math.round(checkedCnt/checkboxCnt*100)}%`;
         };
     }
-    
+
     function changeOnCheckbox(event){
         progress.value=checkedCnt/checkboxCnt*100;
         progressPoint.innerText = `${Math.round(checkedCnt/checkboxCnt*100)}%`;
@@ -29,7 +29,7 @@ if(pageTitle==="Goal Manager | Previous Daily"){
         td.appendChild(input);
         form.submit();
     }
-    
+
     for(let i=0; i<checkboxes.length; i++){
         checkboxes[i].addEventListener("change", changeOnCheckbox);
     }

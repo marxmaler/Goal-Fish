@@ -1,12 +1,14 @@
+function timeFormat(time){
+    return String(time).padStart(2, "0");
+}
+
 export function getToday(){
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth()+1;
     let date = now.getDate();
-    if(date <10) {
-        date = `0${date}`;
-    };
-    const today = `${year}-${month}-${date}`
+
+    const today = `${year}-${timeFormat(month)}-${timeFormat(date)}`
     return today;
 }
 
@@ -16,9 +18,18 @@ export function getYesterday(){
     const year = now.getFullYear();
     const month = now.getMonth()+1;
     let date = now.getDate();
-    if(date <10) {
-        date = `0${date}`;
-    };
-    const yesterday = `${year}-${month}-${date}`
+
+    const yesterday = `${year}-${timeFormat(month)}-${timeFormat(date)}`
     return yesterday;
+}
+
+export function getAWeekFromToday(){
+    const now = new Date();
+    now.setDate(now.getDate()+7);
+    const year = now.getFullYear();
+    const month = now.getMonth()+1;
+    const date = now.getDate();
+
+    const aWeekFromToday = `${year}-${timeFormat(month)}-${timeFormat(date)}`
+    return aWeekFromToday;
 }

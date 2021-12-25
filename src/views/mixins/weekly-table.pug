@@ -1,0 +1,21 @@
+mixin weeklyTable(weekly)
+    div.weekly-table-wrapper
+        table.weekly-table
+            thead 
+                tr
+                    th 중요도
+                    th 완료
+                    th 내용
+            tbody
+            each sub in weekly.subs
+                tr
+                    if sub.completed
+                        td(class=`importance ${sub.importance}`)=sub.importance
+                        td
+                            input(type="checkbox", value=`${sub._id}`, checked)
+                        td(class="checked")=sub.content
+                    else
+                        td(class=`importance ${sub.importance}`)=sub.importance
+                        td
+                            input(type="checkbox", value=`${sub._id}`)
+                        td=sub.content

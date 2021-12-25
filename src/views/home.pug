@@ -1,32 +1,13 @@
 extends base.pug
-include mixins/daily-table.pug
+include mixins/daily-container.pug
+include mixins/weekly-container.pug
 
 block headerBlock
 
 block mainBlock
-    if daily
-        div.daily-container
-            form(method="post") 
-                h2 오늘의 목표
-                p="남은 시간 "
-                    span(class="remainingTime")
-                p
-                +dailyTable(daily)
-            div.daily-container__progress-bar-container
-                h4 진행 상황: 
-                    span(class="progress-point")
-                progress(max="100")
-            div.daily-container__edit-btn-container
-                a(href="/daily/edit") 
-                    button 수정하기
-    else
-        div.home__no-daily-messeage-box
-            p 아직 오늘의 목표를 설정하지 않으셨습니다.
-            p 지금 새로 만들어보세요! 
-            a(href="/daily/add")
-                button 새 목표 작성
+    div.home__main__divider
+        div.home__main__daily
+            +dailyContainer(daily, pageTitle)
 
-    div.home__previous-daily-search
-        p 이전 목표 조회
-        p 
-            input(type="date", class="previous-daily")
+        div.home__main__weekly
+            +weeklyContainer(weekly, pageTitle)

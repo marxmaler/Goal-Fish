@@ -2,10 +2,14 @@ import "dotenv/config";
 import "./db";
 import "./models/Daily";
 import "./models/DailySub";
+import "./models/Weekly";
+import "./models/WeeklySub";
+import "./models/WeeklySubInter";
 import express from "express";
 import morgan from "morgan";
 import globalRouter from "./routers/globalRouter";
 import dailyRouter from "./routers/dailyRouter";
+import weeklyRouter from "./routers/weeklyRouter";
 
 const app = express();
 const PORT = 4000;
@@ -21,6 +25,7 @@ app.use(express.urlencoded({extended: true}));
 //router 선언부
 app.use("/", globalRouter);
 app.use("/daily", dailyRouter);
+app.use("/weekly", weeklyRouter);
 
 //static files serving
 app.use("/assets", express.static("assets"));
