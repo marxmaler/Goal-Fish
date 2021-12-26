@@ -3,10 +3,10 @@ include weekly-table.pug
 mixin weeklyContainer(weekly, pageTitle, date)
     if weekly
         div.weekly-container
-            form(method="post")
+            form(method="post").weekly-container__form
                 if pageTitle==="Home" 
                     h2 이번 주 목표
-                    span=`${weekly.term[0]}~${weekly.term[-1]}`
+                    span.weekly-term=`${termStart}~${termEnd}`
                     p="남은 시간 "
                         span.weekly-container__ramaining-time
                 else if pageTitle==="Previous Weekly" 
@@ -14,8 +14,8 @@ mixin weeklyContainer(weekly, pageTitle, date)
                 +weeklyTable(weekly)
             div.weekly-container__progress-bar-container
                 h4 진행 상황: 
-                    span(class="progress-point")
-                progress(max="100")
+                    span.weekly-container__progress-bar-container__progress-point
+                progress(max="100").weekly-container__progress-bar-container__progress-bar
             if pageTitle==="Home"
                 div.weekly-container__edit-btn-container
                     a(href="/weekly/edit") 

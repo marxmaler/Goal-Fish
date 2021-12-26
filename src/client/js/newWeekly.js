@@ -64,8 +64,8 @@ if(pageTitle==="Goal Manager | New Weekly"){
         subImp.required = "true";
         subInput.type = "text";
         numberOfSubs += 1;
-        subImp.name = `importance-${numberOfSubs}`;
-        subInput.name = `sub-${numberOfSubs}`;
+        subImp.setAttribute("name", `importance-${numberOfSubs}`);
+        subInput.setAttribute("name", `sub-${numberOfSubs}`);
         hiddenSubNumInput.setAttribute("value", numberOfSubs);
         subInput.required = "true";
         subInput.classList.add("sub-input");

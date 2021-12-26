@@ -3,13 +3,24 @@ import DailySub from "../models/DailySub";
 import Weekly from "../models/Weekly";
 import WeeklySub from "../models/WeeklySub";
 import WeeklyInter from "../models/WeeklySubInter";
-import { getToday, getYesterday } from "../functions/time";
+import { getToday, yyyymmdd } from "../functions/time";
 
 export const getHome = async (req, res) => {
     const pageTitle = "Home";
+    const today = getToday();
     const daily = await Daily.findOne({
-        date: getToday(),
+        date: today,
     }).populate("subs");
+
+    const weekly = await Weekly.findOne({
+        term: today,
+    }).populate({
+        path: "subs",
+        populate: {
+            path: "intermediate",
+            model: "WeeklySubInter"
+        },
+    });
 
     if (daily && daily.subs.length < 1) {
         await DailySub.deleteMany({
@@ -18,24 +29,39 @@ export const getHome = async (req, res) => {
         await Daily.deleteOne({
             _id: daily._id
         });
-        return res.render("home");
+        return res.redirect("/");
     }
 
+    if (weekly && weekly.subs.length < 1) {
+        await WeeklySub.deleteMany({
+            weekly: weekly._id
+        });
+        await Weekly.deleteOne({
+            _id: weekly._id
+        });
+        return res.redirect("/");
+    }
+
+    const termStart = yyyymmdd(weekly.term[0]);
+    const termEnd = yyyymmdd(weekly.term[6]);
+
     return res.render("home", {
-        daily, pageTitle
+        daily, weekly, termStart, termEnd, today, pageTitle
     });
 }
 
 export const postHome = async (req, res) => {
-    const changedSubId = req.body.changed;
-    if(changedSubId) {
-        const changedSub = await DailySub.findById(changedSubId);
-        if (changedSub.completed) {
-            changedSub.completed = false;
-            await changedSub.save();
-        } else {
-            changedSub.completed = true;
-            await changedSub.save();
+    if(req.body.changedDaily){
+        const changedDailySubId = req.body.changedDaily;
+        if(changedDailySubId) {
+            const changedDailySub = await DailySub.findById(changedDailySubId);
+            if (changedDailySub.completed) {
+                changedDailySub.completed = false;
+                await changedDailySub.save();
+            } else {
+                changedDailySub.completed = true;
+                await changedDailySub.save();
+            }
         }
     }
     return res.redirect("/");

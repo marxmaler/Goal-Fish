@@ -6,16 +6,16 @@ mixin weeklyTable(weekly)
                     th 중요도
                     th 완료
                     th 내용
-            tbody
+            tbody.weekly-table__tbody
             each sub in weekly.subs
                 tr
                     if sub.completed
                         td(class=`importance ${sub.importance}`)=sub.importance
                         td
-                            input(type="checkbox", value=`${sub._id}`, checked)
+                            input(type="checkbox", value=`${sub._id}`, checked).weekly-table__checkbox
                         td(class="checked")=sub.content
                     else
                         td(class=`importance ${sub.importance}`)=sub.importance
                         td
-                            input(type="checkbox", value=`${sub._id}`)
+                            input(type="checkbox", value=`${sub._id}`).weekly-table__checkbox
                         td=sub.content

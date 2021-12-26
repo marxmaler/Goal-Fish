@@ -33,3 +33,11 @@ export function getAWeekFromToday(){
     const aWeekFromToday = `${year}-${timeFormat(month)}-${timeFormat(date)}`
     return aWeekFromToday;
 }
+
+export function yyyymmdd(dateObj){
+    const year = dateObj.getFullYear();
+    const month = dateObj.getMonth()+1;
+    const date = dateObj.getDate();
+    const normalDate = `${year}-${timeFormat(month)}-${timeFormat(date)}`
+    return normalDate;
+}

@@ -3,9 +3,10 @@ include daily-table.pug
 mixin dailyContainer(daily, pageTitle, date)
     if daily
         div.daily-container
-            form(method="post")
+            form(method="post").daily-container__form
                 if pageTitle==="Home" 
                     h2 오늘의 목표
+                    span=`${today}`
                     p="남은 시간 "
                         span.daily-container__ramaining-time
                 else if pageTitle==="Previous Daily" 
@@ -13,8 +14,8 @@ mixin dailyContainer(daily, pageTitle, date)
                 +dailyTable(daily)
             div.daily-container__progress-bar-container
                 h4 진행 상황: 
-                    span(class="progress-point")
-                progress(max="100")
+                    span.daily-container__progress-bar-container__progress-point
+                progress(max="100").daily-container__progress-bar-container__progress-bar
             if pageTitle==="Home"
                 div.daily-container__edit-btn-container
                     a(href="/daily/edit") 
