@@ -70,7 +70,6 @@ export const postHome = async (req, res) => {
         }
     }
 
-    console.log(req.body);
     // weekly sub가 checked된 경우
     if(req.body.changedWeekly){
         const changedWeeklySubId = req.body.changedWeekly;

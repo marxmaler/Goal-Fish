@@ -24,12 +24,29 @@ block mainBlock
                                             option(value=`${option}`)=`${option}`
                                 input(type="text", name="subs", required, value=`${sub.content}`)
                 li
-                    div.li__container
+                    div.li__container.importance-and-content-setting-box
                         select(name="importances")
                             option(value="A") A
                             option(value="B") B
                             option(value="C") C
                         input(type="text", name="subs", required)
+                    div.li__container.measurement-setting-box
+                        div
+                            label 단위 사용:  
+                                input(type="checkbox")
+                        div
+                            label 단위명: 
+                                select(name="importances")
+                                    option(value="시간") 시간
+                                    option(value="회") 회
+                                    option(value="개") 개
+                        div
+                            label 목표 단위: 
+                                input(type="number", min="0", max="9999")
+                                span
+                        div
+                            label 주간 목표 연결: 
+                                input(type="checkbox")
             div.newDaily__form__form-container__btn-container
                 button(class="addSub-btn") 새 목표 추가
                 input(class="submit-btn", type="submit", value="작성 완료")
