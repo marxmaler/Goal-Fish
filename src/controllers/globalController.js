@@ -4,6 +4,7 @@ import Weekly from "../models/Weekly";
 import WeeklySub from "../models/WeeklySub";
 import WeeklyInter from "../models/WeeklySubInter";
 import { getToday, yyyymmdd } from "../functions/time";
+import WeeklySubInter from "../models/WeeklySubInter";
 
 export const getHome = async (req, res) => {
     const pageTitle = "Home";
@@ -54,6 +55,7 @@ export const getHome = async (req, res) => {
 }
 
 export const postHome = async (req, res) => {
+    // daily가 checked된 경우
     if(req.body.changedDaily){
         const changedDailySubId = req.body.changedDaily;
         if(changedDailySubId) {
@@ -67,5 +69,39 @@ export const postHome = async (req, res) => {
             }
         }
     }
+
+    console.log(req.body);
+    // weekly sub가 checked된 경우
+    if(req.body.changedWeekly){
+        const changedWeeklySubId = req.body.changedWeekly;
+        if(changedWeeklySubId) {
+            const changedWeeklySub = await WeeklySub.findById(changedWeeklySubId);
+            if (changedWeeklySub.completed) {
+                changedWeeklySub.completed = false;
+                await changedWeeklySub.save();
+            } else {
+                changedWeeklySub.completed = true;
+                await changedWeeklySub.save();
+            }
+        }
+    }
+
+    // weekly inter가 checked된 경우
+    if(req.body.changedWeeklyInter){
+        const changedWeeklyInterId = req.body.changedWeeklyInter;
+        if(changedWeeklyInterId) {
+            const changedWeeklyInter = await WeeklySubInter.findById(changedWeeklyInterId);
+            if (changedWeeklyInter.completed) {
+                changedWeeklyInter.completed = false;
+                await changedWeeklyInter.save();
+            } else {
+                changedWeeklyInter.completed = true;
+                await changedWeeklyInter.save();
+            }
+        }
+    }
+
+
+
     return res.redirect("/");
 }

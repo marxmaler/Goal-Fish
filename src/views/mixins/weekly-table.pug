@@ -24,7 +24,7 @@ mixin weeklyTable(weekly)
                             tr.weekly-table__tbody__inter-tr
                                 if inter.completed
                                     td
-                                        i.fas.fa-calendar-plus
+                                        i.fas.fa-level-up-alt
                                     td
                                         input(type="checkbox", value=`${inter._id}`, checked).weekly-table__inter-checkbox 
                                     td=inter.content

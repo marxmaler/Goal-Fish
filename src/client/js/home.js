@@ -113,7 +113,7 @@ if(pageTitle==="Goal Manager | Home") {
         const weeklyProgressPoint = document.querySelector(".weekly-container__progress-bar-container__progress-point");
         let weeklyCheckboxCnt = weeklyCheckboxes.length;
         const weeklyTableTbody = document.querySelector(".weekly-table__tbody");
-        let weeklyCheckedCnt = weeklyTableTbody.querySelectorAll("input[checked]").length;
+        let weeklyCheckedCnt = weeklyTableTbody.querySelectorAll("input[checked].weekly-table__sub-checkbox").length;
 
         weeklyProgress.value=weeklyCheckedCnt/weeklyCheckboxCnt*100;
         weeklyProgressPoint.innerText = `${Math.round(weeklyCheckedCnt/weeklyCheckboxCnt*100)}%`;
@@ -135,6 +135,28 @@ if(pageTitle==="Goal Manager | Home") {
         for(let i=0; i<weeklyCheckboxes.length; i++){
             weeklyCheckboxes[i].addEventListener("change", weeklyChangeOnCheckbox);
         }
+
+        // weekly의 inter가 체크될 때
+        const weeklyInterCheckboxes = document.querySelectorAll(".weekly-table__inter-checkbox");
+        
+        function weeklyInterChangeOnCheckbox(event){
+            const id = event.target.value;
+            const td = event.target.parentElement;
+            const input = document.createElement("input");
+            input.setAttribute("class","hidden");
+            input.setAttribute("type","text");
+            input.setAttribute("name","changedWeeklyInter");
+            input.setAttribute("value", id);
+            td.appendChild(input);
+            weeklyForm.submit();
+        }
+        
+        for(let i=0; i<weeklyInterCheckboxes.length; i++){
+            weeklyInterCheckboxes[i].addEventListener("change", weeklyInterChangeOnCheckbox)
+        }
+
+
+
 
     }
 
