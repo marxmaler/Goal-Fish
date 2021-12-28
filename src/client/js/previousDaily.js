@@ -4,7 +4,7 @@ if(pageTitle==="Goal Manager | Previous Daily"){
     const form = document.querySelector("form");
     const checkboxes = document.querySelectorAll("input[type='checkbox']");
     const progress = document.querySelector("progress");
-    const progressPoint = document.querySelector(".progress-point");
+    const progressPoint = document.querySelector(".daily-container__progress-bar-container__progress-point");
     let checkboxCnt = checkboxes.length;
     let checkedCnt = document.querySelectorAll("input[checked]").length;
 

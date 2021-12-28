@@ -7,15 +7,30 @@ mixin weeklyTable(weekly)
                     th 완료
                     th 내용
             tbody.weekly-table__tbody
-            each sub in weekly.subs
-                tr
-                    if sub.completed
-                        td(class=`importance ${sub.importance}`)=sub.importance
-                        td
-                            input(type="checkbox", value=`${sub._id}`, checked).weekly-table__checkbox
-                        td(class="checked")=sub.content
-                    else
-                        td(class=`importance ${sub.importance}`)=sub.importance
-                        td
-                            input(type="checkbox", value=`${sub._id}`).weekly-table__checkbox
-                        td=sub.content
+                each sub in weekly.subs
+                    tr
+                        if sub.completed
+                            td(class=`importance ${sub.importance}`)=sub.importance
+                            td
+                                input(type="checkbox", value=`${sub._id}`, checked).weekly-table__sub-checkbox
+                            td(class="checked")=sub.content
+                        else
+                            td(class=`importance ${sub.importance}`)=sub.importance
+                            td
+                                input(type="checkbox", value=`${sub._id}`).weekly-table__sub-checkbox
+                            td=sub.content
+                    if sub.intermediate
+                        each inter in sub.intermediate
+                            tr.weekly-table__tbody__inter-tr
+                                if inter.completed
+                                    td
+                                        i.fas.fa-calendar-plus
+                                    td
+                                        input(type="checkbox", value=`${inter._id}`, checked).weekly-table__inter-checkbox 
+                                    td=inter.content
+                                else 
+                                    td
+                                        i.fas.fa-level-up-alt
+                                    td
+                                        input(type="checkbox", value=`${inter._id}`).weekly-table__inter-checkbox 
+                                    td=inter.content

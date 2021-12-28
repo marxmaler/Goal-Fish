@@ -33,20 +33,23 @@ export const getHome = async (req, res) => {
     }
 
     if (weekly && weekly.subs.length < 1) {
-        await WeeklySub.deleteMany({
-            weekly: weekly._id
-        });
         await Weekly.deleteOne({
             _id: weekly._id
         });
         return res.redirect("/");
     }
 
-    const termStart = yyyymmdd(weekly.term[0]);
-    const termEnd = yyyymmdd(weekly.term[6]);
+    if(weekly){
+        const termStart = yyyymmdd(weekly.term[0]);
+        const termEnd = yyyymmdd(weekly.term[6]);
+    
+        return res.render("home", {
+            daily, weekly, termStart, termEnd, today, pageTitle
+        });
+    }
 
     return res.render("home", {
-        daily, weekly, termStart, termEnd, today, pageTitle
+        daily, today, pageTitle
     });
 }
 
