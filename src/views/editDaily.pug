@@ -1,22 +1,24 @@
 extends base.pug
 
-block headerBlock
-
 block mainBlock
-    form(method="POST")
-        div.editDaily__form__form-container 
-            ul
-                each sub in daily.subs
-                    li
-                        div.li__container
-                            select(name=`${sub._id}`)
-                                each option in ["A","B","C"]
-                                    if sub.importance === option
-                                        option(value=`${option}`, selected)=`${option}`
-                                    else
-                                        option(value=`${option}`)=`${option}`
-                            input(type=text, name=`${sub._id}`, value=sub.content)
-                            i(class="fas fa-trash-alt deleteBtn")
-            div.editDaily__form__form-container__btn-container
-                button(class="addSub-btn") 세부 목표 추가
-                input(class="submit-btn", type="submit", value="수정 완료")
+    main
+        form(method="POST")
+            div.editDaily__form__form-container 
+                ul
+                    each sub in daily.subs
+                        li
+                            div.li__container
+                                select(name=`${sub._id}`)
+                                    each option in ["A","B","C"]
+                                        if sub.importance === option
+                                            option(value=`${option}`, selected)=`${option}`
+                                        else
+                                            option(value=`${option}`)=`${option}`
+                                input(type=text, name=`${sub._id}`, value=sub.content)
+                                i(class="fas fa-trash-alt deleteBtn")
+                div.editDaily__form__form-container__btn-container
+                    button(class="addSub-btn") 세부 목표 추가
+                    input(class="submit-btn", type="submit", value="수정 완료")
+
+block scriptBlock 
+    script(src="/assets/js/editDaily.js") 

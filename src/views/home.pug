@@ -2,8 +2,6 @@ extends base.pug
 include mixins/daily-container.pug
 include mixins/weekly-container.pug
 
-block headerBlock
-
 block mainBlock
     div.home__main__divider
         div.home__main__daily
@@ -11,3 +9,6 @@ block mainBlock
 
         div.home__main__weekly
             +weeklyContainer(weekly, pageTitle)
+
+block scriptBlock 
+    script(src="/assets/js/home.js") 

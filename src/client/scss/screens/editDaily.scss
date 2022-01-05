@@ -1,39 +1,39 @@
 .editDaily__form__form-container {
-    margin-top: 50px;
-    background-color: #191919;
-    padding: 10px;
-    border: 1px solid rgb(255, 255, 255, 0.5);
+  width: fit-content;
+  margin-top: 50px;
+  background-color: #191919;
+  padding: 10px;
+  border: 1px solid rgb(255, 255, 255, 0.5);
+  border-radius: 10px;
+  ul {
+    background-color: white;
     border-radius: 10px;
-    ul {
-        background-color: white;
-        border-radius: 10px;
-        padding: 10px;
-        li {
-            margin-bottom: 5px;
-            .li__container {
-                select {
-                    font-weight: 600;
-                    color: white;
-                    background-color: #191919;
-                }
-                input {}
-                i {
-                    margin-left: 5px;
-                    color: black;
-                    cursor: pointer;
-                }
-            }
+    padding: 10px;
+    li {
+      margin-bottom: 5px;
+      .li__container {
+        select {
+          font-weight: 600;
+          color: white;
+          background-color: #191919;
         }
-
-    }
-
-    .editDaily__form__form-container__btn-container {
-        margin-top: 10px;
-        display: flex;
-        justify-content: center;
-        button {
-            margin-right: 10px;
+        input {
         }
-
+        i {
+          margin-left: 5px;
+          color: black;
+          cursor: pointer;
+        }
+      }
     }
+  }
+
+  .editDaily__form__form-container__btn-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    button {
+      margin-right: 10px;
+    }
+  }
 }

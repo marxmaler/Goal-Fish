@@ -1,8 +1,6 @@
 extends base.pug
 
-block headerBlock
-
-block mainBlock
+block bodyBlock
     if errorMessage 
         span(class="errorMessage")=errorMessage
         p
@@ -51,3 +49,5 @@ block mainBlock
                 button(class="addSub-btn") 새 목표 추가
                 input(class="submit-btn", type="submit", value="작성 완료")
 
+block scriptBlock 
+    script(src="/assets/js/newDaily.js") 
