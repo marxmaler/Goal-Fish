@@ -6,16 +6,29 @@ mixin dailyTable(daily)
                     th 중요도
                     th 완료
                     th 내용
+                    th 목표량
             tbody.daily-table__tbody
                 each sub in daily.subs
                     tr
                         if sub.completed
                             td(class=`importance ${sub.importance}`)=sub.importance
                             td
-                                input(type="checkbox", value=`${sub._id}`, checked).daily-table__checkbox
+                                input(type="checkbox", data-id=`${sub._id}`, checked).daily-table__checkbox
                             td(class="checked")=sub.content
+                            if sub.useMeasure 
+                                td
+                                    input(type="number", min=0, step=1, max=sub.targetValue, value=sub.currentValue)
+                                    span=sub.measureName
+                            else 
+                                td=""
                         else
                             td(class=`importance ${sub.importance}`)=sub.importance
                             td
-                                input(type="checkbox", value=`${sub._id}`).daily-table__checkbox
+                                input(type="checkbox", data-id=`${sub._id}`).daily-table__checkbox
                             td=sub.content
+                            if sub.useMeasure    
+                                td
+                                    input(type="number", min=0, step=1, max=sub.targetValue, value=sub.currentValue)
+                                    span=sub.measureName
+                            else 
+                                td=""

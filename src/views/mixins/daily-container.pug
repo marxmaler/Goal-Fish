@@ -3,15 +3,14 @@ include daily-table.pug
 mixin dailyContainer(daily, pageTitle, date)
     if daily
         div.daily-container
-            form(method="post").daily-container__form
-                if pageTitle==="Home" 
-                    h2 오늘의 목표
-                    span=`${today}`
-                    p="남은 시간 "
-                        span.daily-container__ramaining-time
-                else if pageTitle==="Previous Daily" 
-                    h2.daily-container__previousDaily-date=date
-                +dailyTable(daily)
+            if pageTitle==="Home" 
+                h2 오늘의 목표
+                span=`${today}`
+                p="남은 시간 "
+                    span.daily-container__ramaining-time
+            else if pageTitle==="Previous Daily" 
+                h2.daily-container__previousDaily-date=date
+            +dailyTable(daily)
             div.daily-container__progress-bar-container
                 h4 진행 상황: 
                     span.daily-container__progress-bar-container__progress-point
@@ -23,7 +22,7 @@ mixin dailyContainer(daily, pageTitle, date)
             else if pageTitle==="Previous Daily"
                 div.daily-container__back-btn-container
                     a(href="/")
-                        button="뒤로 가기"
+                        button 뒤로 가기
 
     else
         if pageTitle==="Home"    
@@ -37,7 +36,7 @@ mixin dailyContainer(daily, pageTitle, date)
                 p 해당 일자에는 일일 목표가 없습니다.
             div.daily-container__back-btn-container
                 a(href="/")
-                    button="뒤로 가기"
+                    button 뒤로 가기
     if pageTitle==="Home"            
         div.previous-daily-search
             p 이전 목표 조회

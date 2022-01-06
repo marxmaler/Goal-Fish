@@ -1,13 +1,11 @@
+import { preventSubmit, manualSubmit, timeFormat } from "./shared";
+
 let numberOfSubs = 1;
 const hiddenSubNumInput = document.querySelector(".sub-num");
 
 // 시작일 & 종료일 조정
 const termStart = document.querySelector(".term-start");
 const termEnd = document.querySelector(".term-end");
-
-function timeFormat(time) {
-  return String(time).padStart(2, "0");
-}
 
 function adjustTermEnd() {
   const termStartValue = termStart.value;
@@ -26,17 +24,11 @@ const form = document.querySelector(".newWeekly__form");
 const addSubBtn = document.querySelector(".addSub-btn");
 const submitBtn = document.querySelector(".submit-btn");
 
-function preventSubmit(event) {
-  event.preventDefault();
-}
-
-function manualSubmit() {
-  form.submit();
-}
-
 form.addEventListener("submit", preventSubmit);
 addSubBtn.addEventListener("click", addSub);
-submitBtn.addEventListener("click", manualSubmit);
+submitBtn.addEventListener("click", () => {
+  manualSubmit(form);
+});
 
 // 새 월간 목표 추가 기능
 const subList = document.querySelector(".newWeekly__form__form-container__ul");

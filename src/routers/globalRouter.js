@@ -1,7 +1,7 @@
 import express from "express";
-import { getHome, postHome } from "../controllers/globalController";
+import { getHome } from "../controllers/dailyController";
 
 const globalRouter = express.Router();
-globalRouter.route("/").get(getHome).post(postHome);
+globalRouter.route("/").get(getHome);
 
 export default globalRouter;

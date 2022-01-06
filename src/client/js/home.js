@@ -1,15 +1,11 @@
-function timeFormat(time) {
-  return String(time).padStart(2, "0");
-}
-
+import { timeFormat, calculateProgress } from "./shared";
 //daily
 
-const dailyForm = document.querySelector(".daily-container__form");
-if (dailyForm) {
-  //daily가 있다면
-  const dailyProgress = document.querySelector(
-    ".daily-container__progress-bar-container__progress-bar"
-  );
+const dailyProgress = document.querySelector(
+  ".daily-container__progress-bar-container__progress-bar"
+);
+//daily가 있다면
+if (dailyProgress) {
   const dailyProgressPoint = document.querySelector(
     ".daily-container__progress-bar-container__progress-point"
   );
@@ -20,25 +16,46 @@ if (dailyForm) {
   let dailyCheckedCnt =
     dailyTableTbody.querySelectorAll("input[checked]").length;
 
-  dailyProgress.value = (dailyCheckedCnt / dailyCheckboxCnt) * 100;
-  dailyProgressPoint.innerText = `${Math.round(
-    (dailyCheckedCnt / dailyCheckboxCnt) * 100
-  )}%`;
+  calculateProgress(
+    dailyProgress,
+    dailyProgressPoint,
+    dailyCheckedCnt,
+    dailyCheckboxCnt
+  );
 
   function dailyChangeOnCheckbox(event) {
-    dailyProgress.value = (dailyCheckedCnt / dailyCheckboxCnt) * 100;
-    dailyProgressPoint.innerText = `${Math.round(
-      (dailyCheckedCnt / dailyCheckboxCnt) * 100
-    )}%`;
-    const id = event.target.value;
-    const td = event.target.parentElement;
-    const input = document.createElement("input");
-    input.setAttribute("class", "hidden");
-    input.setAttribute("type", "text");
-    input.setAttribute("name", "changedDaily");
-    input.setAttribute("value", id);
-    td.appendChild(input);
-    dailyForm.submit();
+    const checkbox = event.target;
+    const tr = checkbox.parentElement.parentElement;
+    const textTd = tr.querySelectorAll("td")[2];
+
+    //checkbox에 checked attr 명시적으로 추가/제거(count할 수 있게)
+    if (checkbox.checked) {
+      checkbox.setAttribute("checked", "");
+    } else {
+      checkbox.removeAttribute("checked");
+    }
+
+    dailyCheckedCnt = dailyTableTbody.querySelectorAll("input[checked]").length;
+
+    calculateProgress(
+      dailyProgress,
+      dailyProgressPoint,
+      dailyCheckedCnt,
+      dailyCheckboxCnt
+    );
+
+    //완수한 목표에 줄 그어주기(혹은 줄긋기 취소)
+    if (checkbox.checked) {
+      textTd.classList.add("checked");
+    } else {
+      textTd.classList.remove("checked");
+    }
+
+    const id = checkbox.dataset.id;
+
+    fetch(`/api/home/checkbox/${id}`, {
+      method: "POST",
+    });
   }
 
   for (let i = 0; i < dailyCheckboxes.length; i++) {
@@ -82,109 +99,5 @@ if (dailyForm) {
   if (dailyRemainingTimeSpan) {
     dailyCountDown();
     setInterval(dailyCountDown, 1000);
-  }
-}
-
-//weekly
-
-const weeklyForm = document.querySelector(".weekly-container__form");
-if (weeklyForm) {
-  //weekly가 있다면
-  // 남은 시간
-  const weeklyTerm = document.querySelector(".weekly-term").innerText;
-  const termEnd = weeklyTerm.split("~")[1];
-  const termEndDate = new Date(termEnd);
-  termEndDate.setHours(0, 0, 0, 0);
-  const weeklyRemainingTimeSpan = document.querySelector(
-    ".weekly-container__ramaining-time"
-  );
-
-  function weeklyCountDown() {
-    const now = new Date();
-    const timeleft = termEndDate.getTime() - now.getTime();
-    if (timeleft < 1) {
-      window.location.href = `/`;
-    }
-    const days = Math.floor(timeleft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
-    const remaingTime = `${timeFormat(days)}:${timeFormat(hours)}:${timeFormat(
-      minutes
-    )}:${timeFormat(seconds)}`;
-
-    weeklyRemainingTimeSpan.innerText = remaingTime;
-  }
-
-  if (weeklyRemainingTimeSpan) {
-    weeklyCountDown();
-    setInterval(weeklyCountDown, 1000);
-  }
-
-  // progress
-  const weeklyCheckboxes = document.querySelectorAll(
-    ".weekly-table__sub-checkbox"
-  );
-  const weeklyProgress = document.querySelector(
-    ".weekly-container__progress-bar-container__progress-bar"
-  );
-  const weeklyProgressPoint = document.querySelector(
-    ".weekly-container__progress-bar-container__progress-point"
-  );
-  let weeklyCheckboxCnt = weeklyCheckboxes.length;
-  const weeklyTableTbody = document.querySelector(".weekly-table__tbody");
-  let weeklyCheckedCnt = weeklyTableTbody.querySelectorAll(
-    "input[checked].weekly-table__sub-checkbox"
-  ).length;
-
-  weeklyProgress.value = (weeklyCheckedCnt / weeklyCheckboxCnt) * 100;
-  weeklyProgressPoint.innerText = `${Math.round(
-    (weeklyCheckedCnt / weeklyCheckboxCnt) * 100
-  )}%`;
-
-  function weeklyChangeOnCheckbox(event) {
-    weeklyProgress.value = (weeklyCheckedCnt / weeklyCheckboxCnt) * 100;
-    weeklyProgressPoint.innerText = `${Math.round(
-      (weeklyCheckedCnt / weeklyCheckboxCnt) * 100
-    )}%`;
-    const id = event.target.value;
-    const td = event.target.parentElement;
-    const input = document.createElement("input");
-    input.setAttribute("class", "hidden");
-    input.setAttribute("type", "text");
-    input.setAttribute("name", "changedWeekly");
-    input.setAttribute("value", id);
-    td.appendChild(input);
-    weeklyForm.submit();
-  }
-
-  for (let i = 0; i < weeklyCheckboxes.length; i++) {
-    weeklyCheckboxes[i].addEventListener("change", weeklyChangeOnCheckbox);
-  }
-
-  // weekly의 inter가 체크될 때
-  const weeklyInterCheckboxes = document.querySelectorAll(
-    ".weekly-table__inter-checkbox"
-  );
-
-  function weeklyInterChangeOnCheckbox(event) {
-    const id = event.target.value;
-    const td = event.target.parentElement;
-    const input = document.createElement("input");
-    input.setAttribute("class", "hidden");
-    input.setAttribute("type", "text");
-    input.setAttribute("name", "changedWeeklyInter");
-    input.setAttribute("value", id);
-    td.appendChild(input);
-    weeklyForm.submit();
-  }
-
-  for (let i = 0; i < weeklyInterCheckboxes.length; i++) {
-    weeklyInterCheckboxes[i].addEventListener(
-      "change",
-      weeklyInterChangeOnCheckbox
-    );
   }
 }
