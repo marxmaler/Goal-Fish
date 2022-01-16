@@ -26,6 +26,15 @@
         input {
           text-align: center;
         }
+        i {
+          margin-left: 5px;
+          color: black;
+          cursor: pointer;
+          &:hover {
+            opacity: 0.5;
+            transition: all 0.5s ease-out;
+          }
+        }
       }
       .measurement-setting-box {
         flex-direction: column;
@@ -41,6 +50,7 @@
           span {
             color: black;
             font-size: 12px;
+            margin-right: 5px;
           }
         }
       }

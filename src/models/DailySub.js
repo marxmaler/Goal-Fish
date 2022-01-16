@@ -23,6 +23,7 @@ const dailySubSchema = new mongoose.Schema({
   measureName: {
     // 단위명
     type: String,
+    default: "",
   },
   currentValue: {
     type: Number,
@@ -30,6 +31,7 @@ const dailySubSchema = new mongoose.Schema({
   },
   targetValue: {
     type: Number,
+    default: 9999,
   },
 
   linked: {

@@ -1,103 +1,88 @@
-import { timeFormat, calculateProgress } from "./shared";
+import {
+  calculateProgress,
+  changeOnCheckbox,
+  dailyCountDown,
+} from "./sharedDaily";
 //daily
 
-const dailyProgress = document.querySelector(
-  ".daily-container__progress-bar-container__progress-bar"
-);
+const progress = document.querySelector("progress");
 //daily가 있다면
-if (dailyProgress) {
-  const dailyProgressPoint = document.querySelector(
-    ".daily-container__progress-bar-container__progress-point"
+if (progress) {
+  const progressPoint = document.getElementById("progress-point");
+  const checkboxes = document.querySelectorAll("input[type=checkbox]");
+  const checkboxCnt = checkboxes.length;
+  const progressControlObj = {
+    progress,
+    progressPoint,
+    checkboxCnt,
+  };
+
+  calculateProgress(progressControlObj);
+
+  checkboxes.forEach((box) =>
+    box.addEventListener("change", (event) =>
+      changeOnCheckbox(event, progressControlObj)
+    )
   );
 
-  const dailyTableTbody = document.querySelector(".daily-table__tbody");
-  const dailyCheckboxes = document.querySelectorAll(".daily-table__checkbox");
-  let dailyCheckboxCnt = dailyCheckboxes.length;
-  let dailyCheckedCnt =
-    dailyTableTbody.querySelectorAll("input[checked]").length;
-
-  calculateProgress(
-    dailyProgress,
-    dailyProgressPoint,
-    dailyCheckedCnt,
-    dailyCheckboxCnt
-  );
-
-  function dailyChangeOnCheckbox(event) {
-    const checkbox = event.target;
-    const tr = checkbox.parentElement.parentElement;
-    const textTd = tr.querySelectorAll("td")[2];
-
-    //checkbox에 checked attr 명시적으로 추가/제거(count할 수 있게)
-    if (checkbox.checked) {
-      checkbox.setAttribute("checked", "");
-    } else {
-      checkbox.removeAttribute("checked");
+  const measureBoxes = document.querySelectorAll("input[type=number]");
+  function checkUnreflected(measureBoxes) {
+    for (let i = 0; i < measureBoxes.length; i++) {
+      const value = measureBoxes[i].value;
+      const max = measureBoxes[i].max;
+      const checkbox = measureBoxes[
+        i
+      ].parentElement.parentElement.querySelector("input[type=checkbox]");
+      if (
+        (value === max && !checkbox.checked) ||
+        (value < max && checkbox.checked)
+      ) {
+        checkbox.click();
+      }
     }
-
-    dailyCheckedCnt = dailyTableTbody.querySelectorAll("input[checked]").length;
-
-    calculateProgress(
-      dailyProgress,
-      dailyProgressPoint,
-      dailyCheckedCnt,
-      dailyCheckboxCnt
-    );
-
-    //완수한 목표에 줄 그어주기(혹은 줄긋기 취소)
-    if (checkbox.checked) {
-      textTd.classList.add("checked");
-    } else {
-      textTd.classList.remove("checked");
-    }
-
-    const id = checkbox.dataset.id;
-
-    fetch(`/api/home/checkbox/${id}`, {
+  }
+  if (measureBoxes) {
+    checkUnreflected(measureBoxes);
+  }
+  function changeOnMeasure(event) {
+    const { id } = event.target.dataset;
+    const { value, max } = event.target;
+    fetch(`/api/home/measure/${id}`, {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value }),
     });
+    const checkbox = event.target.parentElement.parentElement.querySelector(
+      "input[type=checkbox]"
+    );
+    if (
+      (value === max && !checkbox.checked) ||
+      (value < max && checkbox.checked)
+    ) {
+      checkbox.click();
+    }
   }
-
-  for (let i = 0; i < dailyCheckboxes.length; i++) {
-    dailyCheckboxes[i].addEventListener("change", dailyChangeOnCheckbox);
-  }
-
-  const dailyRemainingTimeSpan = document.querySelector(
-    ".daily-container__ramaining-time"
+  measureBoxes.forEach((box) =>
+    box.addEventListener("change", changeOnMeasure)
   );
 
+  //이전 일일 목표로 이동
   const previousDaily = document.querySelector(".previous-daily");
-
-  function dailyCountDown() {
-    const midNight = new Date();
-    midNight.setHours(0, 0, 0, 0);
-    midNight.setDate(midNight.getDate() + 1);
-    const now = new Date();
-    const timeleft = midNight.getTime() - now.getTime();
-    if (timeleft < 1) {
-      window.location.href = `/`;
-    }
-    const hours = Math.floor(
-      (timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
-    const remaingTime = `${timeFormat(hours)}:${timeFormat(
-      minutes
-    )}:${timeFormat(seconds)}`;
-
-    dailyRemainingTimeSpan.innerText = remaingTime;
-  }
-
   function getPreviousDaily() {
     const date = previousDaily.value;
     window.location.href = `daily/${date}`;
   }
-
   previousDaily.addEventListener("input", getPreviousDaily);
 
-  if (dailyRemainingTimeSpan) {
-    dailyCountDown();
-    setInterval(dailyCountDown, 1000);
+  // 남은 시간
+  const remainingTimeSpan = document.querySelector(
+    ".daily-container__ramaining-time"
+  );
+
+  if (remainingTimeSpan) {
+    dailyCountDown(remainingTimeSpan);
+    setInterval(() => {
+      dailyCountDown(remainingTimeSpan);
+    }, 1000);
   }
 }

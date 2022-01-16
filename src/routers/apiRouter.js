@@ -1,8 +1,9 @@
 import express from "express";
-import { postHome } from "../controllers/dailyController";
+import { postCompleted, postMeasure } from "../controllers/dailyController";
 
 const apiRouter = express.Router();
 
-apiRouter.route("/home/checkbox/:id").post(postHome);
+apiRouter.route("/home/checkbox/:id").post(postCompleted);
+apiRouter.route("/home/measure/:id").post(postMeasure);
 
 export default apiRouter;

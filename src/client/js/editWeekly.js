@@ -1,4 +1,4 @@
-import { preventSubmit, timeFormat } from "./shared";
+import { preventSubmit, timeFormat } from "./sharedAll";
 
 let numberOfSubs = 0;
 const hiddenSubNumInput = document.querySelector(".sub-num");

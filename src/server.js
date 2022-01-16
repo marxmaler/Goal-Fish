@@ -22,6 +22,7 @@ app.set("views", process.cwd() + "/src/views");
 //전역 middleware 선언부
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 //router 선언부
 app.use("/", globalRouter);

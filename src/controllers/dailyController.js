@@ -26,7 +26,7 @@ export const getHome = async (req, res) => {
   });
 };
 
-export const postHome = async (req, res) => {
+export const postCompleted = async (req, res) => {
   const { id } = req.params;
   const dailySub = await DailySub.findById(id);
   if (dailySub.completed) {
@@ -38,6 +38,19 @@ export const postHome = async (req, res) => {
   }
 
   return res.sendStatus(200);
+};
+
+export const postMeasure = async (req, res) => {
+  const { id } = req.params;
+  const { value } = req.body;
+  const dailySub = await DailySub.findById(id);
+  if (value > dailySub.targetValue) {
+    return res.sendStatus(200);
+  } else {
+    dailySub.currentValue = value;
+    dailySub.save();
+    return res.sendStatus(200);
+  }
 };
 
 export const getNewDaily = async (req, res) => {
@@ -185,6 +198,11 @@ export const getEditDaily = async (req, res) => {
     date: getToday(),
   }).populate("subs");
 
+  if (!daily) {
+    //편집 중에 자정이 지났을 때 새로고침으로 발생할 수 있는 에러 방지
+    return res.redirect("/");
+  }
+
   return res.render("editDaily", {
     daily,
     pageTitle,
@@ -192,15 +210,27 @@ export const getEditDaily = async (req, res) => {
 };
 
 export const postEditDaily = async (req, res) => {
-  const { deletedSubs, newSubs, newImps } = req.body;
-  const rest = Object.keys(req.body);
+  console.log(req.body);
+  const {
+    deletedSubs,
+    subs,
+    importances,
+    useMeasures,
+    measureNames,
+    targetValues,
+  } = req.body;
+  const rest = Object.keys(req.body); //기존 sub 정보
   if (deletedSubs) {
     rest.splice(rest.indexOf("deletedSubs"), 1);
   }
-  if (newSubs) {
-    rest.splice(rest.indexOf("newSubs"), 1);
-    rest.splice(rest.indexOf("newImps"), 1);
+  if (subs) {
+    rest.splice(rest.indexOf("subs"), 1);
+    rest.splice(rest.indexOf("importances"), 1);
+    rest.splice(rest.indexOf("useMeasures"), 1);
+    rest.splice(rest.indexOf("measureNames"), 1);
+    rest.splice(rest.indexOf("targetValues"), 1);
   }
+
   const daily = await Daily.findOne({
     date: getToday(),
   });
@@ -215,30 +245,65 @@ export const postEditDaily = async (req, res) => {
     }
   }
 
-  //sub 내용 변경
+  //기존 sub 내용 변경
   for (let i = 0; i < rest.length; i++) {
-    await DailySub.findByIdAndUpdate(rest[i], {
-      content: req.body[rest[i]][1],
-      importance: req.body[rest[i]][0],
-    });
+    const id = rest[i];
+    req.body[id].length === 5
+      ? await DailySub.findByIdAndUpdate(id, {
+          importance: req.body[id][0],
+          content: req.body[id][1],
+          useMeasure: true,
+          measureName: req.body[id][3],
+          targetValue: req.body[id][4],
+        })
+      : await DailySub.findByIdAndUpdate(id, {
+          importance: req.body[id][0],
+          content: req.body[id][1],
+          useMeasure: false,
+          measureName: req.body[id][2],
+          targetValue: req.body[id][3],
+        });
   }
 
-  if (newSubs) {
-    if (typeof newSubs === "string" && newSubs.replace(/ /gi, "").length > 0) {
+  // 새 sub 생성
+  if (subs) {
+    if (typeof subs === "string" && subs.replace(/ /gi, "").length > 0) {
       const newSub = await DailySub.create({
         daily: daily._id,
-        content: newSubs,
-        importance: newImps,
+        content: subs,
+        importance: importances,
+        measureName: measureNames ? measureNames : "",
+        useMeasure: useMeasures ? true : false,
+        targetValue: targetValues ? targetValues : 9999,
       });
       daily.subs.push(newSub._id);
     } else {
-      for (let i = 0; i < newSubs.length; i++) {
-        const newSub = await DailySub.create({
-          daily: daily._id,
-          content: newSubs[i],
-          importance: newImps[i],
-        });
-        daily.subs.push(newSub._id);
+      for (let i = 0; i < subs.length; i++) {
+        if (typeof useMeasures !== "string") {
+          const newSub = await DailySub.create({
+            daily: daily._id,
+            content: subs[i],
+            importance: importances[i],
+            useMeasure: useMeasures.includes(i) ? true : false,
+            measureName: useMeasures.includes(i)
+              ? measureNames.splice(0, 1)
+              : "",
+            targetValue: useMeasures.includes(i)
+              ? targetValues.splice(0, 1)
+              : 9999,
+          });
+          daily.subs.push(newSub._id);
+        } else {
+          const newSub = await DailySub.create({
+            daily: daily._id,
+            content: subs[i],
+            importance: importances[i],
+            useMeasure: useMeasures === String(i) ? true : false,
+            measureName: useMeasures === String(i) ? measureNames : "",
+            targetValue: useMeasures === String(i) ? targetValues : 9999,
+          });
+          daily.subs.push(newSub._id);
+        }
       }
     }
   }
