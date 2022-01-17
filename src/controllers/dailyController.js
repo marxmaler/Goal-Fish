@@ -3,7 +3,7 @@ import DailySub from "../models/DailySub";
 import { getToday, getYesterday } from "../functions/time";
 
 export const getHome = async (req, res) => {
-  const pageTitle = "Home";
+  const pageTitle = "Daily";
   const today = getToday();
   const daily = await Daily.findOne({
     date: today,

@@ -4,6 +4,7 @@ const path = require("path");
 module.exports = {
   entry: {
     main: "./src/client/js/main.js",
+    sideMenu: "./src/client/js/sideMenu.js",
     editDaily: "./src/client/js/editDaily.js",
     editWeekly: "./src/client/js/editWeekly.js",
     home: "./src/client/js/home.js",

@@ -6,7 +6,7 @@ mixin dailyTable(daily)
                     th 중요도
                     th 완료
                     th 내용
-                    th 목표량
+                    th 측정
             tbody
                 each sub in daily.subs
                     tr
@@ -21,7 +21,10 @@ mixin dailyTable(daily)
                             td=sub.content
                         if sub.useMeasure 
                             td
-                                input(type="number", min=0, step=1, max=sub.targetValue, value=sub.currentValue, data-id=`${sub._id}`)
-                                span=sub.measureName
+                                div
+                                    i.fas.fa-minus-circle
+                                    input(type="number", min=0, step=1, max=sub.targetValue, value=sub.currentValue, data-id=`${sub._id}`)
+                                    span=sub.measureName
+                                    i.fas.fa-plus-circle
                         else 
                             td=""

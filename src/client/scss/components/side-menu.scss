@@ -1,0 +1,40 @@
+aside {
+  margin-top: 40px;
+  position: absolute;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+  padding: 10px;
+  ul {
+    li.main-menu {
+      padding: 10px;
+      position: relative;
+      &.highlighted {
+        background-color: black;
+        color: white;
+        font-weight: 900;
+      }
+      div.detail {
+        position: absolute;
+        background-color: rgba(128, 128, 128, 0.5);
+        left: 85px;
+        top: 0px;
+        font-weight: 500;
+        ul {
+          display: flex;
+          flex-direction: column;
+          li {
+            padding: 10px;
+            width: 130px;
+            text-align: center;
+            border-bottom: 0.5px solid white;
+          }
+        }
+      }
+    }
+  }
+}

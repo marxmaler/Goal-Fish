@@ -8,6 +8,7 @@
 @import "./components/daily-container.scss";
 @import "./components/weekly-table.scss";
 @import "./components/weekly-container.scss";
+@import "./components/side-menu.scss";
 //Screens
 @import "./screens/home.scss";
 @import "./screens/editDaily.scss";
@@ -18,47 +19,56 @@
 //Defaults
 
 body {
-    padding: 0px 20px;
-    background-color: black;
-    color:white;
-    text-shadow: 1px 1px 1px rgba($color: white, $alpha: 0.2);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  position: relative;
+  padding: 0px 20px;
+  background-color: black;
+  color: white;
+  text-shadow: 1px 1px 1px rgba($color: white, $alpha: 0.2);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 a {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 
-input { text-align: center; }
-
-button, input[type="submit"] {
-    color: rgba($color: #000000, $alpha: 0.8);
-    border-radius: 15px;
-    background-color: white;
-    border-bottom: 4px solid rgba($color: lightgray, $alpha: 1);
-    font-weight: 900;
-    cursor: pointer;
-    padding: 5px 15px;
-    text-shadow: 1px 1px 1px rgba($color: black, $alpha: 0.2);
-    transition: all 0.3s ease-in-out;
-    &:hover {
-        background-color: black;
-        color: white;
-        border-bottom: 4px solid rgba($color: gray, $alpha: 0.4);
-    }
+input {
+  text-align: center;
 }
 
-input[type="date"]{
-    font-size: 12px;
-    border-radius: 10px;
-    font-family: inherit;
-    color: black;
+button,
+input[type="submit"] {
+  color: rgba($color: #000000, $alpha: 0.8);
+  border-radius: 15px;
+  background-color: white;
+  border-bottom: 4px solid rgba($color: lightgray, $alpha: 1);
+  font-weight: 900;
+  cursor: pointer;
+  padding: 5px 15px;
+  text-shadow: 1px 1px 1px rgba($color: black, $alpha: 0.2);
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    background-color: black;
+    color: white;
+    border-bottom: 4px solid rgba($color: gray, $alpha: 0.4);
+  }
+}
+
+input[type="date"] {
+  font-size: 12px;
+  border-radius: 10px;
+  font-family: inherit;
+  color: black;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }

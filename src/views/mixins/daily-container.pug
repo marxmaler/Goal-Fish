@@ -3,7 +3,7 @@ include daily-table.pug
 mixin dailyContainer(daily, pageTitle, date)
     if daily
         div.daily-container
-            if pageTitle==="Home" 
+            if pageTitle==="Daily" 
                 h2 오늘의 목표
                 span=`${today}`
                 p="남은 시간 "
@@ -15,7 +15,7 @@ mixin dailyContainer(daily, pageTitle, date)
                 h4 진행 상황: 
                     span#progress-point
                 progress(max="100")
-            if pageTitle==="Home"
+            if pageTitle==="Daily"
                 div.daily-container__edit-btn-container
                     a(href="/daily/edit") 
                         button 수정하기
@@ -25,7 +25,7 @@ mixin dailyContainer(daily, pageTitle, date)
                         button 뒤로 가기
 
     else
-        if pageTitle==="Home"    
+        if pageTitle==="Daily"    
             div.no-daily-messeage-box
                 p 아직 오늘의 목표를 설정하지 않으셨습니다.
                 p 지금 새로 만들어보세요! 
@@ -37,7 +37,7 @@ mixin dailyContainer(daily, pageTitle, date)
             div.daily-container__back-btn-container
                 a(href="/")
                     button 뒤로 가기
-    if pageTitle==="Home"            
+    if pageTitle==="Daily"            
         div.previous-daily-search
             p 이전 목표 조회
             p 
