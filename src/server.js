@@ -4,7 +4,6 @@ import "./models/Daily";
 import "./models/DailySub";
 import "./models/Weekly";
 import "./models/WeeklySub";
-import "./models/WeeklySubInter";
 import express from "express";
 import morgan from "morgan";
 import globalRouter from "./routers/globalRouter";

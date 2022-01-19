@@ -1,10 +1,11 @@
-import { manualSubmit, preventSubmit } from "./sharedAll";
 import {
+  manualSubmit,
+  preventSubmit,
   addSub,
   showOrHideMeasureSettings,
   formatMeasureSettingDatas,
   cancelAdd,
-} from "./sharedDaily";
+} from "./sharedAll";
 
 const form = document.querySelector(".newDaily__form");
 const subList = document.querySelector(".newDaily__form__form-container__ul");

@@ -9,9 +9,10 @@ mixin side-menu(pageTitle)
                             li 
                                 a(href="/") 오늘의 목표
                             li 
-                                a(href="/") 오늘의 목표 수정
+                                a(href="/daily/edit") 오늘의 목표 수정
                             li 
                                 a(href="/") 이전 목표 조회
+                                //- `/daily/${yesterday}` 미들웨어에 어제, 오늘 날짜 넣어놓기
             else
                 li.main-menu
                     a(href="/") 일간목표
@@ -20,36 +21,36 @@ mixin side-menu(pageTitle)
                             li 
                                 a(href="/") 오늘의 목표
                             li 
-                                a(href="/") 오늘의 목표 수정
+                                a(href="/daily/edit") 오늘의 목표 수정
                             li 
                                 a(href="/") 이전 목표 조회
 
 
-            if pageTitle=="Weekly"
+            if pageTitle.includes("Weekly")
                 li.highlighted.main-menu 
-                    a(href="/") 주간목표
+                    a(href="/weekly/") 주간목표
                     div.detail.hidden
                         ul
                             li 
-                                a(href="/") 이번 주 목표
+                                a(href="/weekly/") 이번 주 목표
                             li 
                                 a(href="/") 이번 주 목표 수정
                             li 
                                 a(href="/") 지난 주 목표 조회
             else
                 li.main-menu
-                    a(href="/") 주간목표
+                    a(href="/weekly/") 주간목표
                     div.detail.hidden
                         ul
                             li 
-                                a(href="/") 이번 주 목표
+                                a(href="/weekly/") 이번 주 목표
                             li 
                                 a(href="/") 이번 주 목표 수정
                             li 
                                 a(href="/") 지난 주 목표 조회
 
 
-            if pageTitle=="Monthly"
+            if pageTitle.includes("Monthly")
                 li.highlighted.main-menu
                     a(href="/") 월간목표
                     div.detail.hidden
@@ -71,7 +72,7 @@ mixin side-menu(pageTitle)
                                 a(href="/") 이번 달 목표 수정
                             li 
                                 a(href="/") 지난 달 목표 조회
-            if pageTitle=="Yearly"
+            if pageTitle.includes("Yearly")
                 li.highlighted.main-menu
                     a(href="/") 연간목표
                     div.detail.hidden

@@ -22,7 +22,7 @@ mixin dailyContainer(daily, pageTitle, date)
             else if pageTitle==="Previous Daily"
                 div.daily-container__back-btn-container
                     a(href="/")
-                        button 뒤로 가기
+                        button 돌아가기
 
     else
         if pageTitle==="Daily"    
@@ -36,9 +36,11 @@ mixin dailyContainer(daily, pageTitle, date)
                 p 해당 일자에는 일일 목표가 없습니다.
             div.daily-container__back-btn-container
                 a(href="/")
-                    button 뒤로 가기
-    if pageTitle==="Daily"            
-        div.previous-daily-search
+                    button 돌아가기
+    div.previous-daily-search
+        if pageTitle==="Daily"            
             p 이전 목표 조회
-            p 
-                input(type="date", class="previous-daily")
+        if pageTitle==="Previous Daily"            
+            p 다른 날짜 조회
+        p 
+            input(type="date", class="previous-daily")

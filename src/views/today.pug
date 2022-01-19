@@ -2,8 +2,8 @@ extends base.pug
 include mixins/daily-container.pug
 
 block mainBlock
-    div.home__main__daily
+    div
         +dailyContainer(daily, pageTitle)
 
 block scriptBlock 
-    script(src="/assets/js/home.js") 
+    script(src="/assets/js/today.js") 

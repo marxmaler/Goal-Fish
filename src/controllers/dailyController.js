@@ -2,7 +2,7 @@ import Daily from "../models/Daily";
 import DailySub from "../models/DailySub";
 import { getToday, getYesterday } from "../functions/time";
 
-export const getHome = async (req, res) => {
+export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
   const today = getToday();
   const daily = await Daily.findOne({
@@ -19,7 +19,7 @@ export const getHome = async (req, res) => {
     return res.redirect("/");
   }
 
-  return res.render("home", {
+  return res.render("today", {
     daily,
     today,
     pageTitle,
@@ -74,7 +74,6 @@ export const getNewDaily = async (req, res) => {
 };
 
 export const postNewDaily = async (req, res) => {
-  const pageTitle = "New Daily";
   const { date } = req.body;
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const dateExists = await Daily.exists({
@@ -210,7 +209,6 @@ export const getEditDaily = async (req, res) => {
 };
 
 export const postEditDaily = async (req, res) => {
-  console.log(req.body);
   const {
     deletedSubs,
     subs,
@@ -284,12 +282,12 @@ export const postEditDaily = async (req, res) => {
             daily: daily._id,
             content: subs[i],
             importance: importances[i],
-            useMeasure: useMeasures.includes(i) ? true : false,
-            measureName: useMeasures.includes(i)
-              ? measureNames.splice(0, 1)
+            useMeasure: useMeasures.includes(String(i)) ? true : false,
+            measureName: useMeasures.includes(String(i))
+              ? measureNames.splice(0, 1)[0]
               : "",
-            targetValue: useMeasures.includes(i)
-              ? targetValues.splice(0, 1)
+            targetValue: useMeasures.includes(String(i))
+              ? targetValues.splice(0, 1)[0]
               : 9999,
           });
           daily.subs.push(newSub._id);

@@ -3,7 +3,7 @@ import { postCompleted, postMeasure } from "../controllers/dailyController";
 
 const apiRouter = express.Router();
 
-apiRouter.route("/home/checkbox/:id").post(postCompleted);
-apiRouter.route("/home/measure/:id").post(postMeasure);
+apiRouter.route("/daily/checkbox/:id").post(postCompleted);
+apiRouter.route("/daily/measure/:id").post(postMeasure);
 
 export default apiRouter;

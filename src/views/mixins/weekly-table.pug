@@ -6,31 +6,25 @@ mixin weeklyTable(weekly)
                     th 중요도
                     th 완료
                     th 내용
-            tbody.weekly-table__tbody
+                    th 측정
+            tbody
                 each sub in weekly.subs
                     tr
+                        td(class=`importance ${sub.importance}`)=sub.importance
                         if sub.completed
-                            td(class=`importance ${sub.importance}`)=sub.importance
                             td
-                                input(type="checkbox", value=`${sub._id}`, checked).weekly-table__sub-checkbox
-                            td(class="checked")=sub.content
+                                input(type="checkbox", data-id=`${sub._id}`, checked)
+                            td.checked=sub.content
                         else
-                            td(class=`importance ${sub.importance}`)=sub.importance
                             td
-                                input(type="checkbox", value=`${sub._id}`).weekly-table__sub-checkbox
+                                input(type="checkbox", data-id=`${sub._id}`)  
                             td=sub.content
-                    if sub.intermediate
-                        each inter in sub.intermediate
-                            tr.weekly-table__tbody__inter-tr
-                                if inter.completed
-                                    td
-                                        i.fas.fa-level-up-alt
-                                    td
-                                        input(type="checkbox", value=`${inter._id}`, checked).weekly-table__inter-checkbox 
-                                    td=inter.content
-                                else 
-                                    td
-                                        i.fas.fa-level-up-alt
-                                    td
-                                        input(type="checkbox", value=`${inter._id}`).weekly-table__inter-checkbox 
-                                    td=inter.content
+                        if sub.useMeasure 
+                            td
+                                div
+                                    i.fas.fa-minus-circle
+                                    input(type="number", min=0, step=1, max=sub.targetValue, value=sub.currentValue, data-id=`${sub._id}`)
+                                    span=sub.measureName
+                                    i.fas.fa-plus-circle
+                        else 
+                            td=""

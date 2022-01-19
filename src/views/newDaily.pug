@@ -23,20 +23,33 @@ block mainBlock
                                 input(type="text", name="subs", required, value=`${sub.content}`)
                                 i(class="fas fa-trash-alt deleteBtn")
                             div.li__container.measurement-setting-box
-                                div
-                                    span 단위 사용:  
-                                    input(type="checkbox", name="useMeasures").measurement-setting-box__use-measurement-checkbox
-                                div.hidden
-                                    span 단위명: 
+                                if sub.useMeasure
+                                    div
+                                        span 단위 사용:
+                                        input(type="checkbox", checked, name="useMeasures").measurement-setting-box__use-measurement-checkbox
+                                    div
+                                        span 단위명:
                                         select(name="measureNames")
-                                            option(value="시간") 시간
-                                            option(value="회") 회
-                                            option(value="개") 개
-                                            option(value="쪽") 쪽
-                                div.hidden
-                                    span 목표 달성 요구치:&nbsp; 
-                                    input(type="number", name="targetValues" min="0", max="9999").measurement-setting-box__targetValue
-                                    span
+                                            each measure in ["시간", "회", "개", "쪽"]
+                                                if sub.measureName == measure
+                                                    option(value=measure, selected)=measure
+                                                else
+                                                    option(value=measure)=measure
+                                    div
+                                        span 목표 달성 요구치:  
+                                        input(type="number", name="targetValues", min="0", max="9999", value=sub.targetValue).measurement-setting-box__targetValue
+                                else
+                                    div
+                                        span 단위 사용:
+                                        input(type="checkbox", name="useMeasures").measurement-setting-box__use-measurement-checkbox
+                                    div.hidden
+                                        span 단위명:
+                                        select(name="measureNames")
+                                            each measure in ["시간", "회", "개", "쪽"]
+                                                option(value=measure)=measure
+                                    div.hidden
+                                        span 목표 달성 요구치:  
+                                        input(type="number", name="targetValues", min="0", max="9999").measurement-setting-box__targetValue
                 li
                     div.li__container.importance-and-content-setting-box
                         select(name="importances")
@@ -59,7 +72,6 @@ block mainBlock
                         div.hidden
                             span 목표 달성 요구치:  
                             input(type="number", name="targetValues", min="0", max="9999").measurement-setting-box__targetValue
-                            span
                         //- div
                         //-     span 주간 목표 연결: 
                         //-         input(type="checkbox")

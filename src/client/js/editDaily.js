@@ -1,13 +1,16 @@
-import { formSubmit, preventSubmit } from "./sharedAll";
 import {
+  formSubmit,
+  preventSubmit,
   addSub,
   showOrHideMeasureSettings,
   formatMeasureSettingDatas,
   hideDeleted,
-} from "./sharedDaily";
+} from "./sharedAll";
 
 const form = document.querySelector("form");
-const subList = document.querySelector("ul");
+const subList = document.querySelector(
+  "div.editDaily__form__form-container ul"
+);
 const addSubBtn = document.querySelector(".addSub-btn");
 const submitBtn = document.querySelector(".submit-btn");
 const deleteBtns = document.querySelectorAll(".deleteBtn");

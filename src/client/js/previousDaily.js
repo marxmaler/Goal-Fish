@@ -1,35 +1,50 @@
-const form = document.querySelector("form");
-const checkboxes = document.querySelectorAll("input[type='checkbox']");
+import { getPreviousDaily } from "./sharedDaily";
+import {
+  handleMinus,
+  handlePlus,
+  calculateProgress,
+  changeOnCheckbox,
+  checkUnreflected,
+  changeOnMeasure,
+} from "./sharedAll";
+
 const progress = document.querySelector("progress");
-const progressPoint = document.querySelector(
-  ".daily-container__progress-bar-container__progress-point"
-);
-let checkboxCnt = checkboxes.length;
-let checkedCnt = document.querySelectorAll("input[checked]").length;
+//daily가 있다면
+if (progress) {
+  const progressPoint = document.getElementById("progress-point");
+  const checkboxes = document.querySelectorAll("input[type=checkbox]");
+  const checkboxCnt = checkboxes.length;
+  const progressControlObj = {
+    progress,
+    progressPoint,
+    checkboxCnt,
+  };
 
-window.onload = function () {
-  if (progress) {
-    progress.value = (checkedCnt / checkboxCnt) * 100;
-    progressPoint.innerText = `${Math.round(
-      (checkedCnt / checkboxCnt) * 100
-    )}%`;
+  calculateProgress(progressControlObj);
+
+  checkboxes.forEach((box) =>
+    box.addEventListener("change", (event) =>
+      changeOnCheckbox(event, progressControlObj)
+    )
+  );
+
+  const measureBoxes = document.querySelectorAll("input[type=number]");
+
+  if (measureBoxes) {
+    checkUnreflected(measureBoxes);
   }
-};
 
-function changeOnCheckbox(event) {
-  progress.value = (checkedCnt / checkboxCnt) * 100;
-  progressPoint.innerText = `${Math.round((checkedCnt / checkboxCnt) * 100)}%`;
-  const id = event.target.value;
-  const td = event.target.parentElement;
-  const input = document.createElement("input");
-  input.setAttribute("class", "hidden");
-  input.setAttribute("type", "text");
-  input.setAttribute("name", "changed");
-  input.setAttribute("value", id);
-  td.appendChild(input);
-  form.submit();
+  measureBoxes.forEach((box) =>
+    box.addEventListener("change", changeOnMeasure)
+  );
+
+  //plus & minus btn 제어
+  const plusBtns = document.querySelectorAll(".fa-plus-circle");
+  const minusBtns = document.querySelectorAll(".fa-minus-circle");
+  plusBtns.forEach((btn) => btn.addEventListener("click", handlePlus));
+  minusBtns.forEach((btn) => btn.addEventListener("click", handleMinus));
 }
 
-for (let i = 0; i < checkboxes.length; i++) {
-  checkboxes[i].addEventListener("change", changeOnCheckbox);
-}
+//이전 일일 목표로 이동
+const previousDaily = document.querySelector(".previous-daily");
+previousDaily.addEventListener("input", () => getPreviousDaily(previousDaily));
