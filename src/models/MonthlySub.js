@@ -1,9 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
-const dailySubSchema = new mongoose.Schema({
-  daily: {
+const monthlySubSchema = new mongoose.Schema({
+  monthly: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Daily",
+    ref: "Monthly",
     required: true,
   },
   importance: {
@@ -40,5 +40,5 @@ const dailySubSchema = new mongoose.Schema({
   },
 });
 
-const DailySub = mongoose.model("DailySub", dailySubSchema);
-export default DailySub;
+const MonthlySub = mongoose.model("MonthlySub", monthlySubSchema);
+export default MonthlySub;

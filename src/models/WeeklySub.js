@@ -33,11 +33,6 @@ const weeklySubSchema = new mongoose.Schema({
     type: Number,
     default: 9999,
   },
-  linked: {
-    // 연결된 주간 목표
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Monthly",
-  },
   completed: {
     type: Boolean,
     default: false,

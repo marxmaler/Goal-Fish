@@ -1,9 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
-const dailySubSchema = new mongoose.Schema({
-  daily: {
+const yearlySubSchema = new mongoose.Schema({
+  yearly: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Daily",
+    ref: "Yearly",
     required: true,
   },
   importance: {
@@ -40,5 +40,5 @@ const dailySubSchema = new mongoose.Schema({
   },
 });
 
-const DailySub = mongoose.model("DailySub", dailySubSchema);
-export default DailySub;
+const YearlySub = mongoose.model("YearlySub", yearlySubSchema);
+export default YearlySub;

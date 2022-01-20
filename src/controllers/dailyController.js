@@ -26,7 +26,7 @@ export const getDailyHome = async (req, res) => {
   });
 };
 
-export const postCompleted = async (req, res) => {
+export const postDailyCompleted = async (req, res) => {
   const { id } = req.params;
   const dailySub = await DailySub.findById(id);
   if (dailySub.completed) {
@@ -40,7 +40,7 @@ export const postCompleted = async (req, res) => {
   return res.sendStatus(200);
 };
 
-export const postMeasure = async (req, res) => {
+export const postDailyMeasure = async (req, res) => {
   const { id } = req.params;
   const { value } = req.body;
   const dailySub = await DailySub.findById(id);
@@ -282,11 +282,11 @@ export const postEditDaily = async (req, res) => {
             daily: daily._id,
             content: subs[i],
             importance: importances[i],
-            useMeasure: useMeasures.includes(String(i)) ? true : false,
-            measureName: useMeasures.includes(String(i))
+            useMeasure: useMeasures?.includes(String(i)) ? true : false,
+            measureName: useMeasures?.includes(String(i))
               ? measureNames.splice(0, 1)[0]
               : "",
-            targetValue: useMeasures.includes(String(i))
+            targetValue: useMeasures?.includes(String(i))
               ? targetValues.splice(0, 1)[0]
               : 9999,
           });

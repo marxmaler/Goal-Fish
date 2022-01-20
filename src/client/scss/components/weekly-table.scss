@@ -1,92 +1,69 @@
 .weekly-table-wrapper {
-    margin: 15px 0px;
-    background-color: white;
-    padding: 3px 20px 12px 20px;
-    border-radius: 15px;
+  margin: 15px 0px;
+  background-color: white;
+  padding: 3px 20px 12px 20px;
+  border-radius: 15px;
 
-    .weekly-table {
-        text-align: center;
-        border: none;
-        color: black;
-
-        thead {
-            color: black;
-            font-weight: 900;
-            font-size: 20px;
-
-            tr {
-                th {
-                    padding: 15px;
-                    border-bottom: 3px double black;
-                }
-            }
+  .weekly-table {
+    text-align: center;
+    border: none;
+    color: black;
+    thead {
+      color: black;
+      font-weight: 900;
+      font-size: 20px;
+      tr {
+        th {
+          padding: 15px;
+          border-bottom: 3px double black;
         }
-
-        .weekly-table__tbody {
-            tr {
-                border-bottom: 0.5px solid black;
-
-                &.weekly-table__tbody__inter-tr {
-                    background-color: rgba(0, 0, 0, 0.05);
-                    color: black;
-                    border-right: black solid 0.5px;
-
-                    td {
-                        &:first-child {
-                            background-color: white;
-                            border-top: white solid 0.5px;
-                            border-right: black solid 0.5px;
-                            position: relative;
-
-                            i {
-                                transform: rotate(90deg);
-                                position: absolute;
-                                right: 20px;
-                                top: 10px;
-                            }
-                        }
-                        &:nth-child(2),
-                        &:last-child {
-                            border-bottom: black solid 0.5px;
-                        } 
-                    }
-                }
-
-                td {
-                    &:last-child {
-                        padding: 10px 10px;
-                    }
-                }
-
-                &:last-child {
-                    border-bottom: none;
-                }
-            }
-
-
-            .checked {
-                text-decoration-line: line-through;
-            }
-
-            .importance {
-                font-weight: bold;
-                font-style: italic;
-            }
-
-            .A {
-                color: red;
-            }
-
-            .B {
-                color: orange;
-            }
-
-            .C {
-                color: silver;
-            }
-        }
-
-
+      }
     }
 
+    tbody {
+      tr {
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
+        td {
+          padding: 20px;
+          div {
+            display: flex;
+            align-items: center;
+            .fa-minus-circle {
+            }
+            input[type="number"] {
+              border: none;
+              margin: 0;
+              padding: 0;
+            }
+            .fa-plus-circle {
+              margin-left: 10px;
+            }
+          }
+        }
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+      .checked {
+        text-decoration-line: line-through;
+      }
+
+      .importance {
+        font-weight: bold;
+        font-style: italic;
+      }
+
+      .A {
+        color: red;
+      }
+
+      .B {
+        color: orange;
+      }
+
+      .C {
+        color: silver;
+      }
+    }
+  }
 }

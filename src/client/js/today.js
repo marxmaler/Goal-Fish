@@ -49,14 +49,14 @@ if (progress) {
   if (plusBtns) {
     plusBtns.forEach((btn) =>
       btn.addEventListener("click", (event) => {
-        handlePlus(event, "weekly");
+        handlePlus(event, "daily");
       })
     );
   }
   if (minusBtns) {
     minusBtns.forEach((btn) =>
       btn.addEventListener("click", (event) => {
-        handleMinus(event, "weekly");
+        handleMinus(event, "daily");
       })
     );
   }
