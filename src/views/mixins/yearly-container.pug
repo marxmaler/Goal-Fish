@@ -1,0 +1,46 @@
+include yearly-table.pug
+
+mixin yearlyContainer(yearly, pageTitle, date)
+    if yearly
+        div.yearly-container
+            if pageTitle==="Yearly" 
+                h2 올해 목표
+                span#yearly-term=`${termStart}~${termEnd}`
+                p="남은 시간 "
+                    span.yearly-container__ramaining-time
+            else if pageTitle==="Previous Yearly" 
+                h2.yearly-container__previousYearly-date=`${termStart}~${termEnd}`
+            +yearlyTable(yearly)
+            div.yearly-container__progress-bar-container
+                h4 진행 상황: 
+                    span#progress-point
+                progress(max="100")
+            if pageTitle==="Yearly"
+                div.yearly-container__edit-btn-container
+                    a(href="/yearly/edit") 
+                        button 수정하기
+            else if pageTitle==="Previous Yearly"
+                div.yearly-container__back-btn-container
+                    a(href="/")
+                        button 돌아가기
+
+    else
+        if pageTitle==="Yearly"    
+            div.no-yearly-messeage-box
+                p 아직 올해 목표를 설정하지 않으셨습니다.
+                p 지금 새로 만들어보세요! 
+                a(href="/yearly/add")
+                    button 새 목표 작성
+        else if pageTitle==="Previous Yearly"
+            div.no-yearly-messeage-box
+                p 해당 일자에는 연간 목표가 없습니다.
+            div.yearly-container__back-btn-container
+                a(href="/")
+                    button 돌아가기
+    div.previous-yearly-search
+        if pageTitle==="Yearly"            
+            p 이전 목표 조회
+        if pageTitle==="Previous Yearly"            
+            p 다른 날짜 조회
+        p 
+            input(type="date", class="previous-yearly")

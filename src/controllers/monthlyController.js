@@ -1,75 +1,77 @@
-import Weekly from "../models/Weekly";
-import WeeklySub from "../models/WeeklySub";
-import { getToday, getAWeekFromToday, yyyymmdd } from "../functions/time";
+import Monthly from "../models/Monthly";
+import MonthlySub from "../models/MonthlySub";
+import { getToday, getAMonthFromToday, yyyymmdd } from "../functions/time";
 
-export const getWeeklyHome = async (req, res) => {
-  const pageTitle = "Weekly";
+export const getMonthlyHome = async (req, res) => {
+  const pageTitle = "Monthly";
   const today = getToday();
-  const weekly = await Weekly.findOne({
+  const monthly = await Monthly.findOne({
     $and: [
       //다음 두 조건을 동시에 만족하는 doc을 찾습니다.
-      { termStart: { $lte: new Date(today) } }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
-      { termEnd: { $gte: new Date(today) } }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
+      { termStart: { $lte: new Date(today) } }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
+      { termEnd: { $gte: new Date(today) } }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
     ],
   })?.populate("subs");
 
-  if (weekly && weekly.subs.length < 1) {
-    await WeeklySub.deleteMany({
-      weekly: weekly._id,
+  if (monthly && monthly.subs.length < 1) {
+    await MonthlySub.deleteMany({
+      monthly: monthly._id,
     });
-    await Weekly.deleteOne({
-      _id: weekly._id,
+    await Monthly.deleteOne({
+      _id: monthly._id,
     });
-    return res.redirect("/weekly/");
+    return res.redirect("/monthly/");
   }
 
   let termStart = "";
   let termEnd = "";
-  if (weekly) {
-    termStart = yyyymmdd(weekly.termStart);
-    termEnd = yyyymmdd(weekly.termEnd);
+  if (monthly) {
+    termStart = yyyymmdd(monthly.termStart);
+    termEnd = yyyymmdd(monthly.termEnd);
   }
 
-  return res.render("thisWeek", {
-    weekly,
+  return res.render("thisMonth", {
+    monthly,
     termStart,
     termEnd,
     pageTitle,
   });
 };
 
-export const getNewWeekly = async (req, res) => {
-  const pageTitle = "New Weekly";
-  const lastWeekly = await Weekly.findOne().sort({ _id: -1 }).populate("subs");
+export const getNewMonthly = async (req, res) => {
+  const pageTitle = "New Monthly";
+  const lastMonthly = await Monthly.findOne()
+    .sort({ _id: -1 })
+    .populate("subs");
   const unfinishedSubs = [];
-  if (lastWeekly) {
-    for (let i = 0; i < lastWeekly.subs.length; i++) {
-      if (!lastWeekly.subs[i].completed) {
-        unfinishedSubs.push(lastWeekly.subs[i]);
+  if (lastMonthly) {
+    for (let i = 0; i < lastMonthly.subs.length; i++) {
+      if (!lastMonthly.subs[i].completed) {
+        unfinishedSubs.push(lastMonthly.subs[i]);
       }
     }
   }
-  return res.render("newWeekly", {
+  return res.render("newMonthly", {
     today: getToday(),
-    aWeekFromToday: getAWeekFromToday(),
+    aMonthFromToday: getAMonthFromToday(),
     unfinishedSubs,
     pageTitle,
   });
 };
 
-export const postNewWeekly = async (req, res) => {
+export const postNewMonthly = async (req, res) => {
   const { date } = req.body;
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
-  const pageTitle = "New Weekly";
+  const pageTitle = "New Monthly";
   const today = getToday();
-  const dateExists = await Weekly.exists({
-    termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
-    termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
+  const dateExists = await Monthly.exists({
+    termStart: { $lte: new Date(date) },
+    termEnd: { $gte: new Date(date) },
   });
   if (dateExists) {
-    return res.render("newWeekly", {
+    return res.render("newMonthly", {
       today,
-      errorMessage: "동일한 날짜에 대해 이미 설정된 주간 목표가 존재합니다.",
+      errorMessage: "동일한 날짜에 대해 이미 설정된 월간 목표가 존재합니다.",
       pageTitle,
     });
   }
@@ -86,9 +88,9 @@ export const postNewWeekly = async (req, res) => {
   //날짜 설정
   const termStart = new Date(date);
   const termEnd = new Date(date);
-  termEnd.setDate(termEnd.getDate() + 6);
+  termEnd.setDate(termEnd.getDate() + 30);
 
-  const newWeekly = await Weekly.create({
+  const newMonthly = await Monthly.create({
     termStart,
     termEnd,
   });
@@ -104,8 +106,8 @@ export const postNewWeekly = async (req, res) => {
         //useMeasures가 배열일 때
         if (useMeasures.includes(`${i}`)) {
           //이 sub가 단위를 사용한다면
-          const sub = await WeeklySub.create({
-            weekly: newWeekly._id,
+          const sub = await MonthlySub.create({
+            monthly: newMonthly._id,
             importance: importances[i],
             content: subs[i],
             useMeasure: true,
@@ -115,8 +117,8 @@ export const postNewWeekly = async (req, res) => {
           subIds.push(sub._id);
         } else {
           //이 sub가 단위를 사용하지 않는다면
-          const sub = await WeeklySub.create({
-            weekly: newWeekly._id,
+          const sub = await MonthlySub.create({
+            monthly: newMonthly._id,
             importance: importances[i],
             content: subs[i],
           });
@@ -126,8 +128,8 @@ export const postNewWeekly = async (req, res) => {
         //useMeasures가 문자열일 때
         if (useMeasures === `${i}`) {
           //이 sub가 단위를 사용한다면
-          const sub = await WeeklySub.create({
-            weekly: newWeekly._id,
+          const sub = await MonthlySub.create({
+            monthly: newMonthly._id,
             importance: importances[i],
             content: subs[i],
             useMeasure: true,
@@ -137,8 +139,8 @@ export const postNewWeekly = async (req, res) => {
           subIds.push(sub._id);
         } else {
           //이 sub가 단위를 사용하지 않는다면
-          const sub = await WeeklySub.create({
-            weekly: newWeekly._id,
+          const sub = await MonthlySub.create({
+            monthly: newMonthly._id,
             importance: importances[i],
             content: subs[i],
           });
@@ -146,8 +148,8 @@ export const postNewWeekly = async (req, res) => {
         }
       } else {
         //useMeasures가 undefine, measurement 쓰는 sub 없음
-        const sub = await WeeklySub.create({
-          weekly: newWeekly._id,
+        const sub = await MonthlySub.create({
+          monthly: newMonthly._id,
           importance: importances[i],
           content: subs[i],
         });
@@ -161,8 +163,8 @@ export const postNewWeekly = async (req, res) => {
     }
     if (typeof useMeasures === "string") {
       //measure를 쓴다면,
-      const sub = await WeeklySub.create({
-        weekly: newWeekly._id,
+      const sub = await MonthlySub.create({
+        monthly: newMonthly._id,
         importance: importances,
         content: subs,
         useMeasure: true,
@@ -172,39 +174,39 @@ export const postNewWeekly = async (req, res) => {
       subIds.push(sub._id);
     } else {
       //measure를 안쓴다면,
-      const sub = await WeeklySub.create({
-        weekly: newWeekly._id,
+      const sub = await MonthlySub.create({
+        monthly: newMonthly._id,
         importance: importances,
         content: subs,
       });
       subIds.push(sub._id);
     }
   }
-  newWeekly.subs = subIds;
-  await newWeekly.save();
-  return res.redirect("/weekly/");
+  newMonthly.subs = subIds;
+  await newMonthly.save();
+  return res.redirect("/monthly/");
 };
 
-export const getEditWeekly = async (req, res) => {
-  const pageTitle = "Edit Weekly";
+export const getEditMonthly = async (req, res) => {
+  const pageTitle = "Edit Monthly";
   const today = getToday();
-  const weekly = await Weekly.findOne({
-    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
-    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
+  const monthly = await Monthly.findOne({
+    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
+    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   }).populate("subs");
 
-  const termStart = yyyymmdd(weekly.termStart);
-  const termEnd = yyyymmdd(weekly.termEnd);
+  const termStart = yyyymmdd(monthly.termStart);
+  const termEnd = yyyymmdd(monthly.termEnd);
 
-  return res.render("editWeekly", {
-    weekly,
+  return res.render("editMonthly", {
+    monthly,
     pageTitle,
     termStart,
     termEnd,
   });
 };
 
-export const postEditWeekly = async (req, res) => {
+export const postEditMonthly = async (req, res) => {
   const {
     termStart,
     deletedSubs,
@@ -228,17 +230,17 @@ export const postEditWeekly = async (req, res) => {
   }
 
   const today = getToday();
-  const weekly = await Weekly.findOne({
-    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
-    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
+  const monthly = await Monthly.findOne({
+    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
+    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   });
   //sub 삭제
   if (deletedSubs) {
     if (typeof deletedSubs === "string") {
-      await WeeklySub.findByIdAndDelete(deletedSubs);
+      await MonthlySub.findByIdAndDelete(deletedSubs);
     } else {
       for (let i = 0; i < deletedSubs.length; i++) {
-        await WeeklySub.findByIdAndDelete(deletedSubs[i]);
+        await MonthlySub.findByIdAndDelete(deletedSubs[i]);
       }
     }
   }
@@ -247,14 +249,14 @@ export const postEditWeekly = async (req, res) => {
   for (let i = 0; i < rest.length; i++) {
     const id = rest[i];
     req.body[id].length === 5
-      ? await WeeklySub.findByIdAndUpdate(id, {
+      ? await MonthlySub.findByIdAndUpdate(id, {
           importance: req.body[id][0],
           content: req.body[id][1],
           useMeasure: true,
           measureName: req.body[id][3],
           targetValue: req.body[id][4],
         })
-      : await WeeklySub.findByIdAndUpdate(id, {
+      : await MonthlySub.findByIdAndUpdate(id, {
           importance: req.body[id][0],
           content: req.body[id][1],
           useMeasure: false,
@@ -266,20 +268,20 @@ export const postEditWeekly = async (req, res) => {
   // 새 sub 생성
   if (subs) {
     if (typeof subs === "string" && subs.replace(/ /gi, "").length > 0) {
-      const newSub = await WeeklySub.create({
-        weekly: weekly._id,
+      const newSub = await MonthlySub.create({
+        monthly: monthly._id,
         content: subs,
         importance: importances,
         measureName: measureNames ? measureNames : "",
         useMeasure: useMeasures ? true : false,
         targetValue: targetValues ? targetValues : 9999,
       });
-      weekly.subs.push(newSub._id);
+      monthly.subs.push(newSub._id);
     } else {
       for (let i = 0; i < subs.length; i++) {
         if (typeof useMeasures !== "string") {
-          const newSub = await WeeklySub.create({
-            weekly: weekly._id,
+          const newSub = await MonthlySub.create({
+            monthly: monthly._id,
             content: subs[i],
             importance: importances[i],
             useMeasure: useMeasures?.includes(String(i)) ? true : false,
@@ -290,46 +292,46 @@ export const postEditWeekly = async (req, res) => {
               ? targetValues.splice(0, 1)[0]
               : 9999,
           });
-          weekly.subs.push(newSub._id);
+          monthly.subs.push(newSub._id);
         } else {
-          const newSub = await WeeklySub.create({
-            weekly: weekly._id,
+          const newSub = await MonthlySub.create({
+            monthly: monthly._id,
             content: subs[i],
             importance: importances[i],
             useMeasure: useMeasures === String(i) ? true : false,
             measureName: useMeasures === String(i) ? measureNames : "",
             targetValue: useMeasures === String(i) ? targetValues : 9999,
           });
-          weekly.subs.push(newSub._id);
+          monthly.subs.push(newSub._id);
         }
       }
     }
   }
 
-  //weekly 날짜 변경(✔️)
+  //monthly 날짜 변경(✔️)
   const termStartDate = new Date(termStart);
   const termEndDate = new Date(termStart);
-  weekly.termStart = termStartDate;
-  termEndDate.setDate(termStartDate.getDate() + 6);
-  weekly.termEnd = termEndDate;
-  weekly.save();
-  return res.redirect("/weekly/");
+  monthly.termStart = termStartDate;
+  termEndDate.setDate(termStartDate.getDate() + 30);
+  monthly.termEnd = termEndDate;
+  monthly.save();
+  return res.redirect("/monthly/");
 };
 
-export const getPreviousWeekly = async (req, res) => {
-  const pageTitle = "Previous Weekly";
+export const getPreviousMonthly = async (req, res) => {
+  const pageTitle = "Previous Monthly";
   const today = getToday();
-  if (req.originalUrl === "/weekly/previous/") {
-    const lastWeekly = await Weekly.findOne({
+  if (req.originalUrl === "/monthly/previous/") {
+    const lastMonthly = await Monthly.findOne({
       termEnd: { $lt: new Date(today) },
     })
       .sort({ _id: -1 })
       .populate("subs");
     let termStart = "";
     let termEnd = "";
-    if (lastWeekly) {
-      termStart = yyyymmdd(lastWeekly.termStart);
-      termEnd = yyyymmdd(lastWeekly.termEnd);
+    if (lastMonthly) {
+      termStart = yyyymmdd(lastMonthly.termStart);
+      termEnd = yyyymmdd(lastMonthly.termEnd);
       termStart = termStart.split("-");
       termStart =
         termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
@@ -337,8 +339,8 @@ export const getPreviousWeekly = async (req, res) => {
       termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
     }
 
-    return res.render("previousWeekly", {
-      lastWeekly,
+    return res.render("previousMonthly", {
+      lastMonthly,
       termStart,
       termEnd,
       pageTitle,
@@ -346,55 +348,55 @@ export const getPreviousWeekly = async (req, res) => {
   }
   let date = req.params.date;
 
-  const thisWeek = await Weekly.findOne({
-    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
-    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
+  const thisMonth = await Monthly.findOne({
+    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
+    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   });
   if (
-    new Date(date) >= thisWeek.termStart &&
-    new Date(date) <= thisWeek.termEnd
+    new Date(date) >= thisMonth.termStart &&
+    new Date(date) <= thisMonth.termEnd
   ) {
-    return res.redirect("/weekly/");
+    return res.redirect("/monthly/");
   }
 
-  const weekly = await Weekly.findOne({
-    termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
-    termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
+  const monthly = await Monthly.findOne({
+    termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
+    termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   }).populate("subs");
 
-  const termStart = yyyymmdd(weekly.termStart);
-  const termEnd = yyyymmdd(weekly.termEnd);
-  return res.render("previousWeekly", {
-    weekly,
+  const termStart = yyyymmdd(monthly.termStart);
+  const termEnd = yyyymmdd(monthly.termEnd);
+  return res.render("previousMonthly", {
+    monthly,
     termStart,
     termEnd,
     pageTitle,
   });
 };
 
-export const postWeeklyCompleted = async (req, res) => {
+export const postMonthlyCompleted = async (req, res) => {
   const { id } = req.params;
-  const weeklySub = await WeeklySub.findById(id);
-  if (weeklySub.completed) {
-    weeklySub.completed = false;
-    weeklySub.save();
+  const monthlySub = await MonthlySub.findById(id);
+  if (monthlySub.completed) {
+    monthlySub.completed = false;
+    monthlySub.save();
   } else {
-    weeklySub.completed = true;
-    weeklySub.save();
+    monthlySub.completed = true;
+    monthlySub.save();
   }
 
   return res.sendStatus(200);
 };
 
-export const postWeeklyMeasure = async (req, res) => {
+export const postMonthlyMeasure = async (req, res) => {
   const { id } = req.params;
   const { value } = req.body;
-  const weeklySub = await WeeklySub.findById(id);
-  if (value > weeklySub.targetValue) {
+  const monthlySub = await MonthlySub.findById(id);
+  if (value > monthlySub.targetValue) {
     return res.sendStatus(200);
   } else {
-    weeklySub.currentValue = value;
-    weeklySub.save();
+    monthlySub.currentValue = value;
+    monthlySub.save();
     return res.sendStatus(200);
   }
 };

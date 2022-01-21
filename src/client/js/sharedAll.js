@@ -1,3 +1,9 @@
+import {
+  getAMonthLater,
+  getAWeekLater,
+  getAYearLater,
+} from "../../functions/time";
+
 export function manualSubmit(form) {
   form.submit();
 }
@@ -260,16 +266,6 @@ export function changeOnCheckbox(event, progressControlObj, goalType) {
   });
 }
 
-export function newGoalDateValidation(inputDate) {
-  const now = new Date();
-  const date = new Date(inputDate);
-  if (now > date) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
 export function hideDeleted(event) {
   const li = event.target.parentElement.parentElement;
   const id = li.querySelector("input").name;
@@ -284,3 +280,19 @@ export function hideDeleted(event) {
   hiddenDiv.appendChild(hiddenInput);
   li.appendChild(hiddenDiv);
 }
+
+export const handleTermStartChange = (event, termEnd, goalType) => {
+  const inputDate = event.target.value;
+  if (goalType === "weekly") {
+    const termEndValue = getAWeekLater(inputDate);
+    termEnd.value = termEndValue;
+  }
+  if (goalType === "monthly") {
+    const termEndValue = getAMonthLater(inputDate);
+    termEnd.value = termEndValue;
+  }
+  if (goalType === "yearly") {
+    const termEndValue = getAYearLater(inputDate);
+    termEnd.value = termEndValue;
+  }
+};

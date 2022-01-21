@@ -2,7 +2,10 @@ extends base.pug
 include mixins/daily-container.pug
 
 block mainBlock
-    +dailyContainer(daily, pageTitle, date)
+    if lastDaily
+        +dailyContainer(lastDaily, pageTitle, date)
+    else
+        +dailyContainer(daily, pageTitle, date)
 
 block scriptBlock 
     script(src="/assets/js/previousDaily.js") 

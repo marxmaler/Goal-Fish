@@ -1,6 +1,6 @@
 import Daily from "../models/Daily";
 import DailySub from "../models/DailySub";
-import { getToday, getYesterday } from "../functions/time";
+import { getToday, getYesterday, yyyymmdd } from "../functions/time";
 
 export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
@@ -55,9 +55,7 @@ export const postDailyMeasure = async (req, res) => {
 
 export const getNewDaily = async (req, res) => {
   const pageTitle = "New Daily";
-  const lastDaily = await Daily.findOne({
-    date: getYesterday(),
-  }).populate("subs");
+  const lastDaily = await Daily.findOne().sort({ _id: -1 }).populate("subs");
   const unfinishedSubs = [];
   if (lastDaily) {
     for (let i = 0; i < lastDaily.subs.length; i++) {
@@ -311,25 +309,26 @@ export const postEditDaily = async (req, res) => {
 
 export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
+  const today = getToday();
+  if (req.originalUrl === "/daily/previous/") {
+    const lastDaily = await Daily.findOne({ date: { $lt: new Date(today) } })
+      .sort({ _id: -1 })
+      .populate("subs");
+    console.log(lastDaily);
+    let date = "";
+    if (lastDaily) {
+      date = yyyymmdd(lastDaily.date);
+      date = date.split("-");
+      date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
+    }
+    return res.render("previousDaily", { lastDaily, date, pageTitle });
+  }
   let date = req.params.date;
+  if (date === today) {
+    return res.redirect("/");
+  }
   const daily = await Daily.findOne({ date }).populate("subs");
   date = date.split("-");
   date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
   return res.render("previousDaily", { daily, date, pageTitle });
-};
-
-export const postPreviousDaily = async (req, res) => {
-  const date = req.params.date;
-  const changedSubId = req.body.changed;
-  if (changedSubId) {
-    const changedSub = await DailySub.findById(changedSubId);
-    if (changedSub.completed) {
-      changedSub.completed = false;
-      await changedSub.save();
-    } else {
-      changedSub.completed = true;
-      await changedSub.save();
-    }
-  }
-  return res.redirect(`/daily/${date}`);
 };

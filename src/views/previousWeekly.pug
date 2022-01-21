@@ -1,0 +1,11 @@
+extends base.pug
+include mixins/weekly-container.pug
+
+block mainBlock
+    if lastWeekly
+        +weeklyContainer(lastWeekly, pageTitle, date)
+    else
+        +weeklyContainer(weekly, pageTitle, date)
+
+block scriptBlock 
+    script(src="/assets/js/previousWeekly.js") 

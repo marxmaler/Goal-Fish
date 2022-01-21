@@ -5,17 +5,27 @@
 //Components
 @import "./components/shared.scss";
 @import "./components/daily-table.scss";
-@import "./components/daily-container.scss";
 @import "./components/weekly-table.scss";
+@import "./components/monthly-table.scss";
+@import "./components/yearly-table.scss";
+@import "./components/daily-container.scss";
 @import "./components/weekly-container.scss";
+@import "./components/monthly-container.scss";
+@import "./components/yearly-container.scss";
 @import "./components/side-menu.scss";
 //Screens
-@import "./screens/today.scss";
-@import "./screens/editDaily.scss";
-@import "./screens/newDaily.scss";
 @import "./screens/previousDaily.scss";
+@import "./screens/previousWeekly.scss";
+@import "./screens/previousMonthly.scss";
+@import "./screens/previousYearly.scss";
+@import "./screens/newDaily.scss";
 @import "./screens/newWeekly.scss";
+@import "./screens/newYearly.scss";
+@import "./screens/newMonthly.scss";
+@import "./screens/editDaily.scss";
 @import "./screens/editWeekly.scss";
+@import "./screens/editMonthly.scss";
+@import "./screens/editYearly.scss";
 //Defaults
 
 body {

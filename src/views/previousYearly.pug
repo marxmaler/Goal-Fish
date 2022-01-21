@@ -1,0 +1,11 @@
+extends base.pug
+include mixins/yearly-container.pug
+
+block mainBlock
+    if lastYearly
+        +yearlyContainer(lastYearly, pageTitle, date)
+    else
+        +yearlyContainer(yearly, pageTitle, date)
+
+block scriptBlock 
+    script(src="/assets/js/previousYearly.js") 

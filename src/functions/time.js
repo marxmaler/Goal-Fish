@@ -45,6 +45,50 @@ export function getAWeekLater(inputDate) {
   return aWeekLater;
 }
 
+export function getAMonthFromToday() {
+  const now = new Date();
+  now.setDate(now.getDate() + 30);
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const date = now.getDate();
+
+  const aMonthFromToday = `${year}-${timeFormat(month)}-${timeFormat(date)}`;
+  return aMonthFromToday;
+}
+
+export function getAMonthLater(inputDate) {
+  const weekStart = new Date(inputDate);
+  weekStart.setDate(weekStart.getDate() + 30);
+  const year = weekStart.getFullYear();
+  const month = weekStart.getMonth() + 1;
+  const date = weekStart.getDate();
+
+  const aMonthLater = `${year}-${timeFormat(month)}-${timeFormat(date)}`;
+  return aMonthLater;
+}
+
+export function getAYearFromToday() {
+  const now = new Date();
+  now.setDate(now.getDate() + 365);
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const date = now.getDate();
+
+  const aYearFromToday = `${year}-${timeFormat(month)}-${timeFormat(date)}`;
+  return aYearFromToday;
+}
+
+export function getAYearLater(inputDate) {
+  const weekStart = new Date(inputDate);
+  weekStart.setDate(weekStart.getDate() + 365);
+  const year = weekStart.getFullYear();
+  const month = weekStart.getMonth() + 1;
+  const date = weekStart.getDate();
+
+  const aYearLater = `${year}-${timeFormat(month)}-${timeFormat(date)}`;
+  return aYearLater;
+}
+
 export function yyyymmdd(dateObj) {
   const year = dateObj.getFullYear();
   const month = dateObj.getMonth() + 1;

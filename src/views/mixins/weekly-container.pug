@@ -9,7 +9,7 @@ mixin weeklyContainer(weekly, pageTitle, date)
                 p="남은 시간 "
                     span.weekly-container__ramaining-time
             else if pageTitle==="Previous Weekly" 
-                h2.weekly-container__previousWeekly-date=date
+                h2.weekly-container__previousWeekly-date=`${termStart}~${termEnd}`
             +weeklyTable(weekly)
             div.weekly-container__progress-bar-container
                 h4 진행 상황: 

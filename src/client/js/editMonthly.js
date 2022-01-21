@@ -10,7 +10,7 @@ import {
 
 const form = document.querySelector("form");
 const subList = document.querySelector(
-  "div.editWeekly__form__form-container ul"
+  "div.editMonthly__form__form-container ul"
 );
 const addSubBtn = document.querySelector(".addSub-btn");
 const submitBtn = document.querySelector(".submit-btn");
@@ -41,5 +41,5 @@ const termStart = document.getElementById("termStart");
 const termEnd = document.getElementById("termEnd");
 
 termStart.addEventListener("change", (event) =>
-  handleTermStartChange(event, termEnd, "weekly")
+  handleTermStartChange(event, termEnd, "monthly")
 );

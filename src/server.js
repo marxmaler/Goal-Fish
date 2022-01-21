@@ -9,6 +9,8 @@ import morgan from "morgan";
 import globalRouter from "./routers/globalRouter";
 import dailyRouter from "./routers/dailyRouter";
 import weeklyRouter from "./routers/weeklyRouter";
+import monthlyRouter from "./routers/monthlyRouter";
+import yearlyRouter from "./routers/yearlyRouter";
 import apiRouter from "./routers/apiRouter";
 
 const app = express();
@@ -27,6 +29,8 @@ app.use(express.json());
 app.use("/", globalRouter);
 app.use("/daily", dailyRouter);
 app.use("/weekly", weeklyRouter);
+app.use("/monthly", monthlyRouter);
+app.use("/yearly", yearlyRouter);
 app.use("/api", apiRouter);
 
 //static files serving

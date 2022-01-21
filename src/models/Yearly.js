@@ -1,10 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 
 const yearlySchema = new mongoose.Schema({
-  term: {
-    type: [Date],
-    validate: [arrayLimit, "A month cannot be over 365 days"],
-  },
+  termStart: Date,
+  termEnd: Date,
   subs: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -15,7 +13,3 @@ const yearlySchema = new mongoose.Schema({
 
 const Yearly = mongoose.model("Yearly", yearlySchema);
 export default Yearly;
-
-function arrayLimit(val) {
-  return val.length <= 365;
-}

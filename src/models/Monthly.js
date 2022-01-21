@@ -1,10 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 
 const monthlySchema = new mongoose.Schema({
-  term: {
-    type: [Date],
-    validate: [arrayLimit, "A month cannot be over 31 days"],
-  },
+  termStart: Date,
+  termEnd: Date,
   subs: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -15,7 +13,3 @@ const monthlySchema = new mongoose.Schema({
 
 const Monthly = mongoose.model("Monthly", monthlySchema);
 export default Monthly;
-
-function arrayLimit(val) {
-  return val.length <= 31;
-}

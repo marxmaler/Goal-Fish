@@ -8,8 +8,8 @@ import {
   handleTermStartChange,
 } from "./sharedAll";
 
-const form = document.querySelector(".newWeekly__form");
-const subList = document.querySelector(".newWeekly__form__form-container__ul");
+const form = document.querySelector(".newMonthly__form");
+const subList = document.querySelector(".newMonthly__form__form-container__ul");
 const addSubBtn = document.querySelector(".addSub-btn");
 const submitBtn = document.querySelector(".submit-btn");
 const unfinished = document.querySelectorAll(".unfinished");
@@ -29,7 +29,7 @@ window.onload = function () {
   let loadUnfinished = false;
   if (unfinished.length > 0) {
     loadUnfinished = window.confirm(
-      "지난 주간 목표에 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
+      "지난 월간 목표에 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
     );
   }
   if (loadUnfinished) {
@@ -56,5 +56,5 @@ const termStart = document.getElementById("termStart");
 const termEnd = document.getElementById("termEnd");
 
 termStart.addEventListener("change", (event) =>
-  handleTermStartChange(event, termEnd, "weekly")
+  handleTermStartChange(event, termEnd, "monthly")
 );
