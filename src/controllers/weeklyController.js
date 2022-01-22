@@ -40,7 +40,7 @@ export const getWeeklyHome = async (req, res) => {
 
 export const getNewWeekly = async (req, res) => {
   const pageTitle = "New Weekly";
-  const lastWeekly = await Weekly.findOne().sort({ _id: -1 }).populate("subs");
+  const lastWeekly = await Weekly.findOne().sort({ date: -1 }).populate("subs");
   const unfinishedSubs = [];
   if (lastWeekly) {
     for (let i = 0; i < lastWeekly.subs.length; i++) {
@@ -49,7 +49,7 @@ export const getNewWeekly = async (req, res) => {
       }
     }
   }
-  return res.render("newWeekly", {
+  return res.render("newGoal", {
     today: getToday(),
     aWeekFromToday: getAWeekFromToday(),
     unfinishedSubs,
@@ -67,7 +67,7 @@ export const postNewWeekly = async (req, res) => {
     termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
   });
   if (dateExists) {
-    return res.render("newWeekly", {
+    return res.render("newGoal", {
       today,
       errorMessage: "동일한 날짜에 대해 이미 설정된 주간 목표가 존재합니다.",
       pageTitle,
@@ -188,16 +188,20 @@ export const postNewWeekly = async (req, res) => {
 export const getEditWeekly = async (req, res) => {
   const pageTitle = "Edit Weekly";
   const today = getToday();
-  const weekly = await Weekly.findOne({
+  const goal = await Weekly.findOne({
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
   }).populate("subs");
 
-  const termStart = yyyymmdd(weekly.termStart);
-  const termEnd = yyyymmdd(weekly.termEnd);
+  if (!goal) {
+    //편집 중에 자정이 지났을 때 새로고침으로 발생할 수 있는 에러 방지
+    return res.redirect("/");
+  }
+  const termStart = yyyymmdd(goal.termStart);
+  const termEnd = yyyymmdd(goal.termEnd);
 
-  return res.render("editWeekly", {
-    weekly,
+  return res.render("edit-goal", {
+    goal,
     pageTitle,
     termStart,
     termEnd,
@@ -323,7 +327,7 @@ export const getPreviousWeekly = async (req, res) => {
     const lastWeekly = await Weekly.findOne({
       termEnd: { $lt: new Date(today) },
     })
-      .sort({ _id: -1 })
+      .sort({ date: -1 })
       .populate("subs");
     let termStart = "";
     let termEnd = "";

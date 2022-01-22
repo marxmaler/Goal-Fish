@@ -13,20 +13,20 @@
 @import "./components/monthly-container.scss";
 @import "./components/yearly-container.scss";
 @import "./components/side-menu.scss";
+@import "./components/header-menu.scss";
+@import "./components/join-form.scss";
 //Screens
 @import "./screens/previousDaily.scss";
 @import "./screens/previousWeekly.scss";
 @import "./screens/previousMonthly.scss";
 @import "./screens/previousYearly.scss";
-@import "./screens/newDaily.scss";
-@import "./screens/newWeekly.scss";
-@import "./screens/newYearly.scss";
-@import "./screens/newMonthly.scss";
-@import "./screens/editDaily.scss";
-@import "./screens/editWeekly.scss";
-@import "./screens/editMonthly.scss";
-@import "./screens/editYearly.scss";
+@import "./screens/newGoal.scss";
+@import "./screens/editGoal.scss";
 //Defaults
+
+* {
+  box-sizing: border-box;
+}
 
 body {
   position: relative;

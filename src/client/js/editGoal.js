@@ -9,13 +9,15 @@ import {
 } from "./sharedAll";
 
 const form = document.querySelector("form");
-const subList = document.querySelector(
-  "div.editWeekly__form__form-container ul"
-);
+const subList = document.querySelector("div.editGoal__form__form-container ul");
 const addSubBtn = document.querySelector(".addSub-btn");
 const submitBtn = document.querySelector(".submit-btn");
 const deleteBtns = document.querySelectorAll(".deleteBtn");
-
+const goalType = document
+  .querySelector("title")
+  .text.split("|")[1]
+  .split(" ")[2]
+  .toLowerCase();
 for (let i = 0; i < deleteBtns.length; i++) {
   deleteBtns[i].addEventListener("click", hideDeleted);
 }
@@ -40,6 +42,9 @@ submitBtn.addEventListener("click", () => {
 const termStart = document.getElementById("termStart");
 const termEnd = document.getElementById("termEnd");
 
-termStart.addEventListener("change", (event) =>
-  handleTermStartChange(event, termEnd, "weekly")
-);
+if (termStart) {
+  //daily를 edit하는 경우에는 undefined가 됨
+  termStart.addEventListener("change", (event) =>
+    handleTermStartChange(event, termEnd, goalType)
+  );
+}

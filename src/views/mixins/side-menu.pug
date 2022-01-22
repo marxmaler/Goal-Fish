@@ -1,6 +1,8 @@
 mixin side-menu(pageTitle)
-    aside
+    aside.fix
         ul
+            li.fix-btn-container
+                i.fas.fa-dot-circle#fix-btn
             if pageTitle.includes("Daily")
                 li.highlighted.main-menu
                     a(href="/") 일간목표

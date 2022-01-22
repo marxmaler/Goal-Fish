@@ -1,18 +1,109 @@
-aside {
+@keyframes fix {
+  0% {
+    transform: translateY(-10px);
+  }
+  33% {
+    transform: translateY(-15px);
+  }
+  66% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
+}
+
+aside.no-fix {
+  transform: translateX(-95%);
+  background-color: white;
+  transition: all 0.3s ease-in;
+  opacity: 0.1;
+  color: transparent;
   margin-top: 10%;
   position: absolute;
   height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  border-radius: 10px;
+  padding: 10px;
+  &:hover {
+    opacity: 1;
+    transform: translateX(0%);
+    color: transparent;
+    ul {
+      li.fix-btn-container {
+        display: flex;
+        justify-content: flex-start;
+        i {
+          transform: translateY(-10px);
+          color: black;
+          cursor: pointer;
+          &:hover {
+            opacity: 0.5;
+            animation: fix 0.9s ease-in infinite;
+          }
+        }
+      }
+      li.main-menu {
+        padding: 10px;
+        position: relative;
+        color: black;
+        &.highlighted {
+          background-color: black;
+          color: white;
+          font-weight: 900;
+        }
+        div.detail {
+          position: absolute;
+          background-color: rgba(128, 128, 128, 0.5);
+          left: 85px;
+          top: 0px;
+          font-weight: 500;
+          ul {
+            display: flex;
+            flex-direction: column;
+            li {
+              box-sizing: content-box;
+              padding: 10px;
+              width: 130px;
+              text-align: center;
+              border-bottom: 0.5px solid white;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+aside.fix {
   background-color: white;
-  color: black;
+  margin-top: 10%;
+  position: absolute;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   border-radius: 10px;
   padding: 10px;
   ul {
+    li.fix-btn-container {
+      display: flex;
+      justify-content: flex-start;
+      i {
+        transform: translateY(-5px);
+        color: black;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
     li.main-menu {
       padding: 10px;
       position: relative;
+      color: black;
       &.highlighted {
         background-color: black;
         color: white;
@@ -28,6 +119,7 @@ aside {
           display: flex;
           flex-direction: column;
           li {
+            box-sizing: content-box;
             padding: 10px;
             width: 130px;
             text-align: center;

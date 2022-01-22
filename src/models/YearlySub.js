@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
 const yearlySubSchema = new mongoose.Schema({
   yearly: {

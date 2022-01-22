@@ -1,0 +1,69 @@
+.form-wrapper {
+  margin-top: 130px;
+  background-color: white;
+  padding: 20px;
+  color: black;
+  border-radius: 15px;
+  h1 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 900;
+    font-size: 30px;
+  }
+  p {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 20px;
+    .input-box {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      input {
+        margin-left: 5px;
+        border: none;
+        border-bottom: 1px solid black;
+        &:focus {
+          outline: none;
+          background-color: rgba(0, 0, 0);
+          color: white;
+          border-radius: 10px;
+        }
+      }
+      .validation-check-btn {
+        margin-left: 5px;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+        &:hover {
+          border-radius: 15px;
+          padding: 5px 15px;
+        }
+      }
+    }
+    .btn-box {
+      display: flex;
+      justify-content: center;
+    }
+  }
+  .social {
+    margin-top: 10px;
+    font-weight: 900;
+  }
+  .image-box {
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    img {
+      height: 30px;
+      width: 30px;
+      margin: 5px;
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+}

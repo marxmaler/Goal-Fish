@@ -8,11 +8,16 @@ import {
   handleTermStartChange,
 } from "./sharedAll";
 
-const form = document.querySelector(".newYearly__form");
-const subList = document.querySelector(".newYearly__form__form-container__ul");
+const form = document.querySelector(".newGoal__form");
+const subList = document.querySelector(".newGoal__form__form-container__ul");
 const addSubBtn = document.querySelector(".addSub-btn");
 const submitBtn = document.querySelector(".submit-btn");
 const unfinished = document.querySelectorAll(".unfinished");
+const goalType = document
+  .querySelector("title")
+  .text.split("|")[1]
+  .split(" ")[2]
+  .toLowerCase();
 //default로 들어있는 li의 btn들에 event listener 추가
 const cancelBtns = document.querySelectorAll(".fa-trash-alt");
 cancelBtns.forEach((btn) => btn.addEventListener("click", cancelAdd));
@@ -28,9 +33,23 @@ useMeasureCheckboxes.forEach((box) =>
 window.onload = function () {
   let loadUnfinished = false;
   if (unfinished.length > 0) {
-    loadUnfinished = window.confirm(
-      "지난 연간 목표 중 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
-    );
+    if (goalType === "daily") {
+      loadUnfinished = window.confirm(
+        "어제 세운 목표 중 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
+      );
+    } else if (goalType === "weekly") {
+      loadUnfinished = window.confirm(
+        "지난 주간 목표에 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
+      );
+    } else if (goalType === "monthly") {
+      loadUnfinished = window.confirm(
+        "지난 월간 목표에 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
+      );
+    } else {
+      loadUnfinished = window.confirm(
+        "지난 연간 목표 중 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
+      );
+    }
   }
   if (loadUnfinished) {
     for (let i = 0; i < unfinished.length; i++) {
@@ -55,6 +74,8 @@ submitBtn.addEventListener("click", () => {
 const termStart = document.getElementById("termStart");
 const termEnd = document.getElementById("termEnd");
 
-termStart.addEventListener("change", (event) =>
-  handleTermStartChange(event, termEnd, "yearly")
-);
+if (termStart) {
+  termStart.addEventListener("change", (event) =>
+    handleTermStartChange(event, termEnd, goalType)
+  );
+}

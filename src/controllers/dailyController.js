@@ -55,7 +55,7 @@ export const postDailyMeasure = async (req, res) => {
 
 export const getNewDaily = async (req, res) => {
   const pageTitle = "New Daily";
-  const lastDaily = await Daily.findOne().sort({ _id: -1 }).populate("subs");
+  const lastDaily = await Daily.findOne().sort({ date: -1 }).populate("subs");
   const unfinishedSubs = [];
   if (lastDaily) {
     for (let i = 0; i < lastDaily.subs.length; i++) {
@@ -64,7 +64,7 @@ export const getNewDaily = async (req, res) => {
       }
     }
   }
-  return res.render("newDaily", {
+  return res.render("newGoal", {
     today: getToday(),
     unfinishedSubs,
     pageTitle,
@@ -78,7 +78,7 @@ export const postNewDaily = async (req, res) => {
     date,
   });
   if (dateExists) {
-    return res.render("newDaily", {
+    return res.render("newGoal", {
       today: getToday(),
       errorMessage: "동일한 날짜에 대해 이미 설정된 일일 목표가 존재합니다.",
       pageTitle,
@@ -191,17 +191,17 @@ export const postNewDaily = async (req, res) => {
 
 export const getEditDaily = async (req, res) => {
   const pageTitle = "Edit Daily";
-  const daily = await Daily.findOne({
+  const goal = await Daily.findOne({
     date: getToday(),
   }).populate("subs");
 
-  if (!daily) {
+  if (!goal) {
     //편집 중에 자정이 지났을 때 새로고침으로 발생할 수 있는 에러 방지
     return res.redirect("/");
   }
 
-  return res.render("editDaily", {
-    daily,
+  return res.render("edit-goal", {
+    goal,
     pageTitle,
   });
 };
@@ -312,7 +312,7 @@ export const getPreviousDaily = async (req, res) => {
   const today = getToday();
   if (req.originalUrl === "/daily/previous/") {
     const lastDaily = await Daily.findOne({ date: { $lt: new Date(today) } })
-      .sort({ _id: -1 })
+      .sort({ date: -1 })
       .populate("subs");
     console.log(lastDaily);
     let date = "";

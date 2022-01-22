@@ -54,3 +54,20 @@ const defaultHighlight = () => {
 sideMenu.addEventListener("mouseleave", defaultHighlight);
 menus.forEach((menu) => menu.addEventListener("mouseover", handleMouseover));
 menus.forEach((menu) => menu.addEventListener("mouseleave", handleMouseleave));
+
+//메뉴 고정
+const fixBtn = document.getElementById("fix-btn");
+const handleFix = (menu, btn) => {
+  if (menu.classList.contains("no-fix")) {
+    menu.classList.remove("no-fix");
+    menu.classList.add("fix");
+    btn.classList.remove("fa-thumbtack");
+    btn.classList.add("fa-dot-circle");
+  } else {
+    menu.classList.remove("fix");
+    menu.classList.add("no-fix");
+    btn.classList.add("fa-thumbtack");
+    btn.classList.remove("fa-dot-circle");
+  }
+};
+fixBtn.addEventListener("click", () => handleFix(sideMenu, fixBtn));

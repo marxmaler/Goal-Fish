@@ -40,7 +40,7 @@ export const getYearlyHome = async (req, res) => {
 
 export const getNewYearly = async (req, res) => {
   const pageTitle = "New Yearly";
-  const lastYearly = await Yearly.findOne().sort({ _id: -1 }).populate("subs");
+  const lastYearly = await Yearly.findOne().sort({ date: -1 }).populate("subs");
   const unfinishedSubs = [];
   if (lastYearly) {
     for (let i = 0; i < lastYearly.subs.length; i++) {
@@ -49,7 +49,7 @@ export const getNewYearly = async (req, res) => {
       }
     }
   }
-  return res.render("newYearly", {
+  return res.render("newGoal", {
     today: getToday(),
     aYearFromToday: getAYearFromToday(),
     unfinishedSubs,
@@ -67,7 +67,7 @@ export const postNewYearly = async (req, res) => {
     termEnd: { $gte: new Date(date) },
   });
   if (dateExists) {
-    return res.render("newYearly", {
+    return res.render("newGoal", {
       today,
       errorMessage: "동일한 날짜에 대해 이미 설정된 연간 목표가 존재합니다.",
       pageTitle,
@@ -188,16 +188,20 @@ export const postNewYearly = async (req, res) => {
 export const getEditYearly = async (req, res) => {
   const pageTitle = "Edit Yearly";
   const today = getToday();
-  const yearly = await Yearly.findOne({
+  const goal = await Yearly.findOne({
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
   }).populate("subs");
 
-  const termStart = yyyymmdd(yearly.termStart);
-  const termEnd = yyyymmdd(yearly.termEnd);
+  if (!goal) {
+    //편집 중에 자정이 지났을 때 새로고침으로 발생할 수 있는 에러 방지
+    return res.redirect("/");
+  }
+  const termStart = yyyymmdd(goal.termStart);
+  const termEnd = yyyymmdd(goal.termEnd);
 
-  return res.render("editYearly", {
-    yearly,
+  return res.render("edit-goal", {
+    goal,
     pageTitle,
     termStart,
     termEnd,
@@ -323,7 +327,7 @@ export const getPreviousYearly = async (req, res) => {
     const lastYearly = await Yearly.findOne({
       termEnd: { $lt: new Date(today) },
     })
-      .sort({ _id: -1 })
+      .sort({ date: -1 })
       .populate("subs");
     let termStart = "";
     let termEnd = "";

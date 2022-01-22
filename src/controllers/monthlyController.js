@@ -41,7 +41,7 @@ export const getMonthlyHome = async (req, res) => {
 export const getNewMonthly = async (req, res) => {
   const pageTitle = "New Monthly";
   const lastMonthly = await Monthly.findOne()
-    .sort({ _id: -1 })
+    .sort({ date: -1 })
     .populate("subs");
   const unfinishedSubs = [];
   if (lastMonthly) {
@@ -51,7 +51,7 @@ export const getNewMonthly = async (req, res) => {
       }
     }
   }
-  return res.render("newMonthly", {
+  return res.render("newGoal", {
     today: getToday(),
     aMonthFromToday: getAMonthFromToday(),
     unfinishedSubs,
@@ -69,7 +69,7 @@ export const postNewMonthly = async (req, res) => {
     termEnd: { $gte: new Date(date) },
   });
   if (dateExists) {
-    return res.render("newMonthly", {
+    return res.render("newGoal", {
       today,
       errorMessage: "동일한 날짜에 대해 이미 설정된 월간 목표가 존재합니다.",
       pageTitle,
@@ -190,16 +190,20 @@ export const postNewMonthly = async (req, res) => {
 export const getEditMonthly = async (req, res) => {
   const pageTitle = "Edit Monthly";
   const today = getToday();
-  const monthly = await Monthly.findOne({
+  const goal = await Monthly.findOne({
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   }).populate("subs");
 
-  const termStart = yyyymmdd(monthly.termStart);
-  const termEnd = yyyymmdd(monthly.termEnd);
+  if (!goal) {
+    //편집 중에 자정이 지났을 때 새로고침으로 발생할 수 있는 에러 방지
+    return res.redirect("/");
+  }
+  const termStart = yyyymmdd(goal.termStart);
+  const termEnd = yyyymmdd(goal.termEnd);
 
-  return res.render("editMonthly", {
-    monthly,
+  return res.render("edit-goal", {
+    goal,
     pageTitle,
     termStart,
     termEnd,
@@ -325,7 +329,7 @@ export const getPreviousMonthly = async (req, res) => {
     const lastMonthly = await Monthly.findOne({
       termEnd: { $lt: new Date(today) },
     })
-      .sort({ _id: -1 })
+      .sort({ date: -1 })
       .populate("subs");
     let termStart = "";
     let termEnd = "";

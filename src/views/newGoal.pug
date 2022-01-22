@@ -5,16 +5,26 @@ block mainBlock
         span(class="errorMessage")=errorMessage
         p
 
-    form(method="POST").newMonthly__form
-        div.newMonthly__form__form-container
-            div.newMonthly__form__form-container__date-container
-                div
-                    span 시작일
-                    input(type="date", value=today, name="date")#termStart
-                div
-                    span 종료일
-                    input(type="date", value=aMonthFromToday, disabled)#termEnd
-            ul.newMonthly__form__form-container__ul
+    form(method="POST").newGoal__form
+        div.newGoal__form__form-container
+            div.newGoal__form__form-container__date-container
+                if !pageTitle.includes("Daily")
+                    div
+                        span 시작일
+                        input(type="date", value=today, name="date")#termStart
+                    div
+                        span 종료일
+                        if pageTitle.includes("Weekly")
+                            input(type="date", value=aWeekFromToday, disabled)#termEnd
+                        else if pageTitle.includes("Monthly")
+                            input(type="date", value=aMonthFromToday, disabled)#termEnd
+                        else
+                            input(type="date", value=aYearFromToday, disabled)#termEnd
+                else
+                    div
+                        input(type="date", value=today, name="date") 
+
+            ul.newGoal__form__form-container__ul
                 if unfinishedSubs
                     each sub in unfinishedSubs
                         li(class="unfinished hidden")
@@ -78,9 +88,9 @@ block mainBlock
                             span 목표 달성 요구치:  
                             input(type="number", name="targetValues", min="0", max="9999").measurement-setting-box__targetValue
 
-            div.newMonthly__form__form-container__btn-container
+            div.newGoal__form__form-container__btn-container
                 button(class="addSub-btn") 새 목표 추가
                 input(class="submit-btn", type="submit", value="작성 완료")
 
 block scriptBlock 
-    script(src="/assets/js/newMonthly.js") 
+    script(src="/assets/js/newGoal.js") 

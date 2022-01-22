@@ -1,11 +1,11 @@
-.newMonthly__form__form-container {
+.newGoal__form__form-container {
   margin-top: 50px;
   background-color: #191919;
   padding: 10px;
   border: 1px solid rgb(255, 255, 255, 0.5);
   border-radius: 10px;
 
-  .newMonthly__form__form-container__date-container {
+  .newGoal__form__form-container__date-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -19,7 +19,7 @@
     }
   }
 
-  .newMonthly__form__form-container__ul {
+  .newGoal__form__form-container__ul {
     background-color: white;
     border-radius: 10px;
     padding: 10px;
@@ -65,7 +65,7 @@
     }
   }
 
-  .newMonthly__form__form-container__btn-container {
+  .newGoal__form__form-container__btn-container {
     display: flex;
     justify-content: center;
     margin-top: 10px;

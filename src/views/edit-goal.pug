@@ -1,0 +1,61 @@
+extends base.pug
+
+block mainBlock
+    form(method="POST")
+        div.editGoal__form__form-container
+            if !pageTitle.includes("Daily")
+                div.editGoal__form__form-container__date-container
+                    div
+                        span 시작일: 
+                        input(type="date", value=termStart, name="termStart")#termStart
+                    div
+                        span 종료일: 
+                        input(type="date", value=termEnd, disabled)#termEnd 
+            ul
+                each sub in goal.subs
+                    li
+                        div.li__container.importance-and-content-setting-box
+                            select(name=`${sub._id}`)
+                                each option in ["A","B","C"]
+                                    if sub.importance === option
+                                        option(value=`${option}`, selected)=`${option}`
+                                    else
+                                        option(value=`${option}`)=`${option}`
+                            input(type=text, name=`${sub._id}`, value=sub.content)
+                            i(class="fas fa-trash-alt deleteBtn")
+                        div.li__container.measurement-setting-box
+                            if sub.useMeasure
+                                div
+                                    span 단위 사용:
+                                    input(type="checkbox", checked, name=`${sub._id}`).measurement-setting-box__use-measurement-checkbox
+                                div
+                                    span 단위명:
+                                    select(name=`${sub._id}`)
+                                        each measure in ["시간", "회", "개", "쪽"]
+                                            if sub.measureName == measure
+                                                option(value=measure, selected)=measure
+                                            else
+                                                option(value=measure)=measure
+                                div
+                                    span 목표 달성 요구치:  
+                                    input(type="number", name=`${sub._id}`, min="0", max="9999", value=sub.targetValue).measurement-setting-box__targetValue
+                                    span
+                            else
+                                div
+                                    span 단위 사용:
+                                    input(type="checkbox", name=`${sub._id}`).measurement-setting-box__use-measurement-checkbox
+                                div.hidden
+                                    span 단위명:
+                                    select(name=`${sub._id}`)
+                                        each measure in ["시간", "회", "개", "쪽"]
+                                            option(value=measure)=measure
+                                div.hidden
+                                    span 목표 달성 요구치:  
+                                    input(type="number", name=`${sub._id}`, min="0", max="9999").measurement-setting-box__targetValue
+                                    span
+            div.editGoal__form__form-container__btn-container
+                button(class="addSub-btn") 세부 목표 추가
+                input(class="submit-btn", type="submit", value="수정 완료")
+
+block scriptBlock 
+    script(src="/assets/js/editGoal.js") 
