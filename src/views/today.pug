@@ -1,9 +1,0 @@
-extends base.pug
-include mixins/daily-container.pug
-
-block mainBlock
-    div
-        +dailyContainer(daily, pageTitle)
-
-block scriptBlock 
-    script(src="/assets/js/today.js") 

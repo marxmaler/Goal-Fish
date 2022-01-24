@@ -296,3 +296,7 @@ export const handleTermStartChange = (event, termEnd, goalType) => {
     termEnd.value = termEndValue;
   }
 };
+
+export function getPreviousGoal(goalType) {
+  fetch();
+}

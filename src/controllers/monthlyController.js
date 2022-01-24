@@ -5,7 +5,7 @@ import { getToday, getAMonthFromToday, yyyymmdd } from "../functions/time";
 export const getMonthlyHome = async (req, res) => {
   const pageTitle = "Monthly";
   const today = getToday();
-  const monthly = await Monthly.findOne({
+  const goal = await Monthly.findOne({
     $and: [
       //다음 두 조건을 동시에 만족하는 doc을 찾습니다.
       { termStart: { $lte: new Date(today) } }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
@@ -13,25 +13,25 @@ export const getMonthlyHome = async (req, res) => {
     ],
   })?.populate("subs");
 
-  if (monthly && monthly.subs.length < 1) {
+  if (goal && goal.subs.length < 1) {
     await MonthlySub.deleteMany({
-      monthly: monthly._id,
+      monthly: goal._id,
     });
     await Monthly.deleteOne({
-      _id: monthly._id,
+      _id: goal._id,
     });
     return res.redirect("/monthly/");
   }
 
   let termStart = "";
   let termEnd = "";
-  if (monthly) {
-    termStart = yyyymmdd(monthly.termStart);
-    termEnd = yyyymmdd(monthly.termEnd);
+  if (goal) {
+    termStart = yyyymmdd(goal.termStart);
+    termEnd = yyyymmdd(goal.termEnd);
   }
 
-  return res.render("thisMonth", {
-    monthly,
+  return res.render("currentGoal", {
+    goal,
     termStart,
     termEnd,
     pageTitle,
@@ -326,16 +326,16 @@ export const getPreviousMonthly = async (req, res) => {
   const pageTitle = "Previous Monthly";
   const today = getToday();
   if (req.originalUrl === "/monthly/previous/") {
-    const lastMonthly = await Monthly.findOne({
+    const lastGoal = await Monthly.findOne({
       termEnd: { $lt: new Date(today) },
     })
       .sort({ date: -1 })
       .populate("subs");
     let termStart = "";
     let termEnd = "";
-    if (lastMonthly) {
-      termStart = yyyymmdd(lastMonthly.termStart);
-      termEnd = yyyymmdd(lastMonthly.termEnd);
+    if (lastGoal) {
+      termStart = yyyymmdd(lastGoal.termStart);
+      termEnd = yyyymmdd(lastGoal.termEnd);
       termStart = termStart.split("-");
       termStart =
         termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
@@ -343,8 +343,8 @@ export const getPreviousMonthly = async (req, res) => {
       termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
     }
 
-    return res.render("previousMonthly", {
-      lastMonthly,
+    return res.render("previousGoal", {
+      lastGoal,
       termStart,
       termEnd,
       pageTitle,
@@ -352,26 +352,26 @@ export const getPreviousMonthly = async (req, res) => {
   }
   let date = req.params.date;
 
-  const thisMonth = await Monthly.findOne({
+  const currentGoal = await Monthly.findOne({
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   });
   if (
-    new Date(date) >= thisMonth.termStart &&
-    new Date(date) <= thisMonth.termEnd
+    new Date(date) >= currentGoal.termStart &&
+    new Date(date) <= currentGoal.termEnd
   ) {
     return res.redirect("/monthly/");
   }
 
-  const monthly = await Monthly.findOne({
+  const goal = await Monthly.findOne({
     termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
     termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   }).populate("subs");
 
-  const termStart = yyyymmdd(monthly.termStart);
-  const termEnd = yyyymmdd(monthly.termEnd);
-  return res.render("previousMonthly", {
-    monthly,
+  const termStart = yyyymmdd(goal.termStart);
+  const termEnd = yyyymmdd(goal.termEnd);
+  return res.render("previousGoal", {
+    goal,
     termStart,
     termEnd,
     pageTitle,

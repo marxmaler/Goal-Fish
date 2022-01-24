@@ -1,6 +1,6 @@
-mixin monthlyTable(monthly)
-    div.monthly-table-wrapper
-        table.monthly-table
+mixin goalTable(goal)
+    div.goal-table-wrapper
+        table.goal-table
             thead 
                 tr
                     th 중요도
@@ -8,7 +8,7 @@ mixin monthlyTable(monthly)
                     th 내용
                     th 측정
             tbody
-                each sub in monthly.subs
+                each sub in goal.subs
                     tr
                         td(class=`importance ${sub.importance}`)=sub.importance
                         if sub.completed

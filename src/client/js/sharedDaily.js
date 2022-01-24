@@ -21,7 +21,7 @@ export function dailyCountDown(span) {
   span.innerText = remaingTime;
 }
 
-export function getPreviousDaily(previousDaily) {
-  const date = previousDaily.value;
+export function getPreviousDaily(previousGoalSelector) {
+  const date = previousGoalSelector.value;
   window.location.href = `/daily/${date}`;
 }

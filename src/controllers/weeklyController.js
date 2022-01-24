@@ -5,7 +5,7 @@ import { getToday, getAWeekFromToday, yyyymmdd } from "../functions/time";
 export const getWeeklyHome = async (req, res) => {
   const pageTitle = "Weekly";
   const today = getToday();
-  const weekly = await Weekly.findOne({
+  const goal = await Weekly.findOne({
     $and: [
       //다음 두 조건을 동시에 만족하는 doc을 찾습니다.
       { termStart: { $lte: new Date(today) } }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
@@ -13,25 +13,25 @@ export const getWeeklyHome = async (req, res) => {
     ],
   })?.populate("subs");
 
-  if (weekly && weekly.subs.length < 1) {
+  if (goal && goal.subs.length < 1) {
     await WeeklySub.deleteMany({
-      weekly: weekly._id,
+      weekly: goal._id,
     });
     await Weekly.deleteOne({
-      _id: weekly._id,
+      _id: goal._id,
     });
     return res.redirect("/weekly/");
   }
 
   let termStart = "";
   let termEnd = "";
-  if (weekly) {
-    termStart = yyyymmdd(weekly.termStart);
-    termEnd = yyyymmdd(weekly.termEnd);
+  if (goal) {
+    termStart = yyyymmdd(goal.termStart);
+    termEnd = yyyymmdd(goal.termEnd);
   }
 
-  return res.render("thisWeek", {
-    weekly,
+  return res.render("currentGoal", {
+    goal,
     termStart,
     termEnd,
     pageTitle,
@@ -324,16 +324,16 @@ export const getPreviousWeekly = async (req, res) => {
   const pageTitle = "Previous Weekly";
   const today = getToday();
   if (req.originalUrl === "/weekly/previous/") {
-    const lastWeekly = await Weekly.findOne({
+    const lastGoal = await Weekly.findOne({
       termEnd: { $lt: new Date(today) },
     })
       .sort({ date: -1 })
       .populate("subs");
     let termStart = "";
     let termEnd = "";
-    if (lastWeekly) {
-      termStart = yyyymmdd(lastWeekly.termStart);
-      termEnd = yyyymmdd(lastWeekly.termEnd);
+    if (lastGoal) {
+      termStart = yyyymmdd(lastGoal.termStart);
+      termEnd = yyyymmdd(lastGoal.termEnd);
       termStart = termStart.split("-");
       termStart =
         termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
@@ -341,8 +341,8 @@ export const getPreviousWeekly = async (req, res) => {
       termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
     }
 
-    return res.render("previousWeekly", {
-      lastWeekly,
+    return res.render("previousGoal", {
+      lastGoal,
       termStart,
       termEnd,
       pageTitle,
@@ -350,26 +350,26 @@ export const getPreviousWeekly = async (req, res) => {
   }
   let date = req.params.date;
 
-  const thisWeek = await Weekly.findOne({
+  const currentGoal = await Weekly.findOne({
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
   });
   if (
-    new Date(date) >= thisWeek.termStart &&
-    new Date(date) <= thisWeek.termEnd
+    new Date(date) >= currentGoal.termStart &&
+    new Date(date) <= currentGoal.termEnd
   ) {
     return res.redirect("/weekly/");
   }
 
-  const weekly = await Weekly.findOne({
+  const goal = await Weekly.findOne({
     termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
     termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
   }).populate("subs");
 
-  const termStart = yyyymmdd(weekly.termStart);
-  const termEnd = yyyymmdd(weekly.termEnd);
-  return res.render("previousWeekly", {
-    weekly,
+  const termStart = yyyymmdd(goal.termStart);
+  const termEnd = yyyymmdd(goal.termEnd);
+  return res.render("previousGoal", {
+    goal,
     termStart,
     termEnd,
     pageTitle,

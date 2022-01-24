@@ -1,0 +1,12 @@
+extends base.pug
+include mixins/goal-container.pug
+
+block mainBlock
+    div
+        if date
+            +goalContainer(goal, pageTitle, date, null, null)
+        else
+            +goalContainer(goal, pageTitle, null, termStart, termEnd)
+
+block scriptBlock 
+    script(src="/assets/js/currentGoal.js") 

@@ -4,22 +4,13 @@
 
 //Components
 @import "./components/shared.scss";
-@import "./components/daily-table.scss";
-@import "./components/weekly-table.scss";
-@import "./components/monthly-table.scss";
-@import "./components/yearly-table.scss";
-@import "./components/daily-container.scss";
-@import "./components/weekly-container.scss";
-@import "./components/monthly-container.scss";
-@import "./components/yearly-container.scss";
+@import "./components/goal-table.scss";
+@import "./components/goal-container.scss";
 @import "./components/side-menu.scss";
 @import "./components/header-menu.scss";
 @import "./components/join-form.scss";
 //Screens
-@import "./screens/previousDaily.scss";
-@import "./screens/previousWeekly.scss";
-@import "./screens/previousMonthly.scss";
-@import "./screens/previousYearly.scss";
+@import "./screens/previousGoal.scss";
 @import "./screens/newGoal.scss";
 @import "./screens/editGoal.scss";
 //Defaults

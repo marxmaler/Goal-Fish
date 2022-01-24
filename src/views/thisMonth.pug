@@ -1,9 +1,0 @@
-extends base.pug
-include mixins/monthly-container.pug
-
-block mainBlock
-    div
-        +monthlyContainer(monthly, pageTitle)
-
-block scriptBlock 
-    script(src="/assets/js/thisMonth.js")

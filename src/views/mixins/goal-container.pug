@@ -1,0 +1,130 @@
+include goal-table.pug
+
+mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
+    if goal
+        div.goal-container
+            if pageTitle==="Daily" 
+                h2 오늘의 목표
+                span=`${date}`
+                p="남은 시간 "
+                    span.goal-container__ramaining-time
+            else if pageTitle==="Weekly"
+                h2 이번 주 목표
+                span#goal-term=`${termStart}~${termEnd}`
+                p="남은 시간 "
+                    span.goal-container__ramaining-time
+            else if pageTitle==="Monthly"
+                h2 이번 달 목표
+                span#goal-term=`${termStart}~${termEnd}`
+                p="남은 시간 "
+                    span.goal-container__ramaining-time
+            else if pageTitle==="Yearly"
+                h2 올해 목표
+                span#goal-term=`${termStart}~${termEnd}`
+                p="남은 시간 "
+                    span.goal-container__ramaining-time
+            else if pageTitle === "Previous Daily"
+                h2.goal-container__previousGoal-date=`일간 목표: ${date}`
+            else if pageTitle === "Previous Weekly"
+                h2.goal-container__previousGoal-date=`주간 목표: ${termStart}~${termEnd}`
+            else if pageTitle === "Previous Monthly"
+                h2.goal-container__previousGoal-date=`월간 목표: ${termStart}~${termEnd}`
+            else if pageTitle === "Previous Yearly"
+                h2.goal-container__previousGoal-date=`연간 목표: ${termStart}~${termEnd}`
+            +goalTable(goal)
+            div.goal-container__progress-bar-container
+                h4 진행 상황: 
+                    span#progress-point
+                progress(max="100")
+            if pageTitle==="Daily"
+                div.goal-container__edit-btn-container
+                    a(href="/daily/edit") 
+                        button 수정하기
+            else if pageTitle==="Weekly"
+                div.goal-container__edit-btn-container
+                    a(href="/weekly/edit") 
+                        button 수정하기
+            else if pageTitle==="Monthly"
+                div.goal-container__edit-btn-container
+                    a(href="/monthly/edit") 
+                        button 수정하기
+            else if pageTitle==="Yearly"
+                div.goal-container__edit-btn-container
+                    a(href="/yearly/edit") 
+                        button 수정하기
+            else if pageTitle==="Previous Daily"
+                div.goal-container__back-btn-container
+                    a(href="/")
+                        button 돌아가기
+            else if pageTitle==="Previous Weekly"
+                div.goal-container__back-btn-container
+                    a(href="/weekly/")
+                        button 돌아가기
+            else if pageTitle==="Previous Monthly"
+                div.goal-container__back-btn-container
+                    a(href="/monthly")
+                        button 돌아가기
+            else if pageTitle==="Previous Yearly"
+                div.goal-container__back-btn-container
+                    a(href="/weekly/")
+                        button 돌아가기
+
+    else
+        if pageTitle==="Daily"    
+            div.no-goal-messeage-box
+                p 아직 오늘의 목표를 설정하지 않으셨습니다.
+                p 지금 새로 만들어보세요! 
+                a(href="/daily/add")
+                    button 새 목표 작성
+        else if pageTitle==="Weekly"    
+            div.no-goal-messeage-box
+                p 아직 이번 주 목표를 설정하지 않으셨습니다.
+                p 지금 새로 만들어보세요! 
+                a(href="/weekly/add")
+                    button 새 목표 작성
+        else if pageTitle==="Monthly"    
+            div.no-goal-messeage-box
+                p 아직 이번 달 목표를 설정하지 않으셨습니다.
+                p 지금 새로 만들어보세요! 
+                a(href="/monthly/add")
+                    button 새 목표 작성
+        else if pageTitle==="Yearly"    
+            div.no-goal-messeage-box
+                p 아직 올해 목표를 설정하지 않으셨습니다.
+                p 지금 새로 만들어보세요! 
+                a(href="/yearly/add")
+                    button 새 목표 작성
+        else if pageTitle==="Previous Daily"
+            div.no-goal-messeage-box
+                p 해당 일자에는 일일 목표가 없습니다.
+            div.goal-container__back-btn-container
+                a(href="/")
+                    button 돌아가기
+        else if pageTitle==="Previous Weekly"
+            div.no-weekly-messeage-box
+                p 해당 일자에는 주간 목표가 없습니다.
+            div.weekly-container__back-btn-container
+                a(href="/weekly/")
+                    button 돌아가기
+        else if pageTitle==="Previous Monthly"
+            div.no-monthly-messeage-box
+                p 해당 일자에는 월간 목표가 없습니다.
+            div.monthly-container__back-btn-container
+                a(href="/monthly/")
+                    button 돌아가기
+        else if pageTitle==="Previous Yearly"
+            div.no-yearly-messeage-box
+                p 해당 일자에는 연간 목표가 없습니다.
+            div.yearly-container__back-btn-container
+                a(href="/yearly/")
+                    button 돌아가기
+    div.previous-goal-search
+        if pageTitle==="Daily" || !pageTitle.includes("Daily")           
+            p 이전 목표 조회
+        else if pageTitle==="Previous Daily"            
+            p 다른 날짜 조회
+        if pageTitle.includes("Daily")
+            input(type="date")#previous-goal-selector
+        else
+            div
+                button#previous-goal-btn 이전 목표 조회

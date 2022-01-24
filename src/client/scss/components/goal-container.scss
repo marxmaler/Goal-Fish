@@ -1,4 +1,4 @@
-.yearly-container {
+.goal-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,18 +11,18 @@
     font-weight: 900;
   }
 
-  .yearly-container__progress-bar-container {
+  .goal-container__progress-bar-container {
     margin: 20px;
     h4 {
       margin-bottom: 5px;
     }
   }
-  .yearly-container__edit-btn-container {
+  .goal-container__edit-btn-container {
     margin: 5px 0px 50px 0px;
   }
 }
 
-.no-yearly-messeage-box {
+.no-goal-messeage-box {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,9 +37,16 @@
     }
   }
 }
-.previous-yearly-search {
+.previous-goal-search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   p {
     text-align: center;
     margin-bottom: 10px;
+  }
+  div {
+    display: flex;
+    justify-content: center;
   }
 }

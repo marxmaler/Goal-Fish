@@ -5,7 +5,7 @@ import { getToday, getAYearFromToday, yyyymmdd } from "../functions/time";
 export const getYearlyHome = async (req, res) => {
   const pageTitle = "Yearly";
   const today = getToday();
-  const yearly = await Yearly.findOne({
+  const goal = await Yearly.findOne({
     $and: [
       //다음 두 조건을 동시에 만족하는 doc을 찾습니다.
       { termStart: { $lte: new Date(today) } }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
@@ -13,25 +13,25 @@ export const getYearlyHome = async (req, res) => {
     ],
   })?.populate("subs");
 
-  if (yearly && yearly.subs.length < 1) {
-    await YearlySub.deleteMany({
-      yearly: yearly._id,
+  if (goal && goal.subs.length < 1) {
+    await goalSub.deleteMany({
+      yearly: goal._id,
     });
     await Yearly.deleteOne({
-      _id: yearly._id,
+      _id: goal._id,
     });
     return res.redirect("/yearly/");
   }
 
   let termStart = "";
   let termEnd = "";
-  if (yearly) {
-    termStart = yyyymmdd(yearly.termStart);
-    termEnd = yyyymmdd(yearly.termEnd);
+  if (goal) {
+    termStart = yyyymmdd(goal.termStart);
+    termEnd = yyyymmdd(goal.termEnd);
   }
 
-  return res.render("thisYear", {
-    yearly,
+  return res.render("currentGoal", {
+    goal,
     termStart,
     termEnd,
     pageTitle,
@@ -324,16 +324,16 @@ export const getPreviousYearly = async (req, res) => {
   const pageTitle = "Previous Yearly";
   const today = getToday();
   if (req.originalUrl === "/yearly/previous/") {
-    const lastYearly = await Yearly.findOne({
+    const lastGoal = await Yearly.findOne({
       termEnd: { $lt: new Date(today) },
     })
       .sort({ date: -1 })
       .populate("subs");
     let termStart = "";
     let termEnd = "";
-    if (lastYearly) {
-      termStart = yyyymmdd(lastYearly.termStart);
-      termEnd = yyyymmdd(lastYearly.termEnd);
+    if (lastGoal) {
+      termStart = yyyymmdd(lastGoal.termStart);
+      termEnd = yyyymmdd(lastGoal.termEnd);
       termStart = termStart.split("-");
       termStart =
         termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
@@ -341,8 +341,8 @@ export const getPreviousYearly = async (req, res) => {
       termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
     }
 
-    return res.render("previousYearly", {
-      lastYearly,
+    return res.render("previousGoal", {
+      lastGoal,
       termStart,
       termEnd,
       pageTitle,
@@ -350,26 +350,26 @@ export const getPreviousYearly = async (req, res) => {
   }
   let date = req.params.date;
 
-  const thisYear = await Yearly.findOne({
+  const currentGoal = await Yearly.findOne({
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
   });
   if (
-    new Date(date) >= thisYear.termStart &&
-    new Date(date) <= thisYear.termEnd
+    new Date(date) >= currentGoal.termStart &&
+    new Date(date) <= currentGoal.termEnd
   ) {
     return res.redirect("/yearly/");
   }
 
-  const yearly = await Yearly.findOne({
+  const goal = await Yearly.findOne({
     termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
     termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
   }).populate("subs");
 
-  const termStart = yyyymmdd(yearly.termStart);
-  const termEnd = yyyymmdd(yearly.termEnd);
-  return res.render("previousYearly", {
-    yearly,
+  const termStart = yyyymmdd(goal.termStart);
+  const termEnd = yyyymmdd(goal.termEnd);
+  return res.render("previousGoal", {
+    goal,
     termStart,
     termEnd,
     pageTitle,

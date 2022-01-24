@@ -1,9 +1,0 @@
-extends base.pug
-include mixins/yearly-container.pug
-
-block mainBlock
-    div
-        +yearlyContainer(yearly, pageTitle)
-
-block scriptBlock 
-    script(src="/assets/js/thisYear.js")

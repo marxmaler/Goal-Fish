@@ -1,27 +1,27 @@
 import Daily from "../models/Daily";
 import DailySub from "../models/DailySub";
-import { getToday, getYesterday, yyyymmdd } from "../functions/time";
+import { getToday, yyyymmdd } from "../functions/time";
 
 export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
-  const today = getToday();
-  const daily = await Daily.findOne({
-    date: today,
+  const date = getToday();
+  const goal = await Daily.findOne({
+    date,
   }).populate("subs");
 
-  if (daily && daily.subs.length < 1) {
+  if (goal && goal.subs.length < 1) {
     await DailySub.deleteMany({
-      daily: daily._id,
+      daily: goal._id,
     });
     await Daily.deleteOne({
-      _id: daily._id,
+      _id: goal._id,
     });
     return res.redirect("/");
   }
 
-  return res.render("today", {
-    daily,
-    today,
+  return res.render("currentGoal", {
+    goal,
+    date,
     pageTitle,
   });
 };
@@ -36,7 +36,6 @@ export const postDailyCompleted = async (req, res) => {
     dailySub.completed = true;
     dailySub.save();
   }
-
   return res.sendStatus(200);
 };
 
@@ -311,24 +310,23 @@ export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
   const today = getToday();
   if (req.originalUrl === "/daily/previous/") {
-    const lastDaily = await Daily.findOne({ date: { $lt: new Date(today) } })
+    const lastGoal = await Daily.findOne({ date: { $lt: new Date(today) } })
       .sort({ date: -1 })
       .populate("subs");
-    console.log(lastDaily);
     let date = "";
-    if (lastDaily) {
-      date = yyyymmdd(lastDaily.date);
+    if (lastGoal) {
+      date = yyyymmdd(lastGoal.date);
       date = date.split("-");
       date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
     }
-    return res.render("previousDaily", { lastDaily, date, pageTitle });
+    return res.render("previousGoal", { lastGoal, date, pageTitle });
   }
   let date = req.params.date;
   if (date === today) {
     return res.redirect("/");
   }
-  const daily = await Daily.findOne({ date }).populate("subs");
+  const goal = await Daily.findOne({ date }).populate("subs");
   date = date.split("-");
   date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
-  return res.render("previousDaily", { daily, date, pageTitle });
+  return res.render("previousGoal", { goal, date, pageTitle });
 };
