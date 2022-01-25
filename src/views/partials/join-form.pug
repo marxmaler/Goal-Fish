@@ -6,12 +6,14 @@ div.form-wrapper
             label(for="username") *아이디: 
             input(type="text", name="username", required)#username
             input(value=false, name="usernameValidation").hidden#usernameValidation
-            button.validation-check-btn 중복 검사
+            button.validation-check-btn#username-val-btn 중복 검사
+        div.info-box
+            p#valResult
         div.input-box
             label(for="email") *이메일: 
             input(type="email", name="email", required)#email
             input(value=false, name="emailValidation").hidden#emailValidation
-            button.validation-check-btn 중복 검사
+            button.validation-check-btn#email-val-btn 중복 검사
         div.input-box
             label(for="password") *비밀번호: 
             input(type="password", name="password", required)#password

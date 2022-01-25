@@ -6,6 +6,7 @@ import weeklyRouter from "./routers/weeklyRouter";
 import monthlyRouter from "./routers/monthlyRouter";
 import yearlyRouter from "./routers/yearlyRouter";
 import apiRouter from "./routers/apiRouter";
+import userRouter from "./routers/userRouter";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/daily", dailyRouter);
 app.use("/weekly", weeklyRouter);
 app.use("/monthly", monthlyRouter);
 app.use("/yearly", yearlyRouter);
+app.use("/user", userRouter);
 app.use("/api", apiRouter);
 
 //static files serving

@@ -1,4 +1,9 @@
 extends base.pug
 
 block mainBlock 
+    if errorMessage
+        span.errorMessage
     include partials/join-form.pug
+
+block scriptBlock 
+    script(src="/assets/js/joinForm.js") 
