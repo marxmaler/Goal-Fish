@@ -1,0 +1,13 @@
+.oauth-box {
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  img {
+    height: 30px;
+    width: 30px;
+    margin: 5px;
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}

@@ -15,6 +15,7 @@ module.exports = {
     sharedYearly: "./src/client/js/sharedYearly.js",
     sharedAll: "./src/client/js/sharedAll.js",
     joinForm: "./src/client/js/joinForm.js",
+    loginForm: "./src/client/js/loginForm.js",
   },
   mode: "development",
   watch: true,

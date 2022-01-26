@@ -1,0 +1,24 @@
+div.form-wrapper
+    if errorMessage
+        div.errorMessage-box
+            span.errorMessage=errorMessage
+    h1 안녕하세요!
+    div.greeting-box
+        p 오늘도 <strong>Goal Manager</strong>와 함께 
+        p 목표지향적인 하루 되세요.
+    form(method="POST")
+        div.input-box 
+            label(for="email") *이메일: 
+            input(type="text", name="email", required)#email
+        div.input-box
+            label(for="password") *비밀번호: 
+            input(type="password", name="password", required)#password
+        div.btn-box 
+            button 로그인
+        br
+        div.no-id
+            span 아직 아이디가 없으세요?
+            a(href="/join").to-join &rarr;가입하기
+    hr
+    p.social 소셜 아이디로 로그인하기
+    include oauth-box.pug

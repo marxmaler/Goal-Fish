@@ -7,10 +7,11 @@ header {
     opacity: 0.1;
     color: transparent;
     border-radius: 10px;
-    width: 10%;
-    min-width: 150px;
+    width: fit-content;
+    padding: 20px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
     background-color: rgb(255, 255, 255);
     transition: all 0.2s ease-in;
     &:hover {
@@ -18,16 +19,22 @@ header {
       color: rgba(0, 0, 0);
       opacity: 1;
     }
+    p {
+      margin-right: 10px;
+      font-style: italic;
+    }
 
     a {
       text-align: center;
       font-weight: 700;
       width: fit-content;
-      margin-right: 20px;
       padding: 0px;
       display: block;
       padding: 20px 0px;
       cursor: pointer;
+      &.join-link {
+        margin-right: 20px;
+      }
       &:hover {
         opacity: 0.5;
       }

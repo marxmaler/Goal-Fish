@@ -15,9 +15,12 @@
     font-weight: 900;
     font-size: 30px;
   }
-  p {
-    text-align: center;
+  .greeting-box {
     margin-bottom: 20px;
+    p {
+      margin: 8px 0px;
+      text-align: center;
+    }
   }
   form {
     display: flex;
@@ -38,52 +41,24 @@
           border-radius: 10px;
         }
       }
-      .validation-check-btn {
-        margin-left: 5px;
-        padding: 0;
-        border-radius: 0;
-        border: none;
-        &:hover {
-          background-color: transparent;
-          color: rgba(0, 0, 0, 0.5);
-        }
-      }
-    }
 
-    .pw-confirm {
-      margin: 20px 0px;
+      .btn-box {
+        display: flex;
+        justify-content: center;
+      }
     }
-    .info-box {
-      p {
-        font-size: 12px;
-        &.valid {
-          color: rgb(58, 223, 113);
-        }
-        &.invalid {
-          color: red;
+    .no-id {
+      font-size: 12px;
+      .to-join {
+        margin-left: 5px;
+        &:hover {
+          opacity: 0.5;
         }
       }
     }
-    .btn-box {
-      display: flex;
-      justify-content: center;
-    }
-  }
-  .social {
-    margin-top: 10px;
-    font-weight: 900;
-  }
-  .image-box {
-    margin-top: 5px;
-    display: flex;
-    justify-content: center;
-    img {
-      height: 30px;
-      width: 30px;
-      margin: 5px;
-      &:hover {
-        opacity: 0.5;
-      }
+    .social {
+      margin-top: 10px;
+      font-weight: 900;
     }
   }
 }
