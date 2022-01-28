@@ -3,8 +3,6 @@ import morgan from "morgan";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import passport from "passport";
-import GoogleStrategy from "passport-google-oauth";
-import { googleAuth } from "./controllers/userController";
 import { localsMiddleware } from "../middlewares";
 import globalRouter from "./routers/globalRouter";
 import dailyRouter from "./routers/dailyRouter";
@@ -44,16 +42,6 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (user, done) {
   done(null, user);
 });
-passport.use(
-  new GoogleStrategy.OAuth2Strategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT,
-      clientSecret: process.env.GOOGLE_SECRET,
-      callbackURL: `http://localhost:${process.env.PORT}/user/auth/google/finish`,
-    },
-    googleAuth
-  )
-);
 
 app.use(localsMiddleware); //session middleware 다음에 나와야 localsMiddleware 내에서 session 객체 조작 가능.
 //router 선언부

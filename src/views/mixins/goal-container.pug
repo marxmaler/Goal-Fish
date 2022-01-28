@@ -68,7 +68,6 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
                 div.goal-container__back-btn-container
                     a(href="/weekly/")
                         button 돌아가기
-
     else
         if pageTitle==="Daily"    
             div.no-goal-messeage-box
@@ -101,21 +100,21 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
                 a(href="/")
                     button 돌아가기
         else if pageTitle==="Previous Weekly"
-            div.no-weekly-messeage-box
+            div.no-goal-messeage-box
                 p 해당 일자에는 주간 목표가 없습니다.
-            div.weekly-container__back-btn-container
+            div.goal-container__back-btn-container
                 a(href="/weekly/")
                     button 돌아가기
         else if pageTitle==="Previous Monthly"
-            div.no-monthly-messeage-box
+            div.no-goal-messeage-box
                 p 해당 일자에는 월간 목표가 없습니다.
-            div.monthly-container__back-btn-container
+            div.goal-container__back-btn-container
                 a(href="/monthly/")
                     button 돌아가기
         else if pageTitle==="Previous Yearly"
-            div.no-yearly-messeage-box
+            div.no-goal-messeage-box
                 p 해당 일자에는 연간 목표가 없습니다.
-            div.yearly-container__back-btn-container
+            div.goal-container__back-btn-container
                 a(href="/yearly/")
                     button 돌아가기
     div.previous-goal-search

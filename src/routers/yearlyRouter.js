@@ -1,4 +1,5 @@
 import express from "express";
+import { protectorMiddleware } from "../../middlewares";
 import {
   getYearlyHome,
   getEditYearly,
@@ -10,9 +11,17 @@ import {
 
 const yearlyRouter = express.Router();
 
-yearlyRouter.route("/").get(getYearlyHome);
-yearlyRouter.route("/add").get(getNewYearly).post(postNewYearly);
-yearlyRouter.route("/edit").get(getEditYearly).post(postEditYearly);
-yearlyRouter.route("/:id").get(getPreviousYearly);
-yearlyRouter.route("/previous").get(getPreviousYearly);
+yearlyRouter.route("/").all(protectorMiddleware).get(getYearlyHome);
+yearlyRouter
+  .route("/add")
+  .all(protectorMiddleware)
+  .get(getNewYearly)
+  .post(postNewYearly);
+yearlyRouter
+  .route("/edit")
+  .all(protectorMiddleware)
+  .get(getEditYearly)
+  .post(postEditYearly);
+yearlyRouter.route("/previous").all(protectorMiddleware).get(getPreviousYearly);
+yearlyRouter.route("/:id").all(protectorMiddleware).get(getPreviousYearly);
 export default yearlyRouter;

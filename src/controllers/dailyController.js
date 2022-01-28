@@ -5,7 +5,9 @@ import { getToday, yyyymmdd } from "../functions/time";
 export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
   const date = getToday();
+  const userId = req.session.user._id;
   const goal = await Daily.findOne({
+    owner: userId,
     date,
   }).populate("subs");
 
@@ -54,7 +56,10 @@ export const postDailyMeasure = async (req, res) => {
 
 export const getNewDaily = async (req, res) => {
   const pageTitle = "New Daily";
-  const lastDaily = await Daily.findOne().sort({ date: -1 }).populate("subs");
+  const userId = req.session.user._id;
+  const lastDaily = await Daily.findOne({ owner: userId })
+    .sort({ date: -1 })
+    .populate("subs");
   const unfinishedSubs = [];
   if (lastDaily) {
     for (let i = 0; i < lastDaily.subs.length; i++) {
@@ -72,8 +77,10 @@ export const getNewDaily = async (req, res) => {
 
 export const postNewDaily = async (req, res) => {
   const { date } = req.body;
+  const userId = req.session.user._id;
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const dateExists = await Daily.exists({
+    userId,
     date,
   });
   if (dateExists) {
@@ -93,6 +100,7 @@ export const postNewDaily = async (req, res) => {
     return res.redirect("/");
   }
   const newDaily = await Daily.create({
+    owner: userId,
     date,
   });
 
@@ -190,7 +198,9 @@ export const postNewDaily = async (req, res) => {
 
 export const getEditDaily = async (req, res) => {
   const pageTitle = "Edit Daily";
+  const userId = req.session.user._id;
   const goal = await Daily.findOne({
+    owner: userId,
     date: getToday(),
   }).populate("subs");
 
@@ -226,7 +236,9 @@ export const postEditDaily = async (req, res) => {
     rest.splice(rest.indexOf("targetValues"), 1);
   }
 
+  const userId = req.session.user._id;
   const daily = await Daily.findOne({
+    owner: userId,
     date: getToday(),
   });
   //sub 삭제
@@ -309,8 +321,12 @@ export const postEditDaily = async (req, res) => {
 export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
   const today = getToday();
+  const userId = req.session.user._id;
   if (req.originalUrl === "/daily/previous/") {
-    const lastGoal = await Daily.findOne({ date: { $lt: new Date(today) } })
+    const lastGoal = await Daily.findOne({
+      owner: userId,
+      date: { $lt: new Date(today) },
+    })
       .sort({ date: -1 })
       .populate("subs");
     let date = "";
@@ -325,7 +341,7 @@ export const getPreviousDaily = async (req, res) => {
   if (date === today) {
     return res.redirect("/");
   }
-  const goal = await Daily.findOne({ date }).populate("subs");
+  const goal = await Daily.findOne({ owner: userId, date }).populate("subs");
   date = date.split("-");
   date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
   return res.render("previousGoal", { goal, date, pageTitle });

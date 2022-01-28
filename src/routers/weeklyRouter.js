@@ -1,4 +1,5 @@
 import express from "express";
+import { protectorMiddleware } from "../../middlewares";
 import {
   getWeeklyHome,
   getEditWeekly,
@@ -10,9 +11,17 @@ import {
 
 const weeklyRouter = express.Router();
 
-weeklyRouter.route("/").get(getWeeklyHome);
-weeklyRouter.route("/add").get(getNewWeekly).post(postNewWeekly);
-weeklyRouter.route("/edit").get(getEditWeekly).post(postEditWeekly);
-weeklyRouter.route("/:id").get(getPreviousWeekly);
-weeklyRouter.route("/previous").get(getPreviousWeekly);
+weeklyRouter.route("/").all(protectorMiddleware).get(getWeeklyHome);
+weeklyRouter
+  .route("/add")
+  .all(protectorMiddleware)
+  .get(getNewWeekly)
+  .post(postNewWeekly);
+weeklyRouter
+  .route("/edit")
+  .all(protectorMiddleware)
+  .get(getEditWeekly)
+  .post(postEditWeekly);
+weeklyRouter.route("/previous").all(protectorMiddleware).get(getPreviousWeekly);
+weeklyRouter.route("/:id").all(protectorMiddleware).get(getPreviousWeekly);
 export default weeklyRouter;

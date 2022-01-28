@@ -5,12 +5,11 @@ import { getToday, getAYearFromToday, yyyymmdd } from "../functions/time";
 export const getYearlyHome = async (req, res) => {
   const pageTitle = "Yearly";
   const today = getToday();
+  const userId = req.session.user._id;
   const goal = await Yearly.findOne({
-    $and: [
-      //다음 두 조건을 동시에 만족하는 doc을 찾습니다.
-      { termStart: { $lte: new Date(today) } }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
-      { termEnd: { $gte: new Date(today) } }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
-    ],
+    owner: userId,
+    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
+    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
   })?.populate("subs");
 
   if (goal && goal.subs.length < 1) {
@@ -40,7 +39,10 @@ export const getYearlyHome = async (req, res) => {
 
 export const getNewYearly = async (req, res) => {
   const pageTitle = "New Yearly";
-  const lastYearly = await Yearly.findOne().sort({ date: -1 }).populate("subs");
+  const userId = req.session.user._id;
+  const lastYearly = await Yearly.findOne({ owner: userId })
+    .sort({ date: -1 })
+    .populate("subs");
   const unfinishedSubs = [];
   if (lastYearly) {
     for (let i = 0; i < lastYearly.subs.length; i++) {
@@ -59,6 +61,7 @@ export const getNewYearly = async (req, res) => {
 
 export const postNewYearly = async (req, res) => {
   const { date } = req.body;
+  const userId = req.session.user._id;
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const pageTitle = "New Yearly";
   const today = getToday();
@@ -89,6 +92,7 @@ export const postNewYearly = async (req, res) => {
   termEnd.setDate(termEnd.getDate() + 365);
 
   const newYearly = await Yearly.create({
+    owner: userId,
     termStart,
     termEnd,
   });
@@ -187,8 +191,10 @@ export const postNewYearly = async (req, res) => {
 
 export const getEditYearly = async (req, res) => {
   const pageTitle = "Edit Yearly";
+  const userId = req.session.user._id;
   const today = getToday();
   const goal = await Yearly.findOne({
+    owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
   }).populate("subs");
@@ -232,7 +238,9 @@ export const postEditYearly = async (req, res) => {
   }
 
   const today = getToday();
+  const userId = req.session.user._id;
   const yearly = await Yearly.findOne({
+    owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
   });
@@ -323,8 +331,10 @@ export const postEditYearly = async (req, res) => {
 export const getPreviousYearly = async (req, res) => {
   const pageTitle = "Previous Yearly";
   const today = getToday();
+  const userId = req.session.user._id;
   if (req.originalUrl === "/yearly/previous/") {
     const lastGoal = await Yearly.findOne({
+      owner: userId,
       termEnd: { $lt: new Date(today) },
     })
       .sort({ date: -1 })
@@ -351,6 +361,7 @@ export const getPreviousYearly = async (req, res) => {
   let date = req.params.date;
 
   const currentGoal = await Yearly.findOne({
+    owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
   });
@@ -362,6 +373,7 @@ export const getPreviousYearly = async (req, res) => {
   }
 
   const goal = await Yearly.findOne({
+    owner: userId,
     termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
     termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
   }).populate("subs");

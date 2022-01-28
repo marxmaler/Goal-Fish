@@ -5,12 +5,11 @@ import { getToday, getAMonthFromToday, yyyymmdd } from "../functions/time";
 export const getMonthlyHome = async (req, res) => {
   const pageTitle = "Monthly";
   const today = getToday();
+  const userId = req.session.user._id;
   const goal = await Monthly.findOne({
-    $and: [
-      //다음 두 조건을 동시에 만족하는 doc을 찾습니다.
-      { termStart: { $lte: new Date(today) } }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
-      { termEnd: { $gte: new Date(today) } }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
-    ],
+    owner: userId,
+    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
+    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   })?.populate("subs");
 
   if (goal && goal.subs.length < 1) {
@@ -40,7 +39,8 @@ export const getMonthlyHome = async (req, res) => {
 
 export const getNewMonthly = async (req, res) => {
   const pageTitle = "New Monthly";
-  const lastMonthly = await Monthly.findOne()
+  const userId = req.session.user._id;
+  const lastMonthly = await Monthly.findOne({ owner: userId })
     .sort({ date: -1 })
     .populate("subs");
   const unfinishedSubs = [];
@@ -61,6 +61,7 @@ export const getNewMonthly = async (req, res) => {
 
 export const postNewMonthly = async (req, res) => {
   const { date } = req.body;
+  const userId = req.session.user._id;
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const pageTitle = "New Monthly";
   const today = getToday();
@@ -91,6 +92,7 @@ export const postNewMonthly = async (req, res) => {
   termEnd.setDate(termEnd.getDate() + 30);
 
   const newMonthly = await Monthly.create({
+    owner: userId,
     termStart,
     termEnd,
   });
@@ -189,8 +191,10 @@ export const postNewMonthly = async (req, res) => {
 
 export const getEditMonthly = async (req, res) => {
   const pageTitle = "Edit Monthly";
+  const userId = req.session.user._id;
   const today = getToday();
   const goal = await Monthly.findOne({
+    owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   }).populate("subs");
@@ -234,7 +238,9 @@ export const postEditMonthly = async (req, res) => {
   }
 
   const today = getToday();
+  const userId = req.session.user._id;
   const monthly = await Monthly.findOne({
+    owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   });
@@ -325,8 +331,10 @@ export const postEditMonthly = async (req, res) => {
 export const getPreviousMonthly = async (req, res) => {
   const pageTitle = "Previous Monthly";
   const today = getToday();
+  const userId = req.session.user._id;
   if (req.originalUrl === "/monthly/previous/") {
     const lastGoal = await Monthly.findOne({
+      owner: userId,
       termEnd: { $lt: new Date(today) },
     })
       .sort({ date: -1 })
@@ -353,6 +361,7 @@ export const getPreviousMonthly = async (req, res) => {
   let date = req.params.date;
 
   const currentGoal = await Monthly.findOne({
+    owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   });
@@ -364,6 +373,7 @@ export const getPreviousMonthly = async (req, res) => {
   }
 
   const goal = await Monthly.findOne({
+    owner: userId,
     termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
     termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   }).populate("subs");

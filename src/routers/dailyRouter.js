@@ -1,4 +1,5 @@
 import express from "express";
+import { protectorMiddleware } from "../../middlewares";
 import {
   getEditDaily,
   getNewDaily,
@@ -9,9 +10,17 @@ import {
 
 const dailyRouter = express.Router();
 
-dailyRouter.route("/add").get(getNewDaily).post(postNewDaily);
-dailyRouter.route("/edit").get(getEditDaily).post(postEditDaily);
-dailyRouter.route("/:date").get(getPreviousDaily);
-dailyRouter.route("/previous").get(getPreviousDaily);
+dailyRouter
+  .route("/add")
+  .all(protectorMiddleware)
+  .get(getNewDaily)
+  .post(postNewDaily);
+dailyRouter
+  .route("/edit")
+  .all(protectorMiddleware)
+  .get(getEditDaily)
+  .post(postEditDaily);
+dailyRouter.route("/previous").all(protectorMiddleware).get(getPreviousDaily);
+dailyRouter.route("/:date").all(protectorMiddleware).get(getPreviousDaily);
 
 export default dailyRouter;

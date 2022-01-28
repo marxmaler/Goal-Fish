@@ -15,8 +15,32 @@ block mainBlock
         else if goal
             +goalContainer(goal, pageTitle, null, termStart, termEnd)
         else
-            +goalContainer(null, pageTitle, null, termStart, termEnd)        
-
+            +goalContainer(null, pageTitle, null, termStart, termEnd)
+    else
+        if pageTitle==="Previous Daily"
+            div.no-goal-messeage-box
+                p 이전 목표가 없습니다.
+            div.goal-container__back-btn-container
+                a(href="/")
+                    button 돌아가기
+        else if pageTitle==="Previous Weekly"
+            div.no-goal-messeage-box
+                p 이전 목표가 없습니다.
+            div.goal-container__back-btn-container
+                a(href="/weekly/")
+                    button 돌아가기
+        else if pageTitle==="Previous Monthly"
+            div.no-goal-messeage-box
+                p 이전 목표가 없습니다.
+            div.goal-container__back-btn-container
+                a(href="/monthly/")
+                    button 돌아가기
+        else if pageTitle==="Previous Yearly"
+            div.no-goal-messeage-box
+                p 이전 목표가 없습니다.
+            div.goal-container__back-btn-container
+                a(href="/yearly/")
+                    button 돌아가기
 
 block scriptBlock 
     script(src="/assets/js/previousGoal.js") 

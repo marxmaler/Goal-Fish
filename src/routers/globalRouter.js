@@ -1,4 +1,5 @@
 import express from "express";
+import { protectorMiddleware, publicOnlyMiddleware } from "../../middlewares";
 import { getDailyHome } from "../controllers/dailyController";
 import {
   getJoin,
@@ -8,8 +9,16 @@ import {
 } from "../controllers/userController";
 
 const globalRouter = express.Router();
-globalRouter.route("/").get(getDailyHome);
-globalRouter.route("/join").get(getJoin).post(postJoin);
-globalRouter.route("/login").get(getLogin).post(postLogin);
+globalRouter.route("/").all(protectorMiddleware).get(getDailyHome);
+globalRouter
+  .route("/join")
+  .all(publicOnlyMiddleware)
+  .get(getJoin)
+  .post(postJoin);
+globalRouter
+  .route("/login")
+  .all(publicOnlyMiddleware)
+  .get(getLogin)
+  .post(postLogin);
 
 export default globalRouter;
