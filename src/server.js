@@ -3,7 +3,7 @@ import morgan from "morgan";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import passport from "passport";
-import { localsMiddleware } from "../middlewares";
+import { localsMiddleware } from "./middlewares";
 import globalRouter from "./routers/globalRouter";
 import dailyRouter from "./routers/dailyRouter";
 import weeklyRouter from "./routers/weeklyRouter";

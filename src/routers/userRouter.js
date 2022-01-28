@@ -1,7 +1,6 @@
 import express from "express";
-import { route } from "express/lib/application";
 import passport from "passport";
-import { protectorMiddleware, publicOnlyMiddleware } from "../../middlewares";
+import { protectorMiddleware, publicOnlyMiddleware } from "../middlewares";
 import {
   checkEmail,
   logout,

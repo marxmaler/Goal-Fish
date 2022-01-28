@@ -17,8 +17,6 @@ module.exports = {
     joinForm: "./src/client/js/joinForm.js",
     loginForm: "./src/client/js/loginForm.js",
   },
-  mode: "development",
-  watch: true,
   plugins: [
     new MiniCssExtractPlugin({
       filename: "css/styles.css",

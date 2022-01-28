@@ -1,5 +1,5 @@
 import express from "express";
-import { protectorMiddleware } from "../../middlewares";
+import { protectorMiddleware } from "../middlewares";
 import {
   getYearlyHome,
   getEditYearly,

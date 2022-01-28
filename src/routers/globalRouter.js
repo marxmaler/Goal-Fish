@@ -1,5 +1,5 @@
 import express from "express";
-import { protectorMiddleware, publicOnlyMiddleware } from "../../middlewares";
+import { protectorMiddleware, publicOnlyMiddleware } from "../middlewares";
 import { getDailyHome } from "../controllers/dailyController";
 import {
   getJoin,
