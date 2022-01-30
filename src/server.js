@@ -11,6 +11,7 @@ import monthlyRouter from "./routers/monthlyRouter";
 import yearlyRouter from "./routers/yearlyRouter";
 import apiRouter from "./routers/apiRouter";
 import userRouter from "./routers/userRouter";
+import { config } from "./init";
 
 const app = express();
 
@@ -25,11 +26,11 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: process.env.COOKIE_SECRET,
+    secret: config?.COOKIE_SECRET ?? process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.DB_URL,
+      mongoUrl: config?.DB_URL ?? process.env.DB_URL,
     }),
   })
 );

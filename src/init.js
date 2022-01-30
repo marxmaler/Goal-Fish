@@ -12,9 +12,27 @@ import "./models/YearlySub";
 import "./models/User";
 import app from "./server";
 
+const AWS = require("aws-sdk");
+
+const ssm = new AWS.SSM();
+const params = {
+  Name: "goalManagerConfig",
+  WithDecryption: false,
+};
+export let config = null;
+ssm.getParameter(params, (err, data) => {
+  if (err) {
+    console.log(err, err.stack);
+  } else {
+    config = JSON.parse(data.Parameter.Value);
+  }
+});
+
 //server에게 특정 포트로 들어오는 request를 listen하라고 명령하는 부분(마지막에 와야 함)
 const handleListening = () =>
   console.log(
-    `Your server is listening to requests on http://localhost:${process.env.PORT}`
+    `Your server is listening to requests on http://localhost:${
+      config?.PORT ?? process.env.PORT
+    }`
   );
-app.listen(process.env.PORT, handleListening);
+app.listen(config?.PORT ?? process.env.PORT, handleListening);
