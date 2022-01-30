@@ -215,7 +215,6 @@ passport.use(
 
 // 네이버로 가입/로그인
 export const naverAuth = async (accessToken, refreshToken, profile, done) => {
-  console.log(profile);
   const email = profile.emails[0].value;
   const name = profile.displayName;
   let user = await User.findOne({ email });
