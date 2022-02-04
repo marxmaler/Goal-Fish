@@ -2,6 +2,13 @@ extends base.pug
 include mixins/goal-container.pug
 
 block mainBlock
+    if loggedIn
+        div.quote-box
+            if loggedInUser.quote
+                span=loggedInUser.quote
+            else
+                span="Whoever fights monsters should see to it that in the process he does not become a monster. And if you gaze long enough into an abyss, the abyss will gaze back into you."
+                
     div
         if date
             +goalContainer(goal, pageTitle, date, null, null)

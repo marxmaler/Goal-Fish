@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema({
       ref: "Yearly",
     },
   ],
+  quote: { type: String },
 });
 
 userSchema.pre("save", async function () {

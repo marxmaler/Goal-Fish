@@ -3,7 +3,6 @@ import User from "../models/User";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 import passport from "passport";
-import { config } from "../init";
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const KakaoStrategy = require("passport-kakao").Strategy;
 const NaverStrategy = require("passport-naver").Strategy;
@@ -76,11 +75,25 @@ export const logout = (req, res) => {
   return res.redirect("/");
 };
 
+export const getQuote = (req, res) => {
+  const pageTitle = "Quote";
+  return res.render("quote", { pageTitle });
+};
+
+export const postQuote = async (req, res) => {
+  const userId = req.session.user._id;
+  const user = await User.findById(userId);
+  user.quote = req.body.quote;
+  req.session.user = user;
+  user.save();
+  return res.redirect("/");
+};
+
 //깃허브로 가입/로그인
 export const startGithubAuth = (req, res) => {
   const baseUrl = "https://github.com/login/oauth/authorize";
   const config = {
-    client_id: config?.GH_CLIENT ?? process.env.GH_CLIENT,
+    client_id: process.env.GH_CLIENT,
     scope: "read:user user:email",
     allow_signup: false,
   };
@@ -91,8 +104,8 @@ export const startGithubAuth = (req, res) => {
 export const finishGithubAuth = async (req, res) => {
   const baseUrl = "https://github.com/login/oauth/access_token";
   const config = {
-    client_id: config?.GH_CLIENT ?? process.env.GH_CLIENT,
-    client_secret: config?.GH_SECRET ?? process.env.GH_SECRET,
+    client_id: process.env.GH_CLIENT,
+    client_secret: process.env.GH_SECRET,
     code: req.query.code,
   };
   const params = new URLSearchParams(config).toString();
@@ -166,11 +179,9 @@ export const googleAuth = async (accessToken, refreshToken, profile, done) => {
 passport.use(
   new GoogleStrategy(
     {
-      clientID: config?.GOOGLE_CLIENT ?? process.env.GOOGLE_CLIENT,
-      clientSecret: config?.GOOGLE_SECRET ?? process.env.GOOGLE_SECRET,
-      callbackURL: `http://localhost:${
-        config?.PORT ?? process.env.PORT
-      }/user/auth/google/finish`,
+      clientID: process.env.GOOGLE_CLIENT,
+      clientSecret: process.env.GOOGLE_SECRET,
+      callbackURL: `http://localhost:${process.env.PORT}/user/auth/google/finish`,
     },
     googleAuth
   )
@@ -203,11 +214,9 @@ passport.use(
   "kakao-login",
   new KakaoStrategy(
     {
-      clientID: config?.KAKAO_CLIENT ?? process.env.KAKAO_CLIENT,
-      clientSecret: config?.KAKAO_SECRET ?? process.env.KAKAO_SECRET,
-      callbackURL: `http://localhost:${
-        config?.PORT ?? process.env.PORT
-      }/user/auth/kakao/finish`,
+      clientID: process.env.KAKAO_CLIENT,
+      clientSecret: process.env.KAKAO_SECRET,
+      callbackURL: `http://localhost:${process.env.PORT}/user/auth/kakao/finish`,
     },
     kakaoAuth
   )
@@ -235,11 +244,9 @@ passport.use(
   "naver",
   new NaverStrategy(
     {
-      clientID: config?.NAVER_CLIENT ?? process.env.NAVER_CLIENT,
-      clientSecret: config?.NAVER_SECRET ?? process.env.NAVER_SECRET,
-      callbackURL: `http://localhost:${
-        config?.PORT ?? process.env.PORT
-      }/user/auth/naver/finish`,
+      clientID: process.env.NAVER_CLIENT,
+      clientSecret: process.env.NAVER_SECRET,
+      callbackURL: `http://localhost:${process.env.PORT}/user/auth/naver/finish`,
     },
     naverAuth
   )

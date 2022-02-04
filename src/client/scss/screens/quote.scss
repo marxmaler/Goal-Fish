@@ -1,0 +1,25 @@
+.suggestion-box {
+  p {
+    margin-bottom: 0px;
+    &.ex {
+      margin: 10px 0px 20px 0px;
+      font-size: 12px;
+    }
+  }
+}
+
+.textarea-box {
+  display: flex;
+  justify-content: center;
+  textarea {
+    border-radius: 10px;
+    width: 100%;
+    resize: none;
+    padding: 10px;
+    transition: all 0.3s ease-in-out;
+    &:focus {
+      background-color: black;
+      color: white;
+    }
+  }
+}

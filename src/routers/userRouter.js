@@ -6,10 +6,17 @@ import {
   logout,
   startGithubAuth,
   finishGithubAuth,
+  getQuote,
+  postQuote,
 } from "../controllers/userController";
 
 const userRouter = express.Router();
 
+userRouter
+  .route("/quote")
+  .all(protectorMiddleware)
+  .get(getQuote)
+  .post(postQuote);
 userRouter
   .route("/join/check/email")
   .all(publicOnlyMiddleware)

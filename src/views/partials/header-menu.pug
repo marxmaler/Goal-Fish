@@ -2,6 +2,7 @@ header
     div
         if loggedIn
             p#cheer=`힘내요, ${loggedInUser.name}님. 할 수 있어요!`
+            a(href="/user/quote").quote-link 오늘의 한마디
             a(href="/user/logout") 로그아웃
         else
             a(href="/join").join-link 가입

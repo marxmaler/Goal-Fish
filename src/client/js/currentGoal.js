@@ -86,10 +86,10 @@ if (progress) {
     });
   }
 
+  // 남은 시간
   let goalTerm = "";
   let termEnd = "";
   let termEndDate = "";
-  // 남은 시간
   if (goalType !== "daily") {
     goalTerm = document.getElementById("goal-term").innerText;
     termEnd = goalTerm.split("~")[1];
