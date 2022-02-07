@@ -1,6 +1,7 @@
 import Weekly from "../models/Weekly";
 import WeeklySub from "../models/WeeklySub";
 import { getToday, getAWeekFromToday, yyyymmdd } from "../functions/time";
+import User from "../models/User";
 
 export const getWeeklyHome = async (req, res) => {
   const pageTitle = "Weekly";
@@ -16,6 +17,12 @@ export const getWeeklyHome = async (req, res) => {
     await WeeklySub.deleteMany({
       weekly: goal._id,
     });
+
+    const user = await User.findById(userId);
+    user.weeklies.splice(user.weeklies.indexOf(goal._id), 1);
+    user.save();
+    req.session.user = user;
+
     await Weekly.deleteOne({
       _id: goal._id,
     });
@@ -77,8 +84,14 @@ export const postNewWeekly = async (req, res) => {
     });
   }
 
-  const { subs, importances, useMeasures, measureNames, targetValues } =
-    req.body;
+  const {
+    subs,
+    importances,
+    useMeasures,
+    measureNames,
+    targetValues,
+    eachAsIndepend,
+  } = req.body;
   const subIds = [];
 
   if (subs === undefined) {
@@ -96,6 +109,11 @@ export const postNewWeekly = async (req, res) => {
     termStart,
     termEnd,
   });
+
+  const user = await User.findById(req.session.user._id);
+  user.weeklies.push(newWeekly._id);
+  user.save();
+  req.session.user = user;
 
   if (typeof subs === "object") {
     //sub가 둘 이상
@@ -115,6 +133,14 @@ export const postNewWeekly = async (req, res) => {
             useMeasure: true,
             measureName: String(measureNames.splice(0, 1)),
             targetValue: parseInt(targetValues.splice(0, 1), 10),
+            eachAsIndepend:
+              typeof eachAsIndepend === "string"
+                ? parseInt(eachAsIndepend, 10) === i
+                  ? true
+                  : false
+                : eachAsIndepend.includes(String(i))
+                ? true
+                : false,
           });
           subIds.push(sub._id);
         } else {
@@ -137,6 +163,7 @@ export const postNewWeekly = async (req, res) => {
             useMeasure: true,
             measureName: measureNames,
             targetValue: targetValues,
+            eachAsIndepend: eachAsIndepend ? true : false,
           });
           subIds.push(sub._id);
         } else {
@@ -172,6 +199,7 @@ export const postNewWeekly = async (req, res) => {
         useMeasure: true,
         measureName: measureNames,
         targetValue: targetValues,
+        eachAsIndepend: eachAsIndepend ? true : false,
       });
       subIds.push(sub._id);
     } else {
@@ -223,6 +251,7 @@ export const postEditWeekly = async (req, res) => {
     useMeasures,
     measureNames,
     targetValues,
+    eachAsIndepend,
   } = req.body;
   const rest = Object.keys(req.body); //기존 sub 정보
   rest.splice(rest.indexOf("termStart"), 1);
@@ -235,6 +264,7 @@ export const postEditWeekly = async (req, res) => {
     rest.splice(rest.indexOf("useMeasures"), 1);
     rest.splice(rest.indexOf("measureNames"), 1);
     rest.splice(rest.indexOf("targetValues"), 1);
+    rest.splice(rest.indexOf("eachAsIndepend"), 1);
   }
 
   const today = getToday();
@@ -258,20 +288,24 @@ export const postEditWeekly = async (req, res) => {
   //기존 sub 내용 변경
   for (let i = 0; i < rest.length; i++) {
     const id = rest[i];
-    req.body[id].length === 5
+    const body = req.body[id];
+    body[2] === "on" && !isNaN(parseInt(body[4]))
       ? await WeeklySub.findByIdAndUpdate(id, {
-          importance: req.body[id][0],
-          content: req.body[id][1],
+          importance: body[0],
+          content: body[1],
           useMeasure: true,
-          measureName: req.body[id][3],
-          targetValue: req.body[id][4],
+          measureName: body[3],
+          targetValue: parseInt(body[4], 10),
+          eachAsIndepend: body[5] ? true : false,
         })
       : await WeeklySub.findByIdAndUpdate(id, {
-          importance: req.body[id][0],
-          content: req.body[id][1],
+          importance: body[0],
+          content: body[1],
           useMeasure: false,
-          measureName: req.body[id][2],
-          targetValue: req.body[id][3],
+          measureName: "",
+          currentValue: 0,
+          targetValue: 1,
+          eachAsIndepend: false,
         });
   }
 
@@ -284,7 +318,8 @@ export const postEditWeekly = async (req, res) => {
         importance: importances,
         measureName: measureNames ? measureNames : "",
         useMeasure: useMeasures ? true : false,
-        targetValue: targetValues ? targetValues : 9999,
+        targetValue: targetValues ? targetValues : 1,
+        eachAsIndepend: eachAsIndepend ? true : false,
       });
       weekly.subs.push(newSub._id);
     } else {
@@ -300,7 +335,10 @@ export const postEditWeekly = async (req, res) => {
               : "",
             targetValue: useMeasures?.includes(String(i))
               ? targetValues.splice(0, 1)[0]
-              : 9999,
+              : 1,
+            eachAsIndepend: useMeasures?.includes(String(i))
+              ? eachAsIndepend.splice(0, 1)[0]
+              : false,
           });
           weekly.subs.push(newSub._id);
         } else {
@@ -310,7 +348,8 @@ export const postEditWeekly = async (req, res) => {
             importance: importances[i],
             useMeasure: useMeasures === String(i) ? true : false,
             measureName: useMeasures === String(i) ? measureNames : "",
-            targetValue: useMeasures === String(i) ? targetValues : 9999,
+            targetValue: useMeasures === String(i) ? targetValues : 1,
+            eachAsIndepend: useMeasures === String(i) ? eachAsIndepend : false,
           });
           weekly.subs.push(newSub._id);
         }
@@ -394,9 +433,27 @@ export const postWeeklyCompleted = async (req, res) => {
   if (weeklySub.completed) {
     weeklySub.completed = false;
     weeklySub.save();
+    if (!weeklySub.eachAsIndepend) {
+      const impPoint =
+        weeklySub.importance === "A" ? 5 : weeklySub.importance === "B" ? 3 : 1;
+      const userId = req.session.user._id;
+      const user = await User.findById(userId);
+      user.totals.weekly -= impPoint;
+      user.save();
+      req.session.user = user;
+    }
   } else {
     weeklySub.completed = true;
     weeklySub.save();
+    if (!weeklySub.eachAsIndepend) {
+      const impPoint =
+        weeklySub.importance === "A" ? 5 : weeklySub.importance === "B" ? 3 : 1;
+      const userId = req.session.user._id;
+      const user = await User.findById(userId);
+      user.totals.weekly += impPoint;
+      user.save();
+      req.session.user = user;
+    }
   }
 
   return res.sendStatus(200);
@@ -407,8 +464,22 @@ export const postWeeklyMeasure = async (req, res) => {
   const { value } = req.body;
   const weeklySub = await WeeklySub.findById(id);
   if (value > weeklySub.targetValue) {
-    return res.sendStatus(200);
+    return res.sendStatus(400);
   } else {
+    if (
+      weeklySub.eachAsIndepend &&
+      parseInt(weeklySub.currentValue, 10) !== parseInt(value, 10)
+    ) {
+      const impPoint =
+        weeklySub.importance === "A" ? 5 : weeklySub.importance === "B" ? 3 : 1;
+      const userId = req.session.user._id;
+      const user = await User.findById(userId);
+      parseInt(weeklySub.currentValue, 10) < parseInt(value, 10)
+        ? (user.totals.weekly += impPoint)
+        : (user.totals.weekly -= impPoint);
+      user.save();
+      req.session.user = user;
+    }
     weeklySub.currentValue = value;
     weeklySub.save();
     return res.sendStatus(200);

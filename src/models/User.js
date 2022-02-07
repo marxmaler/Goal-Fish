@@ -31,6 +31,12 @@ const userSchema = new mongoose.Schema({
     },
   ],
   quote: { type: String },
+  totals: {
+    daily: { type: Number, default: 0 },
+    weekly: { type: Number, default: 0 },
+    monthly: { type: Number, default: 0 },
+    yearly: { type: Number, default: 0 },
+  },
 });
 
 userSchema.pre("save", async function () {

@@ -52,6 +52,10 @@ block mainBlock
                                     div
                                         span 목표 달성 요구치:  
                                         input(type="number", name="targetValues", min="0", max="9999", value=sub.targetValue).measurement-setting-box__targetValue
+                                    div
+                                        span 각 단위를 단일 목표로 간주:
+                                        input(type="checkbox", name="eachAsIndepend")
+
                                 else
                                     div
                                         span 단위 사용:
@@ -64,6 +68,9 @@ block mainBlock
                                     div.hidden
                                         span 목표 달성 요구치:  
                                         input(type="number", name="targetValues", min="0", max="9999").measurement-setting-box__targetValue
+                                    div.hidden
+                                        span 각 단위를 단일 목표로 간주:
+                                        input(type="checkbox", name="eachAsIndepend")
                 li
                     div.li__container.importance-and-content-setting-box
                         select(name="importances")
@@ -86,7 +93,9 @@ block mainBlock
                         div.hidden
                             span 목표 달성 요구치:  
                             input(type="number", name="targetValues", min="0", max="9999").measurement-setting-box__targetValue
-
+                        div.hidden
+                            span 각 단위를 단일 목표로 간주:
+                            input(type="checkbox", name="eachAsIndepend")
             div.newGoal__form__form-container__btn-container
                 button(class="addSub-btn") 새 목표 추가
                 input(class="submit-btn", type="submit", value="작성 완료")

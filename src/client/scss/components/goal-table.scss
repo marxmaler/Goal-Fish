@@ -9,6 +9,7 @@
     border: none;
     color: black;
     thead {
+      width: fit-content;
       color: black;
       font-weight: 900;
       font-size: 20px;
@@ -36,6 +37,9 @@
             .fa-plus-circle {
               margin-left: 10px;
             }
+          }
+          &.content-td {
+            max-width: 400px;
           }
         }
         &:last-child {

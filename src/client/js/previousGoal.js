@@ -15,11 +15,14 @@ const progress = document.querySelector("progress");
 if (progress) {
   const progressPoint = document.getElementById("progress-point");
   const checkboxes = document.querySelectorAll("input[type=checkbox]");
-  const checkboxCnt = checkboxes.length;
+  let checkboxCnt = checkboxes.length;
+  const indCheckboxes = document.querySelectorAll(".ind-check");
+  checkboxCnt -= indCheckboxes.length;
   const progressControlObj = {
     progress,
     progressPoint,
     checkboxCnt,
+    indCheckboxes,
   };
   const goalType = document
     .querySelector("title")
@@ -41,7 +44,7 @@ if (progress) {
     checkUnreflected(measureBoxes);
     measureBoxes.forEach((box) =>
       box.addEventListener("change", (event) =>
-        changeOnMeasure(event, goalType)
+        changeOnMeasure(event, goalType, progressControlObj)
       )
     );
   }
@@ -50,10 +53,14 @@ if (progress) {
   const plusBtns = document.querySelectorAll(".fa-plus-circle");
   const minusBtns = document.querySelectorAll(".fa-minus-circle");
   plusBtns.forEach((btn) =>
-    btn.addEventListener("click", (event) => handlePlus(event, goalType))
+    btn.addEventListener("click", (event) =>
+      handlePlus(event, goalType, progressControlObj)
+    )
   );
   minusBtns.forEach((btn) =>
-    btn.addEventListener("click", (event) => handleMinus(event, goalType))
+    btn.addEventListener("click", (event) =>
+      handleMinus(event, goalType, progressControlObj)
+    )
   );
 
   //이전 일일 목표로 이동

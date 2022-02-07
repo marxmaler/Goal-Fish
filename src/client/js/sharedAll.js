@@ -83,7 +83,6 @@ export function addSub(ul) {
   }
   measureNameBox.appendChild(measureNameSpan);
   measureNameBox.appendChild(measureNameSelect);
-  measureBox.appendChild(measureNameBox);
 
   const targetValueBox = document.createElement("div");
   targetValueBox.className = "hidden";
@@ -98,12 +97,24 @@ export function addSub(ul) {
   targetValueBox.appendChild(targetValueSpan);
   targetValueBox.appendChild(targetValueInput);
 
+  const eachAsIndependBox = document.createElement("div");
+  eachAsIndependBox.className = "hidden";
+  const eachAsIndependSpan = document.createElement("span");
+  eachAsIndependSpan.innerText = "각 단위를 단일 목표로 간주:";
+  const eachAsIndependInput = document.createElement("input");
+  eachAsIndependInput.setAttribute("type", "checkbox");
+  eachAsIndependInput.setAttribute("name", "eachAsIndepend");
+  eachAsIndependBox.appendChild(eachAsIndependSpan);
+  eachAsIndependBox.appendChild(eachAsIndependInput);
+
+  measureBox.appendChild(measureNameBox);
   measureBox.appendChild(targetValueBox);
+  measureBox.appendChild(eachAsIndependBox);
   li.appendChild(measureBox);
   ul.appendChild(li);
 }
 
-export const handlePlus = (event, goalType) => {
+export const handlePlus = (event, goalType, progressControlObj) => {
   const measureInput =
     event.target.parentElement.querySelector("input[type=number]");
   if (parseInt(measureInput.value, 10) === parseInt(measureInput.max, 10)) {
@@ -114,10 +125,10 @@ export const handlePlus = (event, goalType) => {
     return;
   }
   measureInput.value = parseInt(measureInput.value, 10) + 1;
-  changeOnMeasureNoEvent(measureInput, goalType);
+  changeOnMeasureNoEvent(measureInput, goalType, progressControlObj);
 };
 
-export const handleMinus = (event, goalType) => {
+export const handleMinus = (event, goalType, progressControlObj) => {
   const measureInput =
     event.target.parentElement.querySelector("input[type=number]");
   if (parseInt(measureInput.value, 10) === 0) {
@@ -129,7 +140,7 @@ export const handleMinus = (event, goalType) => {
   }
 
   measureInput.value = parseInt(measureInput.value, 10) - 1;
-  changeOnMeasureNoEvent(measureInput, goalType);
+  changeOnMeasureNoEvent(measureInput, goalType, progressControlObj);
 };
 
 export function checkUnreflected(measureBoxes) {
@@ -164,7 +175,7 @@ export const showOrHideMeasureSettings = (event) => {
     }
   } else {
     const divs = measurementSettingBox.querySelectorAll("div");
-    for (let i = 1; i < 3; i++) {
+    for (let i = 1; i < divs.length; i++) {
       divs[i].classList.add("hidden");
     }
   }
@@ -178,6 +189,12 @@ export const formatMeasureSettingDatas = () => {
     useMeasureCheckboxes[i].setAttribute("value", `${i}`);
     const measurementSettingBox =
       useMeasureCheckboxes[i].parentElement.parentElement;
+    const eachAsIndependCheckBox = measurementSettingBox.querySelector(
+      "input[name=eachAsIndepend]"
+    );
+    if (eachAsIndependCheckBox.checked === true) {
+      eachAsIndependCheckBox.value = i;
+    }
     const targetValue = measurementSettingBox.querySelector(
       ".measurement-setting-box__targetValue"
     ).value;
@@ -190,7 +207,7 @@ export const formatMeasureSettingDatas = () => {
   }
 };
 
-export function changeOnMeasure(event, goalType) {
+export function changeOnMeasure(event, goalType, progressControlObj) {
   const { id } = event.target.dataset;
   const { value, max } = event.target;
   fetch(`/api/${goalType}/measure/${id}`, {
@@ -202,16 +219,24 @@ export function changeOnMeasure(event, goalType) {
     event.target.parentElement.parentElement.parentElement.querySelector(
       "input[type=checkbox]"
     );
+
+  checkbox.classList.contains("ind-check")
+    ? calculateProgress(progressControlObj)
+    : null;
   if (
-    (value === max && !checkbox.checked) ||
-    (value < max && checkbox.checked)
+    (parseInt(value, 10) === parseInt(max, 10) && !checkbox.checked) ||
+    (parseInt(value, 10) < parseInt(max, 10) && checkbox.checked)
   ) {
     checkbox.click();
   }
 }
 
 //같은 함수 event handler가 아닌 버젼
-export function changeOnMeasureNoEvent(measureInput, goalType) {
+export function changeOnMeasureNoEvent(
+  measureInput,
+  goalType,
+  progressControlObj
+) {
   const { id } = measureInput.dataset;
   const { value, max } = measureInput;
   fetch(`/api/${goalType}/measure/${id}`, {
@@ -223,18 +248,42 @@ export function changeOnMeasureNoEvent(measureInput, goalType) {
     measureInput.parentElement.parentElement.parentElement.querySelector(
       "input[type=checkbox]"
     );
+
+  checkbox.classList.contains("ind-check")
+    ? calculateProgress(progressControlObj)
+    : null;
+
   if (
-    (value === max && !checkbox.checked) ||
-    (value < max && checkbox.checked)
+    (parseInt(value, 10) === parseInt(max, 10) && !checkbox.checked) ||
+    (parseInt(value, 10) < parseInt(max, 10) && checkbox.checked)
   ) {
     checkbox.click();
   }
 }
 
-export const calculateProgress = ({ progress, progressPoint, checkboxCnt }) => {
-  const checkedCnt = document.querySelectorAll("input[checked]").length;
-  progress.value = (checkedCnt / checkboxCnt) * 100;
-  progressPoint.innerText = `${Math.round((checkedCnt / checkboxCnt) * 100)}%`;
+export const calculateProgress = ({
+  progress,
+  progressPoint,
+  checkboxCnt,
+  indCheckboxes,
+}) => {
+  let checkedCnt = document.querySelectorAll("input[checked]").length;
+  let indCheckedCnt = 0;
+  let targetTotal = 0;
+  let currentTotal = 0;
+  for (let i = 0; i < indCheckboxes.length; i++) {
+    indCheckboxes[i].checked ? indCheckedCnt++ : null;
+    const tr = indCheckboxes[i].parentElement.parentElement;
+    const measureValInput = tr.querySelector("input[type=number]");
+    targetTotal += parseInt(measureValInput.max, 10);
+    currentTotal += parseInt(measureValInput.value, 10);
+  }
+
+  checkedCnt -= indCheckedCnt;
+  const progVal =
+    ((checkedCnt + currentTotal) / (checkboxCnt + targetTotal)) * 100;
+  progress.value = progVal;
+  progressPoint.innerText = `${Math.round(progVal)}%`;
 };
 
 export function changeOnCheckbox(event, progressControlObj, goalType) {

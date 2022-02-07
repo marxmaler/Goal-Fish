@@ -25,13 +25,18 @@ const yearlySubSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  eachAsIndepend: {
+    // 단위 하나를 하나의 목표로 간주할 것인가
+    type: Boolean,
+    default: false,
+  },
   currentValue: {
     type: Number,
     default: 0,
   },
   targetValue: {
     type: Number,
-    default: 9999,
+    default: 1,
   },
   completed: {
     type: Boolean,
