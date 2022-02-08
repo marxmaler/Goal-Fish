@@ -2,6 +2,7 @@ import Daily from "../models/Daily";
 import DailySub from "../models/DailySub";
 import { getToday, yyyymmdd } from "../functions/time";
 import User from "../models/User";
+import { convertImp } from "../functions/convertImp";
 
 export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
@@ -12,12 +13,13 @@ export const getDailyHome = async (req, res) => {
     date,
   }).populate("subs");
 
+  const user = await User.findById(userId);
+
   if (goal && goal.subs.length < 1) {
     await DailySub.deleteMany({
       daily: goal._id,
     });
 
-    const user = await User.findById(userId);
     user.dailies.splice(user.dailies.indexOf(goal._id), 1);
     user.save();
     req.session.user = user;
@@ -28,10 +30,26 @@ export const getDailyHome = async (req, res) => {
     return res.redirect("/");
   }
 
+  //오늘의 성취도 계산
+  const subs = goal.subs;
+  let todayTotal = 0;
+  subs.forEach((sub) => {
+    sub.eachAsIndepend
+      ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
+      : sub.completed
+      ? (todayTotal += convertImp(sub.importance))
+      : null;
+  });
+  let goalAvg =
+    user.dailies.length > 1
+      ? (user.totals.daily - todayTotal) / (user.dailies.length - 1)
+      : 0;
   return res.render("currentGoal", {
     goal,
     date,
     pageTitle,
+    goalAvg,
+    todayTotal,
   });
 };
 

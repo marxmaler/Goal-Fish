@@ -23,11 +23,31 @@ if (progress) {
   let checkboxCnt = checkboxes.length;
   const indCheckboxes = document.querySelectorAll(".ind-check");
   checkboxCnt -= indCheckboxes.length;
+
+  const measureBoxes = document.querySelectorAll("input[type=number]");
+
+  let indMeasureInputs = [];
+  measureBoxes?.forEach((box) =>
+    box.parentElement.parentElement.parentElement.querySelector(".ind-check")
+      ? indMeasureInputs.push(box)
+      : null
+  );
+  let noIndCheckboxes = [];
+  checkboxes?.forEach((box) =>
+    !box.classList.contains("ind-check") ? noIndCheckboxes.push(box) : null
+  );
+
+  const chartBox = document.querySelector("#chart");
+  const goalAvg = chartBox.dataset.avg;
   const progressControlObj = {
     progress,
     progressPoint,
     checkboxCnt,
     indCheckboxes,
+    chartBox,
+    goalAvg,
+    indMeasureInputs,
+    noIndCheckboxes,
   };
   const goalType = document
     .querySelector("title")
@@ -42,8 +62,6 @@ if (progress) {
       changeOnCheckbox(event, progressControlObj, goalType)
     )
   );
-
-  const measureBoxes = document.querySelectorAll("input[type=number]");
 
   if (measureBoxes) {
     checkUnreflected(measureBoxes);

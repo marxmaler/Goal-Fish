@@ -1,8 +1,10 @@
+import { convertImp } from "../../functions/convertImp";
 import {
   getAMonthLater,
   getAWeekLater,
   getAYearLater,
 } from "../../functions/time";
+import ApexCharts from "apexcharts";
 
 export function manualSubmit(form) {
   form.submit();
@@ -266,6 +268,10 @@ export const calculateProgress = ({
   progressPoint,
   checkboxCnt,
   indCheckboxes,
+  chartBox,
+  goalAvg,
+  indMeasureInputs,
+  noIndCheckboxes,
 }) => {
   let checkedCnt = document.querySelectorAll("input[checked]").length;
   let indCheckedCnt = 0;
@@ -284,6 +290,11 @@ export const calculateProgress = ({
     ((checkedCnt + currentTotal) / (checkboxCnt + targetTotal)) * 100;
   progress.value = progVal;
   progressPoint.innerText = `${Math.round(progVal)}%`;
+
+  reRenderChart(
+    chartBox,
+    getOptions(goalAvg, indMeasureInputs, noIndCheckboxes)
+  );
 };
 
 export function changeOnCheckbox(event, progressControlObj, goalType) {
@@ -348,4 +359,69 @@ export const handleTermStartChange = (event, termEnd, goalType) => {
 
 export function getPreviousGoal(goalType) {
   fetch();
+}
+
+export function getOptions(goalAvg, indMeasureInputs, noIndCheckboxes) {
+  let todayTotal = 0;
+  indMeasureInputs
+    ? indMeasureInputs.forEach((input) => {
+        const value = input.value;
+        const imp = convertImp(
+          input.parentElement.parentElement.parentElement.querySelector(
+            ".importance"
+          ).innerText
+        );
+        todayTotal += value * imp;
+      })
+    : null;
+
+  noIndCheckboxes
+    ? noIndCheckboxes.forEach((box) => {
+        box.checked
+          ? (todayTotal += convertImp(
+              box.parentElement.parentElement.querySelector(".importance")
+                .innerText
+            ))
+          : null;
+      })
+    : null;
+  const options = {
+    theme: { mode: "dark" },
+    chart: {
+      type: "bar",
+    },
+    series: [
+      {
+        name: "Goal Management Score",
+        data: [parseInt(goalAvg, 10), parseInt(todayTotal, 10)],
+      },
+    ],
+    xaxis: {
+      categories: ["average", "today"],
+      crosshairs: {
+        fill: {
+          type: "gradient",
+          gradient: {
+            colorFrom: "#D8E3F0",
+            colorTo: "#BED1E6",
+            stops: [0, 100],
+            opacityFrom: 0.4,
+            opacityTo: 0.5,
+          },
+        },
+      },
+    },
+  };
+
+  return options;
+}
+
+export function reRenderChart(chartBox, options) {
+  while (chartBox.firstChild) {
+    chartBox.removeChild(chartBox.lastChild);
+  }
+  const div = document.createElement("div");
+  chartBox.appendChild(div);
+  const chart = new ApexCharts(div, options);
+  chart.render();
 }
