@@ -24,7 +24,6 @@
   "dependencies": {
     "acorn": "^8.7.0",
     "apexcharts": "^3.33.0",
-    "aws-sdk": "^2.1066.0",
     "bcrypt": "^5.0.1",
     "connect-mongo": "^4.6.0",
     "dotenv": "^10.0.0",
