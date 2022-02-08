@@ -3,16 +3,12 @@ include mixins/goal-container.pug
 
 block mainBlock
     if date
-        if lastGoal
-            +goalContainer(lastGoal, pageTitle, date, null, null)
-        else if goal
+        if goal
             +goalContainer(goal, pageTitle, date, null, null)
         else
             +goalContainer(null, pageTitle, date, null, null)
     else if termStart
-        if lastGoal
-            +goalContainer(lastGoal, pageTitle, null, termStart, termEnd)
-        else if goal
+        if goal
             +goalContainer(goal, pageTitle, null, termStart, termEnd)
         else
             +goalContainer(null, pageTitle, null, termStart, termEnd)

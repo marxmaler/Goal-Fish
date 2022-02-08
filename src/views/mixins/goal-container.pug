@@ -69,7 +69,7 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
                     a(href="/weekly/")
                         button 돌아가기
         //- 그래프
-        div(data-avg=goalAvg, data-today=todayTotal)#chart
+        div(data-avg=goalAvg)#chart
     else
         if pageTitle==="Daily"    
             div.no-goal-messeage-box
@@ -121,9 +121,7 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
                     button 돌아가기
     
     div.previous-goal-search
-        if pageTitle==="Daily" || !pageTitle.includes("Daily")           
-            p 이전 목표 조회
-        else if pageTitle==="Previous Daily"            
+        if pageTitle==="Daily" || pageTitle==="Previous Daily"          
             p 다른 날짜 조회
         if pageTitle.includes("Daily")
             input(type="date")#previous-goal-selector

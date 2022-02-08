@@ -51,7 +51,6 @@ export const getDailyHome = async (req, res) => {
     date,
     pageTitle,
     goalAvg,
-    todayTotal,
   });
 };
 
@@ -412,27 +411,49 @@ export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
   const today = getToday();
   const userId = req.session.user._id;
+  const user = await User.findById(userId);
+  let goal = null;
+  let date = "";
   if (req.originalUrl === "/daily/previous/") {
-    const lastGoal = await Daily.findOne({
+    goal = await Daily.findOne({
       owner: userId,
       date: { $lt: new Date(today) },
     })
       .sort({ date: -1 })
       .populate("subs");
-    let date = "";
-    if (lastGoal) {
-      date = yyyymmdd(lastGoal.date);
+
+    if (goal) {
+      date = yyyymmdd(goal.date);
       date = date.split("-");
       date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
     }
-    return res.render("previousGoal", { lastGoal, date, pageTitle });
+  } else {
+    date = req.params.date;
+
+    if (date === today) {
+      return res.redirect("/");
+    }
+
+    goal = await Daily.findOne({ owner: userId, date }).populate("subs");
+    date = date.split("-");
+    date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
   }
-  let date = req.params.date;
-  if (date === today) {
-    return res.redirect("/");
+
+  //성취도 계산
+  const subs = goal?.subs;
+  let todayTotal = 0;
+  if (subs) {
+    subs.forEach((sub) => {
+      sub.eachAsIndepend
+        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
+        : sub.completed
+        ? (todayTotal += convertImp(sub.importance))
+        : null;
+    });
   }
-  const goal = await Daily.findOne({ owner: userId, date }).populate("subs");
-  date = date.split("-");
-  date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
-  return res.render("previousGoal", { goal, date, pageTitle });
+  let goalAvg =
+    user.dailies.length > 1
+      ? (user.totals.daily - todayTotal) / (user.dailies.length - 1)
+      : 0;
+  return res.render("previousGoal", { goal, date, pageTitle, goalAvg });
 };

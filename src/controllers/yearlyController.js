@@ -371,59 +371,74 @@ export const getPreviousYearly = async (req, res) => {
   const pageTitle = "Previous Yearly";
   const today = getToday();
   const userId = req.session.user._id;
+  const user = await User.findById(userId);
+  let goal = null;
+  let termStart = "";
+  let termEnd = "";
+
   if (req.originalUrl === "/yearly/previous/") {
-    const lastGoal = await Yearly.findOne({
+    goal = await Yearly.findOne({
       owner: userId,
       termEnd: { $lt: new Date(today) },
     })
       .sort({ date: -1 })
       .populate("subs");
-    let termStart = "";
-    let termEnd = "";
-    if (lastGoal) {
-      termStart = yyyymmdd(lastGoal.termStart);
-      termEnd = yyyymmdd(lastGoal.termEnd);
+
+    if (goal) {
+      termStart = yyyymmdd(goal.termStart);
+      termEnd = yyyymmdd(goal.termEnd);
       termStart = termStart.split("-");
       termStart =
         termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
       termEnd = termEnd.split("-");
       termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
     }
+  } else {
+    let date = req.params.date;
 
-    return res.render("previousGoal", {
-      lastGoal,
-      termStart,
-      termEnd,
-      pageTitle,
+    const currentGoal = await Yearly.findOne({
+      owner: userId,
+      termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
+      termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
+    });
+    if (
+      new Date(date) >= currentGoal.termStart &&
+      new Date(date) <= currentGoal.termEnd
+    ) {
+      return res.redirect("/yearly/");
+    }
+
+    goal = await Yearly.findOne({
+      owner: userId,
+      termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
+      termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
+    }).populate("subs");
+    termStart = yyyymmdd(goal.termStart);
+    termEnd = yyyymmdd(goal.termEnd);
+  }
+
+  //성취도 계산
+  const subs = goal?.subs;
+  let todayTotal = 0;
+  if (subs) {
+    subs.forEach((sub) => {
+      sub.eachAsIndepend
+        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
+        : sub.completed
+        ? (todayTotal += convertImp(sub.importance))
+        : null;
     });
   }
-  let date = req.params.date;
-
-  const currentGoal = await Yearly.findOne({
-    owner: userId,
-    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
-    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
-  });
-  if (
-    new Date(date) >= currentGoal.termStart &&
-    new Date(date) <= currentGoal.termEnd
-  ) {
-    return res.redirect("/yearly/");
-  }
-
-  const goal = await Yearly.findOne({
-    owner: userId,
-    termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
-    termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
-  }).populate("subs");
-
-  const termStart = yyyymmdd(goal.termStart);
-  const termEnd = yyyymmdd(goal.termEnd);
+  let goalAvg =
+    user.yearlies.length > 1
+      ? (user.totals.yearly - todayTotal) / (user.yearlies.length - 1)
+      : 0;
   return res.render("previousGoal", {
     goal,
     termStart,
     termEnd,
     pageTitle,
+    goalAvg,
   });
 };
 
