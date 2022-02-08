@@ -31,15 +31,17 @@ export const getDailyHome = async (req, res) => {
   }
 
   //오늘의 성취도 계산
-  const subs = goal.subs;
+  const subs = goal?.subs;
   let todayTotal = 0;
-  subs.forEach((sub) => {
-    sub.eachAsIndepend
-      ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
-      : sub.completed
-      ? (todayTotal += convertImp(sub.importance))
-      : null;
-  });
+  if (subs) {
+    subs.forEach((sub) => {
+      sub.eachAsIndepend
+        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
+        : sub.completed
+        ? (todayTotal += convertImp(sub.importance))
+        : null;
+    });
+  }
   let goalAvg =
     user.dailies.length > 1
       ? (user.totals.daily - todayTotal) / (user.dailies.length - 1)
