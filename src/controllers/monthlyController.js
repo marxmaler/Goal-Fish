@@ -2,6 +2,7 @@ import Monthly from "../models/Monthly";
 import MonthlySub from "../models/MonthlySub";
 import { getToday, getAMonthFromToday, yyyymmdd } from "../functions/time";
 import User from "../models/User";
+import { convertImp } from "../functions/convertImp";
 
 export const getMonthlyHome = async (req, res) => {
   const pageTitle = "Monthly";
@@ -13,12 +14,9 @@ export const getMonthlyHome = async (req, res) => {
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   })?.populate("subs");
 
-  if (goal && goal.subs.length < 1) {
-    await MonthlySub.deleteMany({
-      monthly: goal._id,
-    });
+  const user = await User.findById(userId);
 
-    const user = await User.findById(userId);
+  if (goal && goal.subs.length < 1) {
     user.monthlies.splice(user.monthlies.indexOf(goal._id), 1);
     user.save();
     req.session.user = user;
@@ -28,6 +26,23 @@ export const getMonthlyHome = async (req, res) => {
     });
     return res.redirect("/monthly/");
   }
+
+  //오늘의 성취도 계산
+  const subs = goal?.subs;
+  let todayTotal = 0;
+  if (subs) {
+    subs.forEach((sub) => {
+      sub.eachAsIndepend
+        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
+        : sub.completed
+        ? (todayTotal += convertImp(sub.importance))
+        : null;
+    });
+  }
+  let goalAvg =
+    user.monthlies.length > 1
+      ? (user.totals.monthly - todayTotal) / (user.monthlies.length - 1)
+      : 0;
 
   let termStart = "";
   let termEnd = "";
@@ -41,6 +56,7 @@ export const getMonthlyHome = async (req, res) => {
     termStart,
     termEnd,
     pageTitle,
+    goalAvg,
   });
 };
 
@@ -102,7 +118,7 @@ export const postNewMonthly = async (req, res) => {
   //날짜 설정
   const termStart = new Date(date);
   const termEnd = new Date(date);
-  termEnd.setDate(termEnd.getDate() + 30);
+  termEnd.setDate(termEnd.getDate() + 29);
 
   const newMonthly = await Monthly.create({
     owner: userId,
@@ -269,6 +285,7 @@ export const postEditMonthly = async (req, res) => {
 
   const today = getToday();
   const userId = req.session.user._id;
+  const user = await User.findById(userId);
   const monthly = await Monthly.findOne({
     owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
@@ -277,10 +294,26 @@ export const postEditMonthly = async (req, res) => {
   //sub 삭제
   if (deletedSubs) {
     if (typeof deletedSubs === "string") {
-      await MonthlySub.findByIdAndDelete(deletedSubs);
+      const deletedSub = await MonthlySub.findByIdAndDelete(deletedSubs);
+      const impPoint = convertImp(deletedSub.importance);
+      deletedSub.eachAsIndepend
+        ? (user.totals.monthly -= impPoint * deletedSub.currentValue)
+        : deletedSub.completed
+        ? (user.totals.monthly -= impPoint)
+        : null;
+      user.save();
+      req.session.user = user;
     } else {
       for (let i = 0; i < deletedSubs.length; i++) {
-        await MonthlySub.findByIdAndDelete(deletedSubs[i]);
+        const deletedSub = await MonthlySub.findByIdAndDelete(deletedSubs[i]);
+        const impPoint = convertImp(deletedSub.importance);
+        deletedSub.eachAsIndepend
+          ? (user.totals.monthly -= impPoint * deletedSub.currentValue)
+          : deletedSub.completed
+          ? (user.totals.monthly -= impPoint)
+          : null;
+        user.save();
+        req.session.user = user;
       }
     }
   }
@@ -361,7 +394,7 @@ export const postEditMonthly = async (req, res) => {
   const termStartDate = new Date(termStart);
   const termEndDate = new Date(termStart);
   monthly.termStart = termStartDate;
-  termEndDate.setDate(termStartDate.getDate() + 30);
+  termEndDate.setDate(termStartDate.getDate() + 29);
   monthly.termEnd = termEndDate;
   monthly.save();
   return res.redirect("/monthly/");

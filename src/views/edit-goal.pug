@@ -16,7 +16,7 @@ block mainBlock
                     li
                         div.li__container.importance-and-content-setting-box
                             select(name=`${sub._id}`)
-                                each option in ["A","B","C"]
+                                each option in impArray
                                     if sub.importance === option
                                         option(value=`${option}`, selected)=`${option}`
                                     else
@@ -31,7 +31,7 @@ block mainBlock
                                 div
                                     span 단위명:
                                     select(name=`${sub._id}`)
-                                        each measure in ["시간", "회", "개", "쪽"]
+                                        each measure in measureNameArray
                                             if sub.measureName == measure
                                                 option(value=measure, selected)=measure
                                             else
@@ -53,7 +53,7 @@ block mainBlock
                                 div.hidden
                                     span 단위명:
                                     select(name=`${sub._id}`)
-                                        each measure in ["시간", "회", "개", "쪽"]
+                                        each measure in measureNameArray
                                             option(value=measure)=measure
                                 div.hidden
                                     span 목표 달성 요구치:  

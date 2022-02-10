@@ -16,10 +16,6 @@ export const getDailyHome = async (req, res) => {
   const user = await User.findById(userId);
 
   if (goal && goal.subs.length < 1) {
-    await DailySub.deleteMany({
-      daily: goal._id,
-    });
-
     user.dailies.splice(user.dailies.indexOf(goal._id), 1);
     user.save();
     req.session.user = user;
@@ -317,6 +313,7 @@ export const postEditDaily = async (req, res) => {
   }
 
   const userId = req.session.user._id;
+  const user = await User.findById(userId);
   const daily = await Daily.findOne({
     owner: userId,
     date: getToday(),
@@ -324,10 +321,26 @@ export const postEditDaily = async (req, res) => {
   //sub 삭제
   if (deletedSubs) {
     if (typeof deletedSubs === "string") {
-      await DailySub.findByIdAndDelete(deletedSubs);
+      const deletedSub = await DailySub.findByIdAndDelete(deletedSubs);
+      const impPoint = convertImp(deletedSub.importance);
+      deletedSub.eachAsIndepend
+        ? (user.totals.daily -= impPoint * deletedSub.currentValue)
+        : deletedSub.completed
+        ? (user.totals.daily -= impPoint)
+        : null;
+      user.save();
+      req.session.user = user;
     } else {
       for (let i = 0; i < deletedSubs.length; i++) {
-        await DailySub.findByIdAndDelete(deletedSubs[i]);
+        const deletedSub = await DailySub.findByIdAndDelete(deletedSubs[i]);
+        const impPoint = convertImp(deletedSub.importance);
+        deletedSub.eachAsIndepend
+          ? (user.totals.daily -= impPoint * deletedSub.currentValue)
+          : deletedSub.completed
+          ? (user.totals.daily -= impPoint)
+          : null;
+        user.save();
+        req.session.user = user;
       }
     }
   }
@@ -403,7 +416,7 @@ export const postEditDaily = async (req, res) => {
       }
     }
   }
-  await daily.save();
+  daily.save();
   return res.redirect("/");
 };
 

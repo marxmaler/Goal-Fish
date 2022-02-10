@@ -2,6 +2,7 @@ import Weekly from "../models/Weekly";
 import WeeklySub from "../models/WeeklySub";
 import { getToday, getAWeekFromToday, yyyymmdd } from "../functions/time";
 import User from "../models/User";
+import { convertImp } from "../functions/convertImp";
 
 export const getWeeklyHome = async (req, res) => {
   const pageTitle = "Weekly";
@@ -9,16 +10,13 @@ export const getWeeklyHome = async (req, res) => {
   const userId = req.session.user._id;
   const goal = await Weekly.findOne({
     owner: userId,
-    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
-    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
+    termStart: { $lte: new Date(today) },
+    termEnd: { $gte: new Date(today) },
   })?.populate("subs");
 
-  if (goal && goal.subs.length < 1) {
-    await WeeklySub.deleteMany({
-      weekly: goal._id,
-    });
+  const user = await User.findById(userId);
 
-    const user = await User.findById(userId);
+  if (goal && goal.subs.length < 1) {
     user.weeklies.splice(user.weeklies.indexOf(goal._id), 1);
     user.save();
     req.session.user = user;
@@ -28,6 +26,23 @@ export const getWeeklyHome = async (req, res) => {
     });
     return res.redirect("/weekly/");
   }
+
+  //오늘의 성취도 계산
+  const subs = goal?.subs;
+  let todayTotal = 0;
+  if (subs) {
+    subs.forEach((sub) => {
+      sub.eachAsIndepend
+        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
+        : sub.completed
+        ? (todayTotal += convertImp(sub.importance))
+        : null;
+    });
+  }
+  let goalAvg =
+    user.weeklies.length > 1
+      ? (user.totals.daily - todayTotal) / (user.weeklies.length - 1)
+      : 0;
 
   let termStart = "";
   let termEnd = "";
@@ -41,6 +56,7 @@ export const getWeeklyHome = async (req, res) => {
     termStart,
     termEnd,
     pageTitle,
+    goalAvg,
   });
 };
 
@@ -269,6 +285,7 @@ export const postEditWeekly = async (req, res) => {
 
   const today = getToday();
   const userId = req.session.user._id;
+  const user = await User.findById(userId);
   const weekly = await Weekly.findOne({
     owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
@@ -277,10 +294,26 @@ export const postEditWeekly = async (req, res) => {
   //sub 삭제
   if (deletedSubs) {
     if (typeof deletedSubs === "string") {
-      await WeeklySub.findByIdAndDelete(deletedSubs);
+      const deletedSub = await WeeklySub.findByIdAndDelete(deletedSubs);
+      const impPoint = convertImp(deletedSub.importance);
+      deletedSub.eachAsIndepend
+        ? (user.totals.weekly -= impPoint * deletedSub.currentValue)
+        : deletedSub.completed
+        ? (user.totals.weekly -= impPoint)
+        : null;
+      user.save();
+      req.session.user = user;
     } else {
       for (let i = 0; i < deletedSubs.length; i++) {
-        await WeeklySub.findByIdAndDelete(deletedSubs[i]);
+        const deletedSub = await WeeklySub.findByIdAndDelete(deletedSubs[i]);
+        const impPoint = convertImp(deletedSub.importance);
+        deletedSub.eachAsIndepend
+          ? (user.totals.weekly -= impPoint * deletedSub.currentValue)
+          : deletedSub.completed
+          ? (user.totals.weekly -= impPoint)
+          : null;
+        user.save();
+        req.session.user = user;
       }
     }
   }
