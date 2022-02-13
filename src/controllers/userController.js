@@ -7,6 +7,8 @@ const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const KakaoStrategy = require("passport-kakao").Strategy;
 const NaverStrategy = require("passport-naver").Strategy;
 
+const isHeroku = process.env.NODE_ENV === "production";
+
 export const getJoin = (req, res) => {
   const pageTitle = "Join";
   return res.render("join", { pageTitle });
@@ -181,7 +183,9 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT,
       clientSecret: process.env.GOOGLE_SECRET,
-      callbackURL: `http://localhost:${process.env.PORT}/user/auth/google/finish`,
+      callbackURL: isHeroku
+        ? `https://goal-manager220213.herokuapp.com/user/auth/google/finish`
+        : `http://localhost:${process.env.PORT}/user/auth/google/finish`,
     },
     googleAuth
   )
