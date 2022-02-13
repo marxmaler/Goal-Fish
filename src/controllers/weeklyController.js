@@ -20,21 +20,23 @@ export const getWeeklyHome = async (req, res) => {
     return res.redirect("/weekly/");
   }
 
-  //평균 구하기
-  const prevGoals = await Weekly.find({
-    owner: userId,
-    termEnd: { $lt: goal.termEnd },
-  })
-    .sort({ termEnd: -1 })
-    .limit(4);
-  let prevTotal = 0;
-  let prevAvg = 0;
-  prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
-  prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
-
   let termStart = "";
   let termEnd = "";
+  let prevTotal = 0;
+  let prevAvg = 0;
+  let prevGoals = null;
   if (goal) {
+    //평균 구하기
+    prevGoals = await Weekly.find({
+      owner: userId,
+      termEnd: { $lt: goal.termEnd },
+    })
+      .sort({ termEnd: -1 })
+      .limit(4);
+
+    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+    prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
     termStart = yyyymmdd(goal.termStart);
     termEnd = yyyymmdd(goal.termEnd);
   }
