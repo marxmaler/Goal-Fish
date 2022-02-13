@@ -1,7 +1,6 @@
 import Yearly from "../models/Yearly";
 import YearlySub from "../models/YearlySub";
 import { getToday, getAYearFromToday, yyyymmdd } from "../functions/time";
-import User from "../models/User";
 import { convertImp } from "../functions/convertImp";
 
 export const getYearlyHome = async (req, res) => {
@@ -14,35 +13,24 @@ export const getYearlyHome = async (req, res) => {
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
   })?.populate("subs");
 
-  const user = await User.findById(userId);
-
   if (goal && goal.subs.length < 1) {
-    user.yearlies.splice(user.yearlies.indexOf(goal._id), 1);
-    user.save();
-    req.session.user = user;
-
     await Yearly.deleteOne({
       _id: goal._id,
     });
     return res.redirect("/yearly/");
   }
 
-  //오늘의 성취도 계산
-  const subs = goal?.subs;
-  let todayTotal = 0;
-  if (subs) {
-    subs.forEach((sub) => {
-      sub.eachAsIndepend
-        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
-        : sub.completed
-        ? (todayTotal += convertImp(sub.importance))
-        : null;
-    });
-  }
-  let goalAvg =
-    user.yearlies.length > 1
-      ? (user.totals.daily - todayTotal) / (user.yearlies.length - 1)
-      : 0;
+  //평균 구하기
+  const prevGoals = await Yearly.find({
+    owner: userId,
+    termEnd: { $lt: goal.termEnd },
+  })
+    .sort({ termEnd: -1 })
+    .limit(2);
+  let prevTotal = 0;
+  let prevAvg = 0;
+  prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+  prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
 
   let termStart = "";
   let termEnd = "";
@@ -56,7 +44,7 @@ export const getYearlyHome = async (req, res) => {
     termStart,
     termEnd,
     pageTitle,
-    goalAvg,
+    prevAvg,
   });
 };
 
@@ -125,11 +113,6 @@ export const postNewYearly = async (req, res) => {
     termStart,
     termEnd,
   });
-
-  const user = await User.findById(req.session.user._id);
-  user.yearlies.push(newYearly._id);
-  user.save();
-  req.session.user = user;
 
   if (typeof subs === "object") {
     //sub가 둘 이상
@@ -285,37 +268,34 @@ export const postEditYearly = async (req, res) => {
 
   const today = getToday();
   const userId = req.session.user._id;
-  const user = await User.findById(userId);
   const yearly = await Yearly.findOne({
     owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
   });
+
   //sub 삭제
   if (deletedSubs) {
     if (typeof deletedSubs === "string") {
       const deletedSub = await YearlySub.findByIdAndDelete(deletedSubs);
       const impPoint = convertImp(deletedSub.importance);
       deletedSub.eachAsIndepend
-        ? (user.totals.yearly -= impPoint * deletedSub.currentValue)
+        ? (yearly.total -= impPoint * deletedSub.currentValue)
         : deletedSub.completed
-        ? (user.totals.yearly -= impPoint)
+        ? (yearly.total -= impPoint)
         : null;
-      user.save();
-      req.session.user = user;
     } else {
       for (let i = 0; i < deletedSubs.length; i++) {
         const deletedSub = await YearlySub.findByIdAndDelete(deletedSubs[i]);
         const impPoint = convertImp(deletedSub.importance);
         deletedSub.eachAsIndepend
-          ? (user.totals.yearly -= impPoint * deletedSub.currentValue)
+          ? (yearly.total -= impPoint * deletedSub.currentValue)
           : deletedSub.completed
-          ? (user.totals.yearly -= impPoint)
+          ? (yearly.total -= impPoint)
           : null;
-        user.save();
-        req.session.user = user;
       }
     }
+    yearly.save();
   }
 
   //기존 sub 내용 변경
@@ -404,7 +384,6 @@ export const getPreviousYearly = async (req, res) => {
   const pageTitle = "Previous Yearly";
   const today = getToday();
   const userId = req.session.user._id;
-  const user = await User.findById(userId);
   let goal = null;
   let termStart = "";
   let termEnd = "";
@@ -420,11 +399,6 @@ export const getPreviousYearly = async (req, res) => {
     if (goal) {
       termStart = yyyymmdd(goal.termStart);
       termEnd = yyyymmdd(goal.termEnd);
-      termStart = termStart.split("-");
-      termStart =
-        termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
-      termEnd = termEnd.split("-");
-      termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
     }
   } else {
     let date = req.params.date;
@@ -450,60 +424,51 @@ export const getPreviousYearly = async (req, res) => {
     termEnd = yyyymmdd(goal.termEnd);
   }
 
-  //성취도 계산
-  const subs = goal?.subs;
-  let todayTotal = 0;
-  if (subs) {
-    subs.forEach((sub) => {
-      sub.eachAsIndepend
-        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
-        : sub.completed
-        ? (todayTotal += convertImp(sub.importance))
-        : null;
-    });
+  //평균 구하기
+
+  let prevTotal = 0;
+  let prevAvg = 0;
+
+  if (termEnd !== "") {
+    const prevGoals = await Yearly.find({
+      owner: userId,
+      termEnd: { $lt: goal.termEnd },
+    })
+      .sort({ termEnd: -1 })
+      .limit(2);
+    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+    prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    termStart = termStart.split("-");
+    termStart =
+      termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
+    termEnd = termEnd.split("-");
+    termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
   }
-  let goalAvg =
-    user.yearlies.length > 1
-      ? (user.totals.yearly - todayTotal) / (user.yearlies.length - 1)
-      : 0;
+
   return res.render("previousGoal", {
     goal,
     termStart,
     termEnd,
     pageTitle,
-    goalAvg,
+    prevAvg,
   });
 };
 
 export const postYearlyCompleted = async (req, res) => {
   const { id } = req.params;
   const yearlySub = await YearlySub.findById(id);
-  if (yearlySub.completed) {
-    yearlySub.completed = false;
-    yearlySub.save();
-    if (!yearlySub.eachAsIndepend) {
-      const impPoint =
-        yearlySub.importance === "A" ? 5 : yearlySub.importance === "B" ? 3 : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      user.totals.yearly -= impPoint;
-      user.save();
-      req.session.user = user;
-    }
-  } else {
-    yearlySub.completed = true;
-    yearlySub.save();
-    if (!yearlySub.eachAsIndepend) {
-      const impPoint =
-        yearlySub.importance === "A" ? 5 : yearlySub.importance === "B" ? 3 : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      user.totals.yearly += impPoint;
-      user.save();
-      req.session.user = user;
-    }
-  }
+  yearlySub.completed
+    ? (yearlySub.completed = false)
+    : (yearlySub.completed = true);
+  yearlySub.save();
 
+  if (!yearlySub.eachAsIndepend) {
+    const impPoint = convertImp(yearlySub.importance);
+    const yearly = await Yearly.findById(yearlySub.yearly);
+    yearly.total += impPoint;
+    yearly.save();
+  }
   return res.sendStatus(200);
 };
 
@@ -512,21 +477,17 @@ export const postYearlyMeasure = async (req, res) => {
   const { value } = req.body;
   const yearlySub = await YearlySub.findById(id);
   if (value > yearlySub.targetValue) {
-    return res.sendStatus(200);
+    return res.sendStatus(400);
   } else {
     if (
       yearlySub.eachAsIndepend &&
       parseInt(yearlySub.currentValue, 10) !== parseInt(value, 10)
     ) {
-      const impPoint =
-        yearlySub.importance === "A" ? 5 : yearlySub.importance === "B" ? 3 : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      parseInt(yearlySub.currentValue, 10) < parseInt(value, 10)
-        ? (user.totals.yearly += impPoint)
-        : (user.totals.yearly -= impPoint);
-      user.save();
-      req.session.user = user;
+      const impPoint = convertImp(yearlySub.importance);
+      const yearly = await Yearly.findById(yearlySub.yearly);
+      const diff = parseInt(value, 10) - parseInt(yearlySub.currentValue, 10);
+      yearly.total += impPoint * diff;
+      yearly.save();
     }
     yearlySub.currentValue = value;
     yearlySub.save();

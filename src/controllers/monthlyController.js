@@ -1,7 +1,6 @@
 import Monthly from "../models/Monthly";
 import MonthlySub from "../models/MonthlySub";
 import { getToday, getAMonthFromToday, yyyymmdd } from "../functions/time";
-import User from "../models/User";
 import { convertImp } from "../functions/convertImp";
 
 export const getMonthlyHome = async (req, res) => {
@@ -14,35 +13,24 @@ export const getMonthlyHome = async (req, res) => {
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   })?.populate("subs");
 
-  const user = await User.findById(userId);
-
   if (goal && goal.subs.length < 1) {
-    user.monthlies.splice(user.monthlies.indexOf(goal._id), 1);
-    user.save();
-    req.session.user = user;
-
     await Monthly.deleteOne({
       _id: goal._id,
     });
     return res.redirect("/monthly/");
   }
 
-  //오늘의 성취도 계산
-  const subs = goal?.subs;
-  let todayTotal = 0;
-  if (subs) {
-    subs.forEach((sub) => {
-      sub.eachAsIndepend
-        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
-        : sub.completed
-        ? (todayTotal += convertImp(sub.importance))
-        : null;
-    });
-  }
-  let goalAvg =
-    user.monthlies.length > 1
-      ? (user.totals.monthly - todayTotal) / (user.monthlies.length - 1)
-      : 0;
+  //평균 구하기
+  const prevGoals = await Monthly.find({
+    owner: userId,
+    termEnd: { $lt: goal.termEnd },
+  })
+    .sort({ termEnd: -1 })
+    .limit(3);
+  let prevTotal = 0;
+  let prevAvg = 0;
+  prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+  prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
 
   let termStart = "";
   let termEnd = "";
@@ -56,7 +44,7 @@ export const getMonthlyHome = async (req, res) => {
     termStart,
     termEnd,
     pageTitle,
-    goalAvg,
+    prevAvg,
   });
 };
 
@@ -125,11 +113,6 @@ export const postNewMonthly = async (req, res) => {
     termStart,
     termEnd,
   });
-
-  const user = await User.findById(req.session.user._id);
-  user.monthlies.push(newMonthly._id);
-  user.save();
-  req.session.user = user;
 
   if (typeof subs === "object") {
     //sub가 둘 이상
@@ -285,37 +268,34 @@ export const postEditMonthly = async (req, res) => {
 
   const today = getToday();
   const userId = req.session.user._id;
-  const user = await User.findById(userId);
   const monthly = await Monthly.findOne({
     owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
   });
+
   //sub 삭제
   if (deletedSubs) {
     if (typeof deletedSubs === "string") {
       const deletedSub = await MonthlySub.findByIdAndDelete(deletedSubs);
       const impPoint = convertImp(deletedSub.importance);
       deletedSub.eachAsIndepend
-        ? (user.totals.monthly -= impPoint * deletedSub.currentValue)
+        ? (monthly.total -= impPoint * deletedSub.currentValue)
         : deletedSub.completed
-        ? (user.totals.monthly -= impPoint)
+        ? (monthly.total -= impPoint)
         : null;
-      user.save();
-      req.session.user = user;
     } else {
       for (let i = 0; i < deletedSubs.length; i++) {
         const deletedSub = await MonthlySub.findByIdAndDelete(deletedSubs[i]);
         const impPoint = convertImp(deletedSub.importance);
         deletedSub.eachAsIndepend
-          ? (user.totals.monthly -= impPoint * deletedSub.currentValue)
+          ? (monthly.total -= impPoint * deletedSub.currentValue)
           : deletedSub.completed
-          ? (user.totals.monthly -= impPoint)
+          ? (monthly.total -= impPoint)
           : null;
-        user.save();
-        req.session.user = user;
       }
     }
+    monthly.save();
   }
 
   //기존 sub 내용 변경
@@ -404,7 +384,6 @@ export const getPreviousMonthly = async (req, res) => {
   const pageTitle = "Previous Monthly";
   const today = getToday();
   const userId = req.session.user._id;
-  const user = await User.findById(userId);
   let goal = null;
   let termStart = "";
   let termEnd = "";
@@ -420,11 +399,6 @@ export const getPreviousMonthly = async (req, res) => {
     if (goal) {
       termStart = yyyymmdd(goal.termStart);
       termEnd = yyyymmdd(goal.termEnd);
-      termStart = termStart.split("-");
-      termStart =
-        termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
-      termEnd = termEnd.split("-");
-      termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
     }
   } else {
     let date = req.params.date;
@@ -450,68 +424,52 @@ export const getPreviousMonthly = async (req, res) => {
     termEnd = yyyymmdd(goal.termEnd);
   }
 
-  //성취도 계산
-  const subs = goal?.subs;
-  let todayTotal = 0;
-  if (subs) {
-    subs.forEach((sub) => {
-      sub.eachAsIndepend
-        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
-        : sub.completed
-        ? (todayTotal += convertImp(sub.importance))
-        : null;
-    });
+  //평균 구하기
+
+  let prevTotal = 0;
+  let prevAvg = 0;
+
+  if (termEnd !== "") {
+    const prevGoals = await Monthly.find({
+      owner: userId,
+      termEnd: { $lt: goal.termEnd },
+    })
+      .sort({ termEnd: -1 })
+      .limit(3);
+
+    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+    prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    termStart = termStart.split("-");
+    termStart =
+      termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
+    termEnd = termEnd.split("-");
+    termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
   }
-  let goalAvg =
-    user.monthlies.length > 1
-      ? (user.totals.monthly - todayTotal) / (user.monthlies.length - 1)
-      : 0;
+
   return res.render("previousGoal", {
     goal,
     termStart,
     termEnd,
     pageTitle,
-    goalAvg,
+    prevAvg,
   });
 };
 
 export const postMonthlyCompleted = async (req, res) => {
   const { id } = req.params;
   const monthlySub = await MonthlySub.findById(id);
-  if (monthlySub.completed) {
-    monthlySub.completed = false;
-    monthlySub.save();
-    if (!monthlySub.eachAsIndepend) {
-      const impPoint =
-        monthlySub.importance === "A"
-          ? 5
-          : monthlySub.importance === "B"
-          ? 3
-          : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      user.totals.monthly -= impPoint;
-      user.save();
-      req.session.user = user;
-    }
-  } else {
-    monthlySub.completed = true;
-    monthlySub.save();
-    if (!monthlySub.eachAsIndepend) {
-      const impPoint =
-        monthlySub.importance === "A"
-          ? 5
-          : monthlySub.importance === "B"
-          ? 3
-          : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      user.totals.monthly += impPoint;
-      user.save();
-      req.session.user = user;
-    }
-  }
+  monthlySub.completed
+    ? (monthlySub.completed = false)
+    : (monthlySub.completed = true);
+  monthlySub.save();
 
+  if (!monthlySub.eachAsIndepend) {
+    const impPoint = convertImp(monthlySub.importance);
+    const monthly = await Monthly.findById(monthlySub.monthly);
+    monthly.total += impPoint;
+    monthly.save();
+  }
   return res.sendStatus(200);
 };
 
@@ -526,19 +484,11 @@ export const postMonthlyMeasure = async (req, res) => {
       monthlySub.eachAsIndepend &&
       parseInt(monthlySub.currentValue, 10) !== parseInt(value, 10)
     ) {
-      const impPoint =
-        monthlySub.importance === "A"
-          ? 5
-          : monthlySub.importance === "B"
-          ? 3
-          : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      parseInt(monthlySub.currentValue, 10) < parseInt(value, 10)
-        ? (user.totals.monthly += impPoint)
-        : (user.totals.monthly -= impPoint);
-      user.save();
-      req.session.user = user;
+      const impPoint = convertImp(monthlySub.importance);
+      const monthly = await Monthly.findById(monthlySub.monthly);
+      const diff = parseInt(value, 10) - parseInt(monthlySub.currentValue, 10);
+      monthly.total += impPoint * diff;
+      monthly.save();
     }
     monthlySub.currentValue = value;
     monthlySub.save();

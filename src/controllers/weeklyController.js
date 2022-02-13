@@ -1,7 +1,6 @@
 import Weekly from "../models/Weekly";
 import WeeklySub from "../models/WeeklySub";
 import { getToday, getAWeekFromToday, yyyymmdd } from "../functions/time";
-import User from "../models/User";
 import { convertImp } from "../functions/convertImp";
 
 export const getWeeklyHome = async (req, res) => {
@@ -10,39 +9,28 @@ export const getWeeklyHome = async (req, res) => {
   const userId = req.session.user._id;
   const goal = await Weekly.findOne({
     owner: userId,
-    termStart: { $lte: new Date(today) },
-    termEnd: { $gte: new Date(today) },
+    termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
+    termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
   })?.populate("subs");
 
-  const user = await User.findById(userId);
-
   if (goal && goal.subs.length < 1) {
-    user.weeklies.splice(user.weeklies.indexOf(goal._id), 1);
-    user.save();
-    req.session.user = user;
-
     await Weekly.deleteOne({
       _id: goal._id,
     });
     return res.redirect("/weekly/");
   }
 
-  //오늘의 성취도 계산
-  const subs = goal?.subs;
-  let todayTotal = 0;
-  if (subs) {
-    subs.forEach((sub) => {
-      sub.eachAsIndepend
-        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
-        : sub.completed
-        ? (todayTotal += convertImp(sub.importance))
-        : null;
-    });
-  }
-  let goalAvg =
-    user.weeklies.length > 1
-      ? (user.totals.daily - todayTotal) / (user.weeklies.length - 1)
-      : 0;
+  //평균 구하기
+  const prevGoals = await Weekly.find({
+    owner: userId,
+    termEnd: { $lt: goal.termEnd },
+  })
+    .sort({ termEnd: -1 })
+    .limit(4);
+  let prevTotal = 0;
+  let prevAvg = 0;
+  prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+  prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
 
   let termStart = "";
   let termEnd = "";
@@ -56,7 +44,7 @@ export const getWeeklyHome = async (req, res) => {
     termStart,
     termEnd,
     pageTitle,
-    goalAvg,
+    prevAvg,
   });
 };
 
@@ -125,11 +113,6 @@ export const postNewWeekly = async (req, res) => {
     termStart,
     termEnd,
   });
-
-  const user = await User.findById(req.session.user._id);
-  user.weeklies.push(newWeekly._id);
-  user.save();
-  req.session.user = user;
 
   if (typeof subs === "object") {
     //sub가 둘 이상
@@ -285,37 +268,34 @@ export const postEditWeekly = async (req, res) => {
 
   const today = getToday();
   const userId = req.session.user._id;
-  const user = await User.findById(userId);
   const weekly = await Weekly.findOne({
     owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
     termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
   });
+
   //sub 삭제
   if (deletedSubs) {
     if (typeof deletedSubs === "string") {
       const deletedSub = await WeeklySub.findByIdAndDelete(deletedSubs);
       const impPoint = convertImp(deletedSub.importance);
       deletedSub.eachAsIndepend
-        ? (user.totals.weekly -= impPoint * deletedSub.currentValue)
+        ? (weekly.total -= impPoint * deletedSub.currentValue)
         : deletedSub.completed
-        ? (user.totals.weekly -= impPoint)
+        ? (weekly.total -= impPoint)
         : null;
-      user.save();
-      req.session.user = user;
     } else {
       for (let i = 0; i < deletedSubs.length; i++) {
         const deletedSub = await WeeklySub.findByIdAndDelete(deletedSubs[i]);
         const impPoint = convertImp(deletedSub.importance);
         deletedSub.eachAsIndepend
-          ? (user.totals.weekly -= impPoint * deletedSub.currentValue)
+          ? (weekly.total -= impPoint * deletedSub.currentValue)
           : deletedSub.completed
-          ? (user.totals.weekly -= impPoint)
+          ? (weekly.total -= impPoint)
           : null;
-        user.save();
-        req.session.user = user;
       }
     }
+    weekly.save();
   }
 
   //기존 sub 내용 변경
@@ -404,7 +384,6 @@ export const getPreviousWeekly = async (req, res) => {
   const pageTitle = "Previous Weekly";
   const today = getToday();
   const userId = req.session.user._id;
-  const user = await User.findById(userId);
   let goal = null;
   let termStart = "";
   let termEnd = "";
@@ -420,11 +399,6 @@ export const getPreviousWeekly = async (req, res) => {
     if (goal) {
       termStart = yyyymmdd(goal.termStart);
       termEnd = yyyymmdd(goal.termEnd);
-      termStart = termStart.split("-");
-      termStart =
-        termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
-      termEnd = termEnd.split("-");
-      termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
     }
   } else {
     let date = req.params.date;
@@ -450,60 +424,51 @@ export const getPreviousWeekly = async (req, res) => {
     termEnd = yyyymmdd(goal.termEnd);
   }
 
-  //성취도 계산
-  const subs = goal?.subs;
-  let todayTotal = 0;
-  if (subs) {
-    subs.forEach((sub) => {
-      sub.eachAsIndepend
-        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
-        : sub.completed
-        ? (todayTotal += convertImp(sub.importance))
-        : null;
-    });
+  //평균 구하기
+
+  let prevTotal = 0;
+  let prevAvg = 0;
+
+  if (termEnd !== "") {
+    const prevGoals = await Weekly.find({
+      owner: userId,
+      termEnd: { $lt: goal.termEnd },
+    })
+      .sort({ termEnd: -1 })
+      .limit(4);
+    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+    prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    termStart = termStart.split("-");
+    termStart =
+      termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
+    termEnd = termEnd.split("-");
+    termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
   }
-  let goalAvg =
-    user.weeklies.length > 1
-      ? (user.totals.weekly - todayTotal) / (user.weeklies.length - 1)
-      : 0;
+
   return res.render("previousGoal", {
     goal,
     termStart,
     termEnd,
     pageTitle,
-    goalAvg,
+    prevAvg,
   });
 };
 
 export const postWeeklyCompleted = async (req, res) => {
   const { id } = req.params;
   const weeklySub = await WeeklySub.findById(id);
-  if (weeklySub.completed) {
-    weeklySub.completed = false;
-    weeklySub.save();
-    if (!weeklySub.eachAsIndepend) {
-      const impPoint =
-        weeklySub.importance === "A" ? 5 : weeklySub.importance === "B" ? 3 : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      user.totals.weekly -= impPoint;
-      user.save();
-      req.session.user = user;
-    }
-  } else {
-    weeklySub.completed = true;
-    weeklySub.save();
-    if (!weeklySub.eachAsIndepend) {
-      const impPoint =
-        weeklySub.importance === "A" ? 5 : weeklySub.importance === "B" ? 3 : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      user.totals.weekly += impPoint;
-      user.save();
-      req.session.user = user;
-    }
-  }
+  weeklySub.completed
+    ? (weeklySub.completed = false)
+    : (weeklySub.completed = true);
+  weeklySub.save();
 
+  if (!weeklySub.eachAsIndepend) {
+    const impPoint = convertImp(weeklySub.importance);
+    const weekly = await Weekly.findById(weeklySub.weekly);
+    weekly.total += impPoint;
+    weekly.save();
+  }
   return res.sendStatus(200);
 };
 
@@ -518,15 +483,11 @@ export const postWeeklyMeasure = async (req, res) => {
       weeklySub.eachAsIndepend &&
       parseInt(weeklySub.currentValue, 10) !== parseInt(value, 10)
     ) {
-      const impPoint =
-        weeklySub.importance === "A" ? 5 : weeklySub.importance === "B" ? 3 : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      parseInt(weeklySub.currentValue, 10) < parseInt(value, 10)
-        ? (user.totals.weekly += impPoint)
-        : (user.totals.weekly -= impPoint);
-      user.save();
-      req.session.user = user;
+      const impPoint = convertImp(weeklySub.importance);
+      const weekly = await Weekly.findById(weeklySub.weekly);
+      const diff = parseInt(value, 10) - parseInt(weeklySub.currentValue, 10);
+      weekly.total += impPoint * diff;
+      weekly.save();
     }
     weeklySub.currentValue = value;
     weeklySub.save();

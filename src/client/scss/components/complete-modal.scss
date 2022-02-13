@@ -1,0 +1,26 @@
+@keyframes modalComesUp {
+  0% {
+    opacity: 0;
+    transform: translateX(0px) translateY(-10px);
+  }
+  75% {
+    opacity: 1;
+    transform: translateX(5px) translateY(-20px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(5px) translateY(-10px);
+  }
+}
+
+.complete-modal {
+  opacity: 0;
+  transform: translateX(0px) translateY(-10px);
+  position: absolute;
+  padding: 10px;
+  bottom: 0;
+  right: -20px;
+  background-color: black;
+  color: white;
+  animation: modalComesUp 2s ease-in-out;
+}

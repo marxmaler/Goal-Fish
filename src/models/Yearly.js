@@ -14,6 +14,7 @@ const yearlySchema = new mongoose.Schema({
       ref: "YearlySub",
     },
   ],
+  total: { type: Number, default: 0, required: true },
 });
 
 const Yearly = mongoose.model("Yearly", yearlySchema);

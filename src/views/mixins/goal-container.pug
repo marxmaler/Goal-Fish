@@ -69,7 +69,7 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
                     a(href="/weekly/")
                         button 돌아가기
         //- 그래프
-        div(data-avg=goalAvg)#chart
+        div(data-avg=prevAvg)#chart
     else
         if pageTitle==="Daily"    
             div.no-goal-messeage-box

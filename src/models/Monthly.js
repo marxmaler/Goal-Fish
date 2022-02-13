@@ -14,6 +14,7 @@ const monthlySchema = new mongoose.Schema({
       ref: "MonthlySub",
     },
   ],
+  total: { type: Number, default: 0, required: true },
 });
 
 const Monthly = mongoose.model("Monthly", monthlySchema);

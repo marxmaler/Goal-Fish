@@ -14,6 +14,7 @@ const weeklySchema = new mongoose.Schema({
       ref: "WeeklySub",
     },
   ],
+  total: { type: Number, default: 0, required: true },
 });
 
 const Weekly = mongoose.model("Weekly", weeklySchema);

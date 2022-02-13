@@ -5,6 +5,7 @@ import {
   getAYearLater,
 } from "../../functions/time";
 import ApexCharts from "apexcharts";
+import { animateModalValue } from "../../functions/animateModalValue";
 
 export function manualSubmit(form) {
   form.submit();
@@ -127,7 +128,7 @@ export const handlePlus = (event, goalType, progressControlObj) => {
     return;
   }
   measureInput.value = parseInt(measureInput.value, 10) + 1;
-  changeOnMeasureNoEvent(measureInput, goalType, progressControlObj);
+  changeOnMeasureNoEvent(measureInput, goalType, progressControlObj, true);
 };
 
 export const handleMinus = (event, goalType, progressControlObj) => {
@@ -142,7 +143,7 @@ export const handleMinus = (event, goalType, progressControlObj) => {
   }
 
   measureInput.value = parseInt(measureInput.value, 10) - 1;
-  changeOnMeasureNoEvent(measureInput, goalType, progressControlObj);
+  changeOnMeasureNoEvent(measureInput, goalType, progressControlObj, false);
 };
 
 export function checkUnreflected(measureBoxes) {
@@ -210,21 +211,42 @@ export const formatMeasureSettingDatas = () => {
 };
 
 export function changeOnMeasure(event, goalType, progressControlObj) {
-  const { id } = event.target.dataset;
+  const { id, oldval } = event.target.dataset;
   const { value, max } = event.target;
+  const isPlus = oldval < value ? true : false;
+  const diff = value - oldval;
   fetch(`/api/${goalType}/measure/${id}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ value }),
   });
+  event.target.dataset.oldval = value;
+
   const checkbox =
     event.target.parentElement.parentElement.parentElement.querySelector(
       "input[type=checkbox]"
     );
 
-  checkbox.classList.contains("ind-check")
-    ? calculateProgress(progressControlObj)
-    : null;
+  const tr = checkbox.parentElement.parentElement;
+  const td = tr.querySelector(".measure-td");
+
+  if (checkbox.classList.contains("ind-check") && isPlus) {
+    calculateProgress(progressControlObj);
+    const impPoint =
+      convertImp(tr.querySelector(".importance").innerText) * diff;
+    const modal = document.createElement("div");
+    modal.className = "complete-modal";
+    td.appendChild(modal);
+
+    animateModalValue(modal, 0, 99, 750);
+    animateModalValue(modal, 99, impPoint, 750);
+    setTimeout(() => {
+      modal.remove();
+    }, 2100);
+  } else if (checkbox.classList.contains("ind-check")) {
+    calculateProgress(progressControlObj);
+  }
+
   if (
     (parseInt(value, 10) === parseInt(max, 10) && !checkbox.checked) ||
     (parseInt(value, 10) < parseInt(max, 10) && checkbox.checked)
@@ -237,7 +259,8 @@ export function changeOnMeasure(event, goalType, progressControlObj) {
 export function changeOnMeasureNoEvent(
   measureInput,
   goalType,
-  progressControlObj
+  progressControlObj,
+  isPlus
 ) {
   const { id } = measureInput.dataset;
   const { value, max } = measureInput;
@@ -246,14 +269,30 @@ export function changeOnMeasureNoEvent(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ value }),
   });
+
+  measureInput.dataset.oldval = value;
   const checkbox =
     measureInput.parentElement.parentElement.parentElement.querySelector(
       "input[type=checkbox]"
     );
+  const tr = checkbox.parentElement.parentElement;
+  const td = tr.querySelector(".measure-td");
 
-  checkbox.classList.contains("ind-check")
-    ? calculateProgress(progressControlObj)
-    : null;
+  if (checkbox.classList.contains("ind-check") && isPlus) {
+    calculateProgress(progressControlObj);
+    const impPoint = convertImp(tr.querySelector(".importance").innerText);
+    const modal = document.createElement("div");
+    modal.className = "complete-modal";
+    td.appendChild(modal);
+
+    animateModalValue(modal, 0, 99, 750);
+    animateModalValue(modal, 99, impPoint, 750);
+    setTimeout(() => {
+      modal.remove();
+    }, 2100);
+  } else if (checkbox.classList.contains("ind-check")) {
+    calculateProgress(progressControlObj);
+  }
 
   if (
     (parseInt(value, 10) === parseInt(max, 10) && !checkbox.checked) ||
@@ -299,7 +338,8 @@ export const calculateProgress = ({
 
 export function changeOnCheckbox(event, progressControlObj, goalType) {
   const checkbox = event.target;
-  const tr = checkbox.parentElement.parentElement;
+  const td = checkbox.parentElement;
+  const tr = td.parentElement;
   const textTd = tr.querySelectorAll("td")[2];
 
   //checkbox에 checked attr 명시적으로 추가/제거(count할 수 있게)
@@ -307,6 +347,19 @@ export function changeOnCheckbox(event, progressControlObj, goalType) {
     checkbox.setAttribute("checked", "");
   } else {
     checkbox.removeAttribute("checked");
+  }
+
+  if (!checkbox.classList.contains("ind-check") && checkbox.checked) {
+    const impPoint = convertImp(tr.querySelector(".importance").innerText);
+    const modal = document.createElement("div");
+    modal.className = "complete-modal";
+    td.appendChild(modal);
+
+    animateModalValue(modal, 0, 99, 750);
+    animateModalValue(modal, 99, impPoint, 750);
+    setTimeout(() => {
+      modal.remove();
+    }, 2100);
   }
 
   calculateProgress(progressControlObj);
@@ -356,10 +409,6 @@ export const handleTermStartChange = (event, termEnd, goalType) => {
     termEnd.value = termEndValue;
   }
 };
-
-export function getPreviousGoal(goalType) {
-  fetch();
-}
 
 export function getOptions(goalAvg, indMeasureInputs, noIndCheckboxes) {
   let todayTotal = 0;

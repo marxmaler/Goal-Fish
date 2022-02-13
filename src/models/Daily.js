@@ -13,6 +13,7 @@ const dailySchema = new mongoose.Schema({
       ref: "DailySub",
     },
   ],
+  total: { type: Number, default: 0, required: true },
 });
 
 const Daily = mongoose.model("Daily", dailySchema);

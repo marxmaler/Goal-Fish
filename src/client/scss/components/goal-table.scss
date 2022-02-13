@@ -15,8 +15,19 @@
       font-size: 20px;
       tr {
         th {
-          padding: 15px;
+          width: max-content;
+          padding: 10px;
           border-bottom: 3px double black;
+          &.th-imp {
+            div {
+              width: max-content;
+            }
+          }
+          div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
         }
       }
     }
@@ -25,11 +36,18 @@
       tr {
         border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
         td {
+          position: relative;
           padding: 20px;
           div {
             display: flex;
             align-items: center;
+            span.measureName-span {
+              display: inline-block;
+              font-size: 12px;
+              width: max-content;
+            }
             input[type="number"] {
+              background-color: transparent;
               border: none;
               margin: 0;
               padding: 0;
@@ -39,6 +57,7 @@
             }
           }
           &.content-td {
+            min-width: 100px;
             max-width: 400px;
           }
         }
@@ -65,6 +84,79 @@
 
       .C {
         color: silver;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 899px) {
+  .goal-table-wrapper {
+    .goal-table {
+      tbody {
+        tr {
+          td {
+            padding: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .goal-table-wrapper {
+    .goal-table {
+      thead {
+        tr {
+          th {
+            font-size: 17px;
+            padding: 7px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .goal-table-wrapper {
+    .goal-table {
+      thead {
+        tr {
+          th {
+            font-size: 14px;
+            padding: 5px;
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          td {
+            font-size: 10px;
+            padding: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .goal-table-wrapper {
+    .goal-table {
+      thead {
+        tr {
+          th {
+            &.th-imp {
+              div {
+                width: max-content;
+              }
+            }
+            font-size: 10px;
+            padding: 5px;
+          }
+        }
       }
     }
   }

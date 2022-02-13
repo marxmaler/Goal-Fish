@@ -1,7 +1,6 @@
 import Daily from "../models/Daily";
 import DailySub from "../models/DailySub";
 import { getToday, yyyymmdd } from "../functions/time";
-import User from "../models/User";
 import { convertImp } from "../functions/convertImp";
 
 export const getDailyHome = async (req, res) => {
@@ -13,70 +12,46 @@ export const getDailyHome = async (req, res) => {
     date,
   }).populate("subs");
 
-  const user = await User.findById(userId);
-
   if (goal && goal.subs.length < 1) {
-    user.dailies.splice(user.dailies.indexOf(goal._id), 1);
-    user.save();
-    req.session.user = user;
-
     await Daily.deleteOne({
       _id: goal._id,
     });
     return res.redirect("/");
   }
 
-  //오늘의 성취도 계산
-  const subs = goal?.subs;
-  let todayTotal = 0;
-  if (subs) {
-    subs.forEach((sub) => {
-      sub.eachAsIndepend
-        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
-        : sub.completed
-        ? (todayTotal += convertImp(sub.importance))
-        : null;
-    });
-  }
-  let goalAvg =
-    user.dailies.length > 1
-      ? (user.totals.daily - todayTotal) / (user.dailies.length - 1)
-      : 0;
+  //평균 구하기
+  const prevGoals = await Daily.find({
+    owner: userId,
+    date: { $lt: new Date(date) },
+  })
+    .sort({ date: -1 })
+    .limit(7);
+  let prevTotal = 0;
+  let prevAvg = 0;
+  prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+  prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
   return res.render("currentGoal", {
     goal,
     date,
     pageTitle,
-    goalAvg,
+    prevAvg,
   });
 };
 
 export const postDailyCompleted = async (req, res) => {
   const { id } = req.params;
   const dailySub = await DailySub.findById(id);
-  if (dailySub.completed) {
-    dailySub.completed = false;
-    dailySub.save();
-    if (!dailySub.eachAsIndepend) {
-      const impPoint =
-        dailySub.importance === "A" ? 5 : dailySub.importance === "B" ? 3 : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      user.totals.daily -= impPoint;
-      user.save();
-      req.session.user = user;
-    }
-  } else {
-    dailySub.completed = true;
-    dailySub.save();
-    if (!dailySub.eachAsIndepend) {
-      const impPoint =
-        dailySub.importance === "A" ? 5 : dailySub.importance === "B" ? 3 : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      user.totals.daily += impPoint;
-      user.save();
-      req.session.user = user;
-    }
+  dailySub.completed
+    ? (dailySub.completed = false)
+    : (dailySub.completed = true);
+  dailySub.save();
+
+  if (!dailySub.eachAsIndepend) {
+    const impPoint = convertImp(dailySub.importance);
+    const daily = await Daily.findById(dailySub.daily);
+    daily.total += impPoint;
+    daily.save();
   }
   return res.sendStatus(200);
 };
@@ -92,15 +67,11 @@ export const postDailyMeasure = async (req, res) => {
       dailySub.eachAsIndepend &&
       parseInt(dailySub.currentValue, 10) !== parseInt(value, 10)
     ) {
-      const impPoint =
-        dailySub.importance === "A" ? 5 : dailySub.importance === "B" ? 3 : 1;
-      const userId = req.session.user._id;
-      const user = await User.findById(userId);
-      parseInt(dailySub.currentValue, 10) < parseInt(value, 10)
-        ? (user.totals.daily += impPoint)
-        : (user.totals.daily -= impPoint);
-      user.save();
-      req.session.user = user;
+      const impPoint = convertImp(dailySub.importance);
+      const daily = await Daily.findById(dailySub.daily);
+      const diff = parseInt(value, 10) - parseInt(dailySub.currentValue, 10);
+      daily.total += impPoint * diff;
+      daily.save();
     }
     dailySub.currentValue = value;
     dailySub.save();
@@ -162,11 +133,6 @@ export const postNewDaily = async (req, res) => {
     owner: userId,
     date,
   });
-
-  const user = await User.findById(req.session.user._id);
-  user.dailies.push(newDaily._id);
-  user.save();
-  req.session.user = user;
 
   if (typeof subs === "object") {
     //sub가 둘 이상
@@ -313,36 +279,33 @@ export const postEditDaily = async (req, res) => {
   }
 
   const userId = req.session.user._id;
-  const user = await User.findById(userId);
   const daily = await Daily.findOne({
     owner: userId,
     date: getToday(),
   });
+
   //sub 삭제
   if (deletedSubs) {
     if (typeof deletedSubs === "string") {
       const deletedSub = await DailySub.findByIdAndDelete(deletedSubs);
       const impPoint = convertImp(deletedSub.importance);
       deletedSub.eachAsIndepend
-        ? (user.totals.daily -= impPoint * deletedSub.currentValue)
+        ? (daily.total -= impPoint * deletedSub.currentValue)
         : deletedSub.completed
-        ? (user.totals.daily -= impPoint)
+        ? (daily.total -= impPoint)
         : null;
-      user.save();
-      req.session.user = user;
     } else {
       for (let i = 0; i < deletedSubs.length; i++) {
         const deletedSub = await DailySub.findByIdAndDelete(deletedSubs[i]);
         const impPoint = convertImp(deletedSub.importance);
         deletedSub.eachAsIndepend
-          ? (user.totals.daily -= impPoint * deletedSub.currentValue)
+          ? (daily.total -= impPoint * deletedSub.currentValue)
           : deletedSub.completed
-          ? (user.totals.daily -= impPoint)
+          ? (daily.total -= impPoint)
           : null;
-        user.save();
-        req.session.user = user;
       }
     }
+    daily.save();
   }
 
   //기존 sub 내용 변경
@@ -424,9 +387,9 @@ export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
   const today = getToday();
   const userId = req.session.user._id;
-  const user = await User.findById(userId);
   let goal = null;
   let date = "";
+
   if (req.originalUrl === "/daily/previous/") {
     goal = await Daily.findOne({
       owner: userId,
@@ -437,8 +400,6 @@ export const getPreviousDaily = async (req, res) => {
 
     if (goal) {
       date = yyyymmdd(goal.date);
-      date = date.split("-");
-      date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
     }
   } else {
     date = req.params.date;
@@ -448,25 +409,27 @@ export const getPreviousDaily = async (req, res) => {
     }
 
     goal = await Daily.findOne({ owner: userId, date }).populate("subs");
+  }
+
+  //평균 구하기
+
+  let prevTotal = 0;
+  let prevAvg = 0;
+
+  if (date !== "") {
+    const prevGoals = await Daily.find({
+      owner: userId,
+      date: { $lt: new Date(date) },
+    })
+      .sort({ date: -1 })
+      .limit(7);
+
+    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+    prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
     date = date.split("-");
     date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
   }
 
-  //성취도 계산
-  const subs = goal?.subs;
-  let todayTotal = 0;
-  if (subs) {
-    subs.forEach((sub) => {
-      sub.eachAsIndepend
-        ? (todayTotal += convertImp(sub.importance) * sub.currentValue)
-        : sub.completed
-        ? (todayTotal += convertImp(sub.importance))
-        : null;
-    });
-  }
-  let goalAvg =
-    user.dailies.length > 1
-      ? (user.totals.daily - todayTotal) / (user.dailies.length - 1)
-      : 0;
-  return res.render("previousGoal", { goal, date, pageTitle, goalAvg });
+  return res.render("previousGoal", { goal, date, pageTitle, prevAvg });
 };
