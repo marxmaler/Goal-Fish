@@ -23,8 +23,11 @@ monthlyRouter
   .get(getEditMonthly)
   .post(postEditMonthly);
 monthlyRouter
-  .route("/previous")
+  .route("/previous/")
   .all(protectorMiddleware)
   .get(getPreviousMonthly);
-monthlyRouter.route("/:id").all(protectorMiddleware).get(getPreviousMonthly);
+monthlyRouter
+  .route("/previous/:id")
+  .all(protectorMiddleware)
+  .get(getPreviousMonthly);
 export default monthlyRouter;

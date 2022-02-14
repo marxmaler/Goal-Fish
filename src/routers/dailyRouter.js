@@ -20,7 +20,7 @@ dailyRouter
   .all(protectorMiddleware)
   .get(getEditDaily)
   .post(postEditDaily);
-dailyRouter.route("/previous").all(protectorMiddleware).get(getPreviousDaily);
+dailyRouter.route("/previous/").all(protectorMiddleware).get(getPreviousDaily);
 dailyRouter.route("/:date").all(protectorMiddleware).get(getPreviousDaily);
 
 export default dailyRouter;

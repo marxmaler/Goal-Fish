@@ -1,6 +1,11 @@
 import Monthly from "../models/Monthly";
 import MonthlySub from "../models/MonthlySub";
-import { getToday, getAMonthFromToday, yyyymmdd } from "../functions/time";
+import {
+  getToday,
+  getAMonthFromToday,
+  yyyymmdd,
+  yymm,
+} from "../functions/time";
 import { convertImp } from "../functions/convertImp";
 
 export const getMonthlyHome = async (req, res) => {
@@ -25,17 +30,29 @@ export const getMonthlyHome = async (req, res) => {
   let prevTotal = 0;
   let prevAvg = 0;
   let prevGoals = null;
+  let prevGoalArr = [];
+  let prevGoalDates = [];
+
   if (goal) {
     //평균 구하기
-    prevGoals = await Weekly.find({
+    prevGoals = await Monthly.find({
       owner: userId,
       termEnd: { $lt: goal.termEnd },
     })
       .sort({ termEnd: -1 })
       .limit(3);
 
-    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+    prevGoals
+      ? prevGoals.forEach((goal) => {
+          prevTotal += goal.total;
+          prevGoalArr.push(goal.total);
+          prevGoalDates.push(`${yymm(goal.termStart)}~${yymm(goal.termEnd)}`);
+        })
+      : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    prevGoalArr = prevGoalArr.reverse();
+    prevGoalDates = prevGoalDates.reverse();
 
     termStart = yyyymmdd(goal.termStart);
     termEnd = yyyymmdd(goal.termEnd);
@@ -47,6 +64,8 @@ export const getMonthlyHome = async (req, res) => {
     termEnd,
     pageTitle,
     prevAvg,
+    prevGoals: prevGoalArr,
+    prevGoalDates,
   });
 };
 
@@ -385,51 +404,38 @@ export const postEditMonthly = async (req, res) => {
 export const getPreviousMonthly = async (req, res) => {
   const pageTitle = "Previous Monthly";
   const today = getToday();
+  const { id: goalId } = req.params;
   const userId = req.session.user._id;
-  let goal = null;
   let termStart = "";
   let termEnd = "";
 
-  if (req.originalUrl === "/monthly/previous/") {
-    goal = await Monthly.findOne({
+  let currentGoal = null;
+  if (!goalId) {
+    currentGoal = await Monthly.findOne({
       owner: userId,
-      termEnd: { $lt: new Date(today) },
-    })
-      .sort({ date: -1 })
-      .populate("subs");
-
-    if (goal) {
-      termStart = yyyymmdd(goal.termStart);
-      termEnd = yyyymmdd(goal.termEnd);
-    }
+      termEnd: { $gte: new Date(today) },
+    }).sort({ date: -1 });
   } else {
-    let date = req.params.date;
+    currentGoal = await Monthly.findById(goalId);
+  }
 
-    const currentGoal = await Monthly.findOne({
-      owner: userId,
-      termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
-      termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
-    });
-    if (
-      new Date(date) >= currentGoal.termStart &&
-      new Date(date) <= currentGoal.termEnd
-    ) {
-      return res.redirect("/monthly/");
-    }
+  const goal = await Monthly.findOne({
+    owner: userId,
+    termEnd: { $lt: currentGoal.termEnd },
+  })
+    .sort({ date: -1 })
+    .populate("subs");
 
-    goal = await Monthly.findOne({
-      owner: userId,
-      termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 monthly를 찾습니다.
-      termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 monthly를 찾습니다.
-    }).populate("subs");
+  if (goal) {
     termStart = yyyymmdd(goal.termStart);
     termEnd = yyyymmdd(goal.termEnd);
   }
 
   //평균 구하기
-
   let prevTotal = 0;
   let prevAvg = 0;
+  let prevGoalArr = [];
+  let prevGoalDates = [];
 
   if (termEnd !== "") {
     const prevGoals = await Monthly.find({
@@ -439,8 +445,17 @@ export const getPreviousMonthly = async (req, res) => {
       .sort({ termEnd: -1 })
       .limit(3);
 
-    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+    prevGoals
+      ? prevGoals.forEach((goal) => {
+          prevTotal += goal.total;
+          prevGoalArr.push(goal.total);
+          prevGoalDates.push(`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`);
+        })
+      : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    prevGoalArr = prevGoalArr.reverse();
+    prevGoalDates = prevGoalDates.reverse();
 
     termStart = termStart.split("-");
     termStart =
@@ -455,6 +470,8 @@ export const getPreviousMonthly = async (req, res) => {
     termEnd,
     pageTitle,
     prevAvg,
+    prevGoals: prevGoalArr,
+    prevGoalDates,
   });
 };
 

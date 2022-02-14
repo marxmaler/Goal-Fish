@@ -191,67 +191,67 @@ passport.use(
   )
 );
 
-//카카오로 가입/로그인
-export const kakaoAuth = async (accessToken, refreshToken, profile, done) => {
-  const email = profile._json.kakao_account.email;
-  if (!email) {
-    //이메일이 없으면(아직 테스트 안해봄, 친구한테 부탁해서 이메일 선택 제공 안하면 profile에 뭐가 나오는지 일단 보고 처리하기)
-    console.log(profile);
-    return done(null, null);
-  }
-  const name = profile.displayName;
-  let user = await User.findOne({ email });
-  if (user) {
-    user.name = name;
-    user.save();
-  } else {
-    user = await User.create({
-      email,
-      name,
-      joinedWithSocial: true,
-    });
-  }
-  return done(null, user);
-};
+// //카카오로 가입/로그인
+// export const kakaoAuth = async (accessToken, refreshToken, profile, done) => {
+//   const email = profile._json.kakao_account.email;
+//   if (!email) {
+//     //이메일이 없으면(아직 테스트 안해봄, 친구한테 부탁해서 이메일 선택 제공 안하면 profile에 뭐가 나오는지 일단 보고 처리하기)
+//     console.log(profile);
+//     return done(null, null);
+//   }
+//   const name = profile.displayName;
+//   let user = await User.findOne({ email });
+//   if (user) {
+//     user.name = name;
+//     user.save();
+//   } else {
+//     user = await User.create({
+//       email,
+//       name,
+//       joinedWithSocial: true,
+//     });
+//   }
+//   return done(null, user);
+// };
 
-passport.use(
-  "kakao-login",
-  new KakaoStrategy(
-    {
-      clientID: process.env.KAKAO_CLIENT,
-      clientSecret: process.env.KAKAO_SECRET,
-      callbackURL: `http://localhost:${process.env.PORT}/user/auth/kakao/finish`,
-    },
-    kakaoAuth
-  )
-);
+// passport.use(
+//   "kakao-login",
+//   new KakaoStrategy(
+//     {
+//       clientID: process.env.KAKAO_CLIENT,
+//       clientSecret: process.env.KAKAO_SECRET,
+//       callbackURL: `http://localhost:${process.env.PORT}/user/auth/kakao/finish`,
+//     },
+//     kakaoAuth
+//   )
+// );
 
-// 네이버로 가입/로그인
-export const naverAuth = async (accessToken, refreshToken, profile, done) => {
-  const email = profile.emails[0].value;
-  const name = profile.displayName;
-  let user = await User.findOne({ email });
-  if (user) {
-    user.name = name;
-    user.save();
-  } else {
-    user = await User.create({
-      email,
-      name,
-      joinedWithSocial: true,
-    });
-  }
-  return done(null, user);
-};
+// // 네이버로 가입/로그인
+// export const naverAuth = async (accessToken, refreshToken, profile, done) => {
+//   const email = profile.emails[0].value;
+//   const name = profile.displayName;
+//   let user = await User.findOne({ email });
+//   if (user) {
+//     user.name = name;
+//     user.save();
+//   } else {
+//     user = await User.create({
+//       email,
+//       name,
+//       joinedWithSocial: true,
+//     });
+//   }
+//   return done(null, user);
+// };
 
-passport.use(
-  "naver",
-  new NaverStrategy(
-    {
-      clientID: process.env.NAVER_CLIENT,
-      clientSecret: process.env.NAVER_SECRET,
-      callbackURL: `http://localhost:${process.env.PORT}/user/auth/naver/finish`,
-    },
-    naverAuth
-  )
-);
+// passport.use(
+//   "naver",
+//   new NaverStrategy(
+//     {
+//       clientID: process.env.NAVER_CLIENT,
+//       clientSecret: process.env.NAVER_SECRET,
+//       callbackURL: `http://localhost:${process.env.PORT}/user/auth/naver/finish`,
+//     },
+//     naverAuth
+//   )
+// );

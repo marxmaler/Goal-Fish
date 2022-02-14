@@ -2,7 +2,7 @@ include goal-table.pug
 
 mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
     if goal
-        div.goal-container
+        div(data-goalid=goal._id).goal-container
             if pageTitle==="Daily" 
                 h2 오늘의 목표
                 span=`${date}`
@@ -69,7 +69,11 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
                     a(href="/weekly/")
                         button 돌아가기
         //- 그래프
-        div(data-avg=prevAvg)#chart
+        div.chart-box
+            div.chart-swap-btn
+                span#swap-to-line 그래프 전환
+                span#graph-type 막대 그래프
+            div(data-avg=prevAvg, data-prevs=prevGoals, data-prevdates=prevGoalDates)#chart
     else
         if pageTitle==="Daily"    
             div.no-goal-messeage-box
@@ -120,10 +124,9 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
                 a(href="/yearly/")
                     button 돌아가기
     
-    div.previous-goal-search
-        if pageTitle==="Daily" || pageTitle==="Previous Daily"          
-            p 다른 날짜 조회
+    div.previous-goal-search      
         if pageTitle.includes("Daily")
+            p 다른 날짜 조회
             input(type="date")#previous-goal-selector
         else
             div

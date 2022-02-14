@@ -1,6 +1,6 @@
 import Daily from "../models/Daily";
 import DailySub from "../models/DailySub";
-import { getToday, yyyymmdd } from "../functions/time";
+import { getToday, mmdd, yyyymmdd } from "../functions/time";
 import { convertImp } from "../functions/convertImp";
 
 export const getDailyHome = async (req, res) => {
@@ -28,14 +28,27 @@ export const getDailyHome = async (req, res) => {
     .limit(7);
   let prevTotal = 0;
   let prevAvg = 0;
-  prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+  let prevGoalArr = [];
+  let prevGoalDates = [];
+  prevGoals
+    ? prevGoals.forEach((goal) => {
+        prevTotal += goal.total;
+        prevGoalArr.push(goal.total);
+        prevGoalDates.push(mmdd(goal.date));
+      })
+    : null;
   prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+  prevGoalArr = prevGoalArr.reverse();
+  prevGoalDates = prevGoalDates.reverse();
 
   return res.render("currentGoal", {
     goal,
     date,
     pageTitle,
     prevAvg,
+    prevGoals: prevGoalArr,
+    prevGoalDates,
   });
 };
 
@@ -387,49 +400,58 @@ export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
   const today = getToday();
   const userId = req.session.user._id;
-  let goal = null;
-  let date = "";
 
-  if (req.originalUrl === "/daily/previous/") {
+  let date = req.params.date;
+
+  if (date && date === today) {
+    return res.redirect("/");
+  }
+
+  let goal = null;
+  if (!date) {
     goal = await Daily.findOne({
       owner: userId,
       date: { $lt: new Date(today) },
-    })
-      .sort({ date: -1 })
-      .populate("subs");
-
-    if (goal) {
-      date = yyyymmdd(goal.date);
-    }
+    }).sort({ date: -1 });
+    return res.redirect(`/daily/${yyyymmdd(goal.date)}`);
   } else {
-    date = req.params.date;
-
-    if (date === today) {
-      return res.redirect("/");
-    }
-
     goal = await Daily.findOne({ owner: userId, date }).populate("subs");
   }
 
   //평균 구하기
+  const prevGoals = await Daily.find({
+    owner: userId,
+    date: { $lt: new Date(date) },
+  })
+    .sort({ date: -1 })
+    .limit(7);
 
   let prevTotal = 0;
   let prevAvg = 0;
+  let prevGoalArr = [];
+  let prevGoalDates = [];
 
-  if (date !== "") {
-    const prevGoals = await Daily.find({
-      owner: userId,
-      date: { $lt: new Date(date) },
-    })
-      .sort({ date: -1 })
-      .limit(7);
+  prevGoals
+    ? prevGoals.forEach((goal) => {
+        prevTotal += goal.total;
+        prevGoalArr.push(goal.total);
+        prevGoalDates.push(mmdd(goal.date));
+      })
+    : null;
+  prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
 
-    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
-    prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+  prevGoalArr = prevGoalArr.reverse();
+  prevGoalDates = prevGoalDates.reverse();
 
-    date = date.split("-");
-    date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
-  }
+  date = date.split("-");
+  date = date[0] + "년 " + date[1] + "월 " + date[2] + "일";
 
-  return res.render("previousGoal", { goal, date, pageTitle, prevAvg });
+  return res.render("previousGoal", {
+    goal,
+    date,
+    pageTitle,
+    prevAvg,
+    prevGoals: prevGoalArr,
+    prevGoalDates,
+  });
 };

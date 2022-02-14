@@ -1,6 +1,6 @@
 import Yearly from "../models/Yearly";
 import YearlySub from "../models/YearlySub";
-import { getToday, getAYearFromToday, yyyymmdd } from "../functions/time";
+import { getToday, getAYearFromToday, yyyymmdd, yymm } from "../functions/time";
 import { convertImp } from "../functions/convertImp";
 
 export const getYearlyHome = async (req, res) => {
@@ -25,6 +25,9 @@ export const getYearlyHome = async (req, res) => {
   let prevTotal = 0;
   let prevAvg = 0;
   let prevGoals = null;
+  let prevGoalArr = [];
+  let prevGoalDates = [];
+
   if (goal) {
     //평균 구하기
     prevGoals = await Yearly.find({
@@ -34,8 +37,17 @@ export const getYearlyHome = async (req, res) => {
       .sort({ termEnd: -1 })
       .limit(2);
 
-    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+    prevGoals
+      ? prevGoals.forEach((goal) => {
+          prevTotal += goal.total;
+          prevGoalArr.push(goal.total);
+          prevGoalDates.push(`${yymm(goal.termStart)}~${yymm(goal.termEnd)}`);
+        })
+      : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    prevGoalArr = prevGoalArr.reverse();
+    prevGoalDates = prevGoalDates.reverse();
 
     termStart = yyyymmdd(goal.termStart);
     termEnd = yyyymmdd(goal.termEnd);
@@ -47,6 +59,8 @@ export const getYearlyHome = async (req, res) => {
     termEnd,
     pageTitle,
     prevAvg,
+    prevGoals: prevGoalArr,
+    prevGoalDates,
   });
 };
 
@@ -385,51 +399,38 @@ export const postEditYearly = async (req, res) => {
 export const getPreviousYearly = async (req, res) => {
   const pageTitle = "Previous Yearly";
   const today = getToday();
+  const { id: goalId } = req.params;
   const userId = req.session.user._id;
-  let goal = null;
   let termStart = "";
   let termEnd = "";
 
-  if (req.originalUrl === "/yearly/previous/") {
-    goal = await Yearly.findOne({
+  let currentGoal = null;
+  if (!goalId) {
+    currentGoal = await Yearly.findOne({
       owner: userId,
-      termEnd: { $lt: new Date(today) },
-    })
-      .sort({ date: -1 })
-      .populate("subs");
-
-    if (goal) {
-      termStart = yyyymmdd(goal.termStart);
-      termEnd = yyyymmdd(goal.termEnd);
-    }
+      termEnd: { $gte: new Date(today) },
+    }).sort({ date: -1 });
   } else {
-    let date = req.params.date;
+    currentGoal = await Yearly.findById(goalId);
+  }
 
-    const currentGoal = await Yearly.findOne({
-      owner: userId,
-      termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
-      termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
-    });
-    if (
-      new Date(date) >= currentGoal.termStart &&
-      new Date(date) <= currentGoal.termEnd
-    ) {
-      return res.redirect("/yearly/");
-    }
+  const goal = await Yearly.findOne({
+    owner: userId,
+    termEnd: { $lt: currentGoal.termEnd },
+  })
+    .sort({ date: -1 })
+    .populate("subs");
 
-    goal = await Yearly.findOne({
-      owner: userId,
-      termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
-      termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 yearly를 찾습니다.
-    }).populate("subs");
+  if (goal) {
     termStart = yyyymmdd(goal.termStart);
     termEnd = yyyymmdd(goal.termEnd);
   }
 
   //평균 구하기
-
   let prevTotal = 0;
   let prevAvg = 0;
+  let prevGoalArr = [];
+  let prevGoalDates = [];
 
   if (termEnd !== "") {
     const prevGoals = await Yearly.find({
@@ -438,8 +439,18 @@ export const getPreviousYearly = async (req, res) => {
     })
       .sort({ termEnd: -1 })
       .limit(2);
-    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+
+    prevGoals
+      ? prevGoals.forEach((goal) => {
+          prevTotal += goal.total;
+          prevGoalArr.push(goal.total);
+          prevGoalDates.push(`${yymm(goal.termStart)}~${yymm(goal.termEnd)}`);
+        })
+      : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    prevGoalArr = prevGoalArr.reverse();
+    prevGoalDates = prevGoalDates.reverse();
 
     termStart = termStart.split("-");
     termStart =
@@ -454,6 +465,8 @@ export const getPreviousYearly = async (req, res) => {
     termEnd,
     pageTitle,
     prevAvg,
+    prevGoals: prevGoalArr,
+    prevGoalDates,
   });
 };
 

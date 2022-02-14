@@ -309,6 +309,8 @@ export const calculateProgress = ({
   indCheckboxes,
   chartBox,
   goalAvg,
+  prevGoals,
+  prevGoalDates,
   indMeasureInputs,
   noIndCheckboxes,
 }) => {
@@ -330,9 +332,20 @@ export const calculateProgress = ({
   progress.value = progVal;
   progressPoint.innerText = `${Math.round(progVal)}%`;
 
+  const graphType =
+    document.getElementById("graph-type").innerText === "막대 그래프"
+      ? "bar"
+      : "line";
   reRenderChart(
     chartBox,
-    getOptions(goalAvg, indMeasureInputs, noIndCheckboxes)
+    getOptions(
+      goalAvg,
+      prevGoals,
+      prevGoalDates,
+      graphType,
+      indMeasureInputs,
+      noIndCheckboxes
+    )
   );
 };
 
@@ -410,7 +423,14 @@ export const handleTermStartChange = (event, termEnd, goalType) => {
   }
 };
 
-export function getOptions(goalAvg, indMeasureInputs, noIndCheckboxes) {
+export function getOptions(
+  goalAvg,
+  prevGoals,
+  prevGoalDates,
+  graphType,
+  indMeasureInputs,
+  noIndCheckboxes
+) {
   let todayTotal = 0;
   indMeasureInputs
     ? indMeasureInputs.forEach((input) => {
@@ -437,16 +457,20 @@ export function getOptions(goalAvg, indMeasureInputs, noIndCheckboxes) {
   const options = {
     theme: { mode: "dark" },
     chart: {
-      type: "bar",
+      type: graphType,
     },
     series: [
       {
         name: "Goal Management Score",
-        data: [parseInt(goalAvg, 10), parseInt(todayTotal, 10)],
+        data:
+          graphType === "bar"
+            ? [parseInt(goalAvg, 10), parseInt(todayTotal, 10)]
+            : JSON.parse(prevGoals),
       },
     ],
     xaxis: {
-      categories: ["average", "today"],
+      categories:
+        graphType === "bar" ? ["average", "today"] : JSON.parse(prevGoalDates),
       crosshairs: {
         fill: {
           type: "gradient",
@@ -474,3 +498,79 @@ export function reRenderChart(chartBox, options) {
   const chart = new ApexCharts(div, options);
   chart.render();
 }
+
+export const handleChartSwap = (
+  event,
+  chartSwapBtnBox,
+  chartType,
+  charRenderObject
+) => {
+  const {
+    chartBox,
+    goalAvg,
+    prevGoals,
+    prevGoalDates,
+    indMeasureInputs,
+    noIndCheckboxes,
+  } = charRenderObject;
+
+  if (event.target.id === "swap-to-line") {
+    event.target.style.animation = "slideRight 0.3s ease-in-out";
+    setTimeout(() => {
+      const newSwapBtn = document.createElement("span");
+      newSwapBtn.setAttribute("id", "swap-to-bar");
+      newSwapBtn.innerText = "그래프 전환";
+      newSwapBtn.addEventListener("click", (event) =>
+        handleChartSwap(event, chartSwapBtnBox, chartType, charRenderObject)
+      );
+      event.target.remove();
+      chartSwapBtnBox.appendChild(newSwapBtn);
+      chartType.innerText = "꺾은 선 그래프";
+    }, 300);
+
+    const graphType = "line";
+    reRenderChart(
+      chartBox,
+      getOptions(
+        goalAvg,
+        prevGoals,
+        prevGoalDates,
+        graphType,
+        indMeasureInputs,
+        noIndCheckboxes
+      )
+    );
+  } else {
+    event.target.style.animation = "slideLeft 0.3s ease-in-out";
+    setTimeout(() => {
+      const newSwapBtn = document.createElement("span");
+      newSwapBtn.setAttribute("id", "swap-to-line");
+      newSwapBtn.innerText = "그래프 전환";
+      newSwapBtn.addEventListener("click", (event) =>
+        handleChartSwap(event, chartSwapBtnBox, chartType, charRenderObject)
+      );
+      event.target.remove();
+      chartSwapBtnBox.prepend(newSwapBtn);
+      chartType.innerText = "막대 그래프";
+    }, 300);
+
+    const graphType = "bar";
+    reRenderChart(
+      chartBox,
+      getOptions(
+        goalAvg,
+        prevGoals,
+        prevGoalDates,
+        graphType,
+        indMeasureInputs,
+        noIndCheckboxes
+      )
+    );
+  }
+};
+
+export const getPreviousGoal = (goalId, goalType) => {
+  window.location.href = goalId
+    ? `/${goalType}/previous/${goalId}`
+    : `/${goalType}/previous/`;
+};

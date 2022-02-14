@@ -96,3 +96,17 @@ export function yyyymmdd(dateObj) {
   const normalDate = `${year}-${timeFormat(month)}-${timeFormat(date)}`;
   return normalDate;
 }
+
+export function yymm(dateObj) {
+  const year = String(dateObj.getFullYear()).slice(2, 4);
+  const month = dateObj.getMonth() + 1;
+  const normalDate = `${year}-${timeFormat(month)}`;
+  return normalDate;
+}
+
+export function mmdd(dateObj) {
+  const month = dateObj.getMonth() + 1;
+  const date = dateObj.getDate();
+  const normalDate = `${timeFormat(month)}-${timeFormat(date)}`;
+  return normalDate;
+}

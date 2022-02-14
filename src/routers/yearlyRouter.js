@@ -22,6 +22,9 @@ yearlyRouter
   .all(protectorMiddleware)
   .get(getEditYearly)
   .post(postEditYearly);
-yearlyRouter.route("/previous").all(protectorMiddleware).get(getPreviousYearly);
+yearlyRouter
+  .route("/previous/:id")
+  .all(protectorMiddleware)
+  .get(getPreviousYearly);
 yearlyRouter.route("/:id").all(protectorMiddleware).get(getPreviousYearly);
 export default yearlyRouter;

@@ -12,12 +12,41 @@ import {
   checkUnreflected,
   getPreviousGoal,
   preventSubmit,
+  handleChartSwap,
 } from "./sharedAll";
-//daily
 
-const progress = document.querySelector("progress");
-//daily가 있다면
-if (progress) {
+const goalType = document
+  .querySelector("title")
+  .text.split("|")[1]
+  .replace(" ", "")
+  .toLowerCase();
+
+//이전 일일 목표로 이동
+const goalContainer = document.querySelector(".goal-container");
+let goalId = null;
+
+if (goalContainer) {
+  goalId = goalContainer.dataset.goalid;
+}
+
+if (goalType === "daily") {
+  const previousGoalSelector = document.getElementById(
+    "previous-goal-selector"
+  );
+  previousGoalSelector.addEventListener("input", () =>
+    getPreviousDaily(previousGoalSelector)
+  );
+} else {
+  const previousGoalBtn = document.getElementById("previous-goal-btn");
+  previousGoalBtn.addEventListener("click", (event) => {
+    preventSubmit(event);
+    getPreviousGoal(goalId, goalType);
+  });
+}
+
+//goal이 있다면
+if (goalContainer) {
+  const progress = document.querySelector("progress");
   const progressPoint = document.getElementById("progress-point");
   const checkboxes = document.querySelectorAll("input[type=checkbox]");
   let checkboxCnt = checkboxes.length;
@@ -38,7 +67,14 @@ if (progress) {
   );
 
   const chartBox = document.querySelector("#chart");
-  const goalAvg = chartBox.dataset.avg;
+  const chartType = document.getElementById("graph-type");
+  const graphType = chartType.innerText === "막대 그래프" ? "bar" : "line";
+  const {
+    avg: goalAvg,
+    prevs: prevGoals,
+    prevdates: prevGoalDates,
+  } = chartBox.dataset;
+
   const progressControlObj = {
     progress,
     progressPoint,
@@ -46,14 +82,21 @@ if (progress) {
     indCheckboxes,
     chartBox,
     goalAvg,
+    prevGoals,
+    prevGoalDates,
     indMeasureInputs,
     noIndCheckboxes,
   };
-  const goalType = document
-    .querySelector("title")
-    .text.split("|")[1]
-    .replace(" ", "")
-    .toLowerCase();
+
+  const charRenderObject = {
+    chartBox,
+    goalAvg,
+    prevGoals,
+    prevGoalDates,
+    graphType,
+    indMeasureInputs,
+    noIndCheckboxes,
+  };
 
   calculateProgress(progressControlObj);
 
@@ -91,22 +134,6 @@ if (progress) {
     );
   }
 
-  //이전 일일 목표로 이동
-  if (goalType === "daily") {
-    const previousGoalSelector = document.getElementById(
-      "previous-goal-selector"
-    );
-    previousGoalSelector.addEventListener("input", () =>
-      getPreviousDaily(previousGoalSelector)
-    );
-  } else {
-    const previousGoalBtn = document.getElementById("previous-goal-btn");
-    previousGoalBtn.addEventListener("click", (event) => {
-      preventSubmit(event);
-      getPreviousGoal(goalType);
-    });
-  }
-
   // 남은 시간
   let goalTerm = "";
   let termEnd = "";
@@ -120,6 +147,14 @@ if (progress) {
   }
   const remainingTimeSpan = document.querySelector(
     ".goal-container__ramaining-time"
+  );
+
+  //chart-btn
+  const chartSwapBtnBox = document.querySelector(".chart-swap-btn");
+  const chartSwapBtn = document.getElementById("swap-to-line");
+
+  chartSwapBtn.addEventListener("click", (event) =>
+    handleChartSwap(event, chartSwapBtnBox, chartType, charRenderObject)
   );
 
   if (remainingTimeSpan) {

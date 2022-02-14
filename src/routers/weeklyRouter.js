@@ -22,6 +22,12 @@ weeklyRouter
   .all(protectorMiddleware)
   .get(getEditWeekly)
   .post(postEditWeekly);
-weeklyRouter.route("/previous").all(protectorMiddleware).get(getPreviousWeekly);
-weeklyRouter.route("/:id").all(protectorMiddleware).get(getPreviousWeekly);
+weeklyRouter
+  .route("/previous/")
+  .all(protectorMiddleware)
+  .get(getPreviousWeekly);
+weeklyRouter
+  .route("/previous/:id")
+  .all(protectorMiddleware)
+  .get(getPreviousWeekly);
 export default weeklyRouter;

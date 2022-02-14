@@ -1,0 +1,57 @@
+@keyframes slideRight {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.chart-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .chart-swap-btn {
+    margin-bottom: 10px;
+    background-color: transparent;
+    border: white 2px solid;
+    color: black;
+    width: 50%;
+    min-width: 260px;
+    padding: 1px;
+    border-radius: 10px;
+    display: flex;
+    span {
+      width: 50%;
+      text-align: center;
+      padding: 10px;
+      border-radius: 9px;
+      &#swap-to-line {
+        background-color: white;
+        border-bottom: 4px solid rgba($color: lightgray, $alpha: 1);
+        cursor: pointer;
+      }
+      &#swap-to-bar {
+        background-color: white;
+        border-bottom: 4px solid rgba($color: lightgray, $alpha: 1);
+        cursor: pointer;
+      }
+      &#graph-type {
+        background-color: black;
+        color: white;
+      }
+    }
+  }
+  #chart {
+    width: 100%;
+  }
+}

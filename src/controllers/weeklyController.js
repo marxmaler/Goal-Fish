@@ -1,6 +1,6 @@
 import Weekly from "../models/Weekly";
 import WeeklySub from "../models/WeeklySub";
-import { getToday, getAWeekFromToday, yyyymmdd } from "../functions/time";
+import { getToday, getAWeekFromToday, yyyymmdd, mmdd } from "../functions/time";
 import { convertImp } from "../functions/convertImp";
 
 export const getWeeklyHome = async (req, res) => {
@@ -25,6 +25,9 @@ export const getWeeklyHome = async (req, res) => {
   let prevTotal = 0;
   let prevAvg = 0;
   let prevGoals = null;
+  let prevGoalArr = [];
+  let prevGoalDates = [];
+
   if (goal) {
     //평균 구하기
     prevGoals = await Weekly.find({
@@ -34,8 +37,17 @@ export const getWeeklyHome = async (req, res) => {
       .sort({ termEnd: -1 })
       .limit(4);
 
-    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+    prevGoals
+      ? prevGoals.forEach((goal) => {
+          prevTotal += goal.total;
+          prevGoalArr.push(goal.total);
+          prevGoalDates.push(`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`);
+        })
+      : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    prevGoalArr = prevGoalArr.reverse();
+    prevGoalDates = prevGoalDates.reverse();
 
     termStart = yyyymmdd(goal.termStart);
     termEnd = yyyymmdd(goal.termEnd);
@@ -47,6 +59,8 @@ export const getWeeklyHome = async (req, res) => {
     termEnd,
     pageTitle,
     prevAvg,
+    prevGoals: prevGoalArr,
+    prevGoalDates,
   });
 };
 
@@ -385,51 +399,38 @@ export const postEditWeekly = async (req, res) => {
 export const getPreviousWeekly = async (req, res) => {
   const pageTitle = "Previous Weekly";
   const today = getToday();
+  const { id: goalId } = req.params;
   const userId = req.session.user._id;
-  let goal = null;
   let termStart = "";
   let termEnd = "";
 
-  if (req.originalUrl === "/weekly/previous/") {
-    goal = await Weekly.findOne({
+  let currentGoal = null;
+  if (!goalId) {
+    currentGoal = await Weekly.findOne({
       owner: userId,
-      termEnd: { $lt: new Date(today) },
-    })
-      .sort({ date: -1 })
-      .populate("subs");
-
-    if (goal) {
-      termStart = yyyymmdd(goal.termStart);
-      termEnd = yyyymmdd(goal.termEnd);
-    }
+      termEnd: { $gte: new Date(today) },
+    }).sort({ date: -1 });
   } else {
-    let date = req.params.date;
+    currentGoal = await Weekly.findById(goalId);
+  }
 
-    const currentGoal = await Weekly.findOne({
-      owner: userId,
-      termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
-      termEnd: { $gte: new Date(today) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
-    });
-    if (
-      new Date(date) >= currentGoal.termStart &&
-      new Date(date) <= currentGoal.termEnd
-    ) {
-      return res.redirect("/weekly/");
-    }
+  const goal = await Weekly.findOne({
+    owner: userId,
+    termEnd: { $lt: currentGoal.termEnd },
+  })
+    .sort({ date: -1 })
+    .populate("subs");
 
-    goal = await Weekly.findOne({
-      owner: userId,
-      termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
-      termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
-    }).populate("subs");
+  if (goal) {
     termStart = yyyymmdd(goal.termStart);
     termEnd = yyyymmdd(goal.termEnd);
   }
 
   //평균 구하기
-
   let prevTotal = 0;
   let prevAvg = 0;
+  let prevGoalArr = [];
+  let prevGoalDates = [];
 
   if (termEnd !== "") {
     const prevGoals = await Weekly.find({
@@ -438,8 +439,18 @@ export const getPreviousWeekly = async (req, res) => {
     })
       .sort({ termEnd: -1 })
       .limit(4);
-    prevGoals ? prevGoals.forEach((goal) => (prevTotal += goal.total)) : null;
+
+    prevGoals
+      ? prevGoals.forEach((goal) => {
+          prevTotal += goal.total;
+          prevGoalArr.push(goal.total);
+          prevGoalDates.push(`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`);
+        })
+      : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    prevGoalArr = prevGoalArr.reverse();
+    prevGoalDates = prevGoalDates.reverse();
 
     termStart = termStart.split("-");
     termStart =
@@ -454,6 +465,8 @@ export const getPreviousWeekly = async (req, res) => {
     termEnd,
     pageTitle,
     prevAvg,
+    prevGoals: prevGoalArr,
+    prevGoalDates,
   });
 };
 
