@@ -5,9 +5,13 @@ block mainBlock
     div.quote-box
         if loggedInUser.quote
             span=loggedInUser.quote
+                a(href="/user/quote")
+                    i.fa-solid.fa-pen-to-square
         else
-            span.no-quote="아직 오늘의 한 마디를 추가하지 않으셨습니다. 지금 작성해보세요."
-                
+            span.no-quote=lang==="ko" ? "아직 오늘의 한 마디를 추가하지 않으셨습니다. 지금 작성해보세요." : "There is no today's quote yet. Add one now."
+                a(href="/user/quote")
+                    i.fa-solid.fa-pen-to-square
+
     div
         if date
             +goalContainer(goal, pageTitle, date, null, null)

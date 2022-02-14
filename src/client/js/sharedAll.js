@@ -6,6 +6,7 @@ import {
 } from "../../functions/time";
 import ApexCharts from "apexcharts";
 import { animateModalValue } from "../../functions/animateModalValue";
+import { async } from "regenerator-runtime";
 
 export function manualSubmit(form) {
   form.submit();
@@ -332,10 +333,11 @@ export const calculateProgress = ({
   progress.value = progVal;
   progressPoint.innerText = `${Math.round(progVal)}%`;
 
-  const graphType =
-    document.getElementById("graph-type").innerText === "막대 그래프"
-      ? "bar"
-      : "line";
+  const graphType = ["막대 그래프", "Bar Chart"].includes(
+    document.getElementById("graph-type").innerText
+  )
+    ? "bar"
+    : "line";
   reRenderChart(
     chartBox,
     getOptions(
@@ -458,6 +460,9 @@ export function getOptions(
     theme: { mode: "dark" },
     chart: {
       type: graphType,
+      toolbar: {
+        show: false,
+      },
     },
     series: [
       {
@@ -502,8 +507,8 @@ export function reRenderChart(chartBox, options) {
 export const handleChartSwap = (
   event,
   chartSwapBtnBox,
-  chartType,
-  charRenderObject
+  charRenderObject,
+  lang
 ) => {
   const {
     chartBox,
@@ -514,18 +519,20 @@ export const handleChartSwap = (
     noIndCheckboxes,
   } = charRenderObject;
 
+  const chartType = document.getElementById("graph-type");
   if (event.target.id === "swap-to-line") {
     event.target.style.animation = "slideRight 0.3s ease-in-out";
     setTimeout(() => {
       const newSwapBtn = document.createElement("span");
       newSwapBtn.setAttribute("id", "swap-to-bar");
-      newSwapBtn.innerText = "그래프 전환";
+      newSwapBtn.innerText = lang === "ko" ? "그래프 전환" : "Swap Chart";
       newSwapBtn.addEventListener("click", (event) =>
-        handleChartSwap(event, chartSwapBtnBox, chartType, charRenderObject)
+        handleChartSwap(event, chartSwapBtnBox, charRenderObject)
       );
       event.target.remove();
       chartSwapBtnBox.appendChild(newSwapBtn);
-      chartType.innerText = "꺾은 선 그래프";
+
+      chartType.innerText = lang === "ko" ? "꺾은 선 그래프" : "Line Chart";
     }, 300);
 
     const graphType = "line";
@@ -545,13 +552,13 @@ export const handleChartSwap = (
     setTimeout(() => {
       const newSwapBtn = document.createElement("span");
       newSwapBtn.setAttribute("id", "swap-to-line");
-      newSwapBtn.innerText = "그래프 전환";
+      newSwapBtn.innerText = lang === "ko" ? "그래프 전환" : "Swap Chart";
       newSwapBtn.addEventListener("click", (event) =>
-        handleChartSwap(event, chartSwapBtnBox, chartType, charRenderObject)
+        handleChartSwap(event, chartSwapBtnBox, charRenderObject)
       );
       event.target.remove();
       chartSwapBtnBox.prepend(newSwapBtn);
-      chartType.innerText = "막대 그래프";
+      chartType.innerText = lang === "ko" ? "막대 그래프" : "Bar Chart";
     }, 300);
 
     const graphType = "bar";
@@ -573,4 +580,20 @@ export const getPreviousGoal = (goalId, goalType) => {
   window.location.href = goalId
     ? `/${goalType}/previous/${goalId}`
     : `/${goalType}/previous/`;
+};
+
+export const detectLanguage = async () => {
+  // let detectedLang = window.navigator.userLanguage || window.navigator.language;
+  let detectedLang = "en";
+
+  const { langChange, sessionLang } = await (
+    await fetch(`/api/language/${detectedLang}`, {
+      method: "POST",
+    })
+  ).json();
+  if (langChange) {
+    const currentUrl = window.location.href;
+    window.location.href = currentUrl;
+  }
+  return sessionLang;
 };

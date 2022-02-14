@@ -15,6 +15,7 @@ import {
   postYearlyCompleted,
   postYearlyMeasure,
 } from "../controllers/yearlyController";
+import { postSetLanguage } from "../controllers/userController";
 
 const apiRouter = express.Router();
 
@@ -26,5 +27,6 @@ apiRouter.route("/monthly/checkbox/:id").post(postMonthlyCompleted);
 apiRouter.route("/monthly/measure/:id").post(postMonthlyMeasure);
 apiRouter.route("/yearly/checkbox/:id").post(postYearlyCompleted);
 apiRouter.route("/yearly/measure/:id").post(postYearlyMeasure);
+apiRouter.route("/language/:lang").post(postSetLanguage);
 
 export default apiRouter;

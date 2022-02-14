@@ -1,0 +1,24 @@
+div.form-wrapper
+    if errorMessage
+        div.errorMessage-box
+            span.errorMessage=errorMessage
+    h1=lang === "ko" ? "프로필 변경" : "Edit Profile"
+
+    form(method="POST")
+        div.input-box 
+            label(for="name")=lang === "ko" ? "*이름:" : "*Name:" 
+            input(type="text", name="name", value=loggedInUser.name, required)#name
+        div.input-box 
+            label(for="lang")=lang === "ko" ? "*언어:" : "*Language:" 
+            select(name="lang")#lang
+                each option in langArr
+                    if lang == option
+                        option(value=`${option}`, selected)=option==="ko" ? "한국어":"English"
+                    else
+                        option(value=`${option}`)=option==="ko" ? "한국어":"English"
+        //- if !loggedInUser.joinedWithSocial
+        //-     div.input-box
+        //-         label(for="password") *새 비밀번호: 
+        //-         input(type="password", name="password", required)#password
+        div.btn-box 
+            button=lang === "ko" ? "저장" : "Save"

@@ -31,6 +31,7 @@
         color: white;
         text-shadow: 1px 1px 1px rgba($color: black, $alpha: 0.2);
         border-radius: 5px;
+        border: 1px solid gray;
         border-bottom: 4px solid rgba($color: gray, $alpha: 0.4);
         text-align: center;
         font-weight: 900;
@@ -39,7 +40,7 @@
         padding: 10px 10px;
         cursor: pointer;
         transition: all 0.3s ease-in-out;
-        &.quote-link {
+        &.profile-link {
           margin-right: 5px;
         }
         &.join-link {
@@ -48,6 +49,7 @@
         &:hover {
           background-color: white;
           color: rgba($color: #000000, $alpha: 0.8);
+          border: 1px solid lightgray;
           border-bottom: 4px solid rgba($color: lightgray, $alpha: 1);
         }
       }

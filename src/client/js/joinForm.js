@@ -1,7 +1,7 @@
 import { async } from "regenerator-runtime";
-import { preventSubmit } from "./sharedAll";
+import { detectLanguage, preventSubmit } from "./sharedAll";
 
-const form = document.querySelector("form");
+export const lang = detectLanguage();
 const emailValBtn = document.getElementById("email-val-btn");
 
 const validateEmail = async (event) => {
@@ -14,7 +14,10 @@ const validateEmail = async (event) => {
 
   if (emailFormat.test(email) === false) {
     valResult.className = "invalid";
-    valResult.innerText = "이메일 주소를 다시 한번 확인해주세요.";
+    valResult.innerText =
+      lang === "ko"
+        ? "이메일 주소를 다시 한번 확인해주세요."
+        : "Please check your email address again.";
   } else {
     const { result } = await (
       await fetch("/user/join/check/email", {
@@ -28,10 +31,14 @@ const validateEmail = async (event) => {
       const valResultInput = document.getElementById("emailValidation");
       valResultInput.value = true;
       valResult.className = "valid";
-      valResult.innerText = "사용 가능한 이메일입니다.";
+      valResult.innerText =
+        lang === "ko" ? "사용 가능한 이메일입니다." : "This email is available";
     } else {
       valResult.className = "invalid";
-      valResult.innerText = "이미 사용 중인 이메일입니다.";
+      valResult.innerText =
+        lang === "ko"
+          ? "이미 사용 중인 이메일입니다."
+          : "This email is already registered.";
     }
   }
 };

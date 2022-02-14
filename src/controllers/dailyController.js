@@ -28,8 +28,8 @@ export const getDailyHome = async (req, res) => {
     .limit(7);
   let prevTotal = 0;
   let prevAvg = 0;
-  let prevGoalArr = [];
-  let prevGoalDates = [];
+  let prevGoalArr = [goal.total];
+  let prevGoalDates = [mmdd(goal.date)];
   prevGoals
     ? prevGoals.forEach((goal) => {
         prevTotal += goal.total;
@@ -38,6 +38,9 @@ export const getDailyHome = async (req, res) => {
       })
     : null;
   prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+  prevGoalArr.length > 7 ? (prevGoalArr = prevGoalArr.slice(0, 7)) : null;
+  prevGoalDates.length > 7 ? (prevGoalDates = prevGoalDates.slice(0, 7)) : null;
 
   prevGoalArr = prevGoalArr.reverse();
   prevGoalDates = prevGoalDates.reverse();
@@ -421,7 +424,7 @@ export const getPreviousDaily = async (req, res) => {
   //평균 구하기
   const prevGoals = await Daily.find({
     owner: userId,
-    date: { $lt: new Date(date) },
+    date: { $lte: new Date(date) },
   })
     .sort({ date: -1 })
     .limit(7);

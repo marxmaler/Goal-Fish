@@ -3,6 +3,8 @@ export const localsMiddleware = (req, res, next) => {
   res.locals.loggedInUser = req.session.user;
   res.locals.measureNameArray = ["시간", "회", "개", "쪽", "권"];
   res.locals.impArray = ["A", "B", "C"];
+  res.locals.langArr = ["ko", "en"];
+  res.locals.lang = req.session.lang;
   next();
 };
 

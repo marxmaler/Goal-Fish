@@ -5,107 +5,107 @@ mixin side-menu(pageTitle)
                 i.fas.fa-dot-circle#fix-btn
             if pageTitle.includes("Daily")
                 li.highlighted.main-menu
-                    a(href="/") 일간목표
+                    a(href="/")=lang==="ko"? "일간목표" : "Daily"
                     div.detail.hidden
                         ul
                             li 
-                                a(href="/") 오늘의 목표
+                                a(href="/")=lang==="ko"? "오늘의 목표" : "Goal of today"
                             li 
-                                a(href="/daily/edit/") 오늘의 목표 수정
+                                a(href="/daily/edit/")=lang==="ko"? "오늘의 목표 수정" : "Edit Today's"
                             li 
-                                a(href="/daily/previous/") 이전 목표 조회
+                                a(href="/daily/previous/")=lang==="ko"? "이전 목표 조회" : "Previous Goal"
                             li 
-                                a(href="/daily/add/") 새 목표 추가
+                                a(href="/daily/add/")=lang==="ko"? "새 목표 추가" : "Add new Goal"
             else
                 li.main-menu
-                    a(href="/") 일간목표
+                    a(href="/")=lang==="ko"? "일간목표" : "Daily"
                     div.detail.hidden
                         ul
                             li 
-                                a(href="/") 오늘의 목표
+                                a(href="/")=lang==="ko"? "오늘의 목표" : "Goal of today"
                             li 
-                                a(href="/daily/edit") 오늘의 목표 수정
+                                a(href="/daily/edit")=lang==="ko"? "오늘의 목표 수정" : "Edit today's"
                             li 
-                                a(href="/daily/previous/") 이전 목표 조회
+                                a(href="/daily/previous/")=lang==="ko"? "이전 목표 조회" : "Previous goal"
                             li 
-                                a(href="/daily/add/") 새 목표 추가
+                                a(href="/daily/add/")=lang==="ko"? "새 목표 추가" : "Add new goal"
 
             if pageTitle.includes("Weekly")
                 li.highlighted.main-menu 
-                    a(href="/weekly/") 주간목표
+                    a(href="/weekly/")=lang==="ko"? "주간목표" : "Weekly"
                     div.detail.hidden
                         ul
                             li 
-                                a(href="/weekly/") 이번 주 목표
+                                a(href="/weekly/")=lang==="ko"? "이번 주 목표" : "Goal of this week"
                             li 
-                                a(href="/weekly/edit/") 이번 주 목표 수정
+                                a(href="/weekly/edit/")=lang==="ko"? "이번 주 목표 수정" : "Edit this week's"
                             li 
-                                a(href="/weekly/previous/") 지난 주 목표 조회
+                                a(href="/weekly/previous/")=lang==="ko"? "지난 주 목표 조회" : "Previous goal"
                             li 
-                                a(href="/weekly/add/") 새 목표 추가                                
+                                a(href="/weekly/add/")=lang==="ko"? "새 목표 추가" : "Add new goal"                                
             else
                 li.main-menu
-                    a(href="/weekly/") 주간목표
+                    a(href="/weekly/")=lang==="ko"? "주간목표" : "Weekly"
                     div.detail.hidden
                         ul
                             li 
-                                a(href="/weekly/") 이번 주 목표
+                                a(href="/weekly/")=lang==="ko"? "이번 주 목표" : "Goal of this week"
                             li 
-                                a(href="/weekly/edit/") 이번 주 목표 수정
+                                a(href="/weekly/edit/")=lang==="ko"? "이번 주 목표 수정" : "Edit this week's"
                             li 
-                                a(href="/weekly/previous/") 지난 주 목표 조회
+                                a(href="/weekly/previous/")=lang==="ko"? "지난 주 목표 조회" : "Previous goal"
                             li 
-                                a(href="/weekly/add/") 새 목표 추가   
+                                a(href="/weekly/add/")=lang==="ko"? "새 목표 추가" : "Add new goal"  
 
             if pageTitle.includes("Monthly")
                 li.highlighted.main-menu
-                    a(href="/monthly/") 월간목표
+                    a(href="/monthly/")=lang==="ko"? "월간목표" : "Monthly"
                     div.detail.hidden
                         ul
                             li 
-                                a(href="/monthly/") 이번 달 목표
+                                a(href="/monthly/")=lang==="ko"? "이번 달 목표" : "Goal of this month"
                             li 
-                                a(href="/monthly/edit/") 이번 달 목표 수정
+                                a(href="/monthly/edit/")=lang==="ko"? "이번 달 목표 수정" : "Edit this month's"
                             li 
-                                a(href="/monthly/previous/") 지난 달 목표 조회
+                                a(href="/monthly/previous/")=lang==="ko"? "지난 달 목표 조회" : "Previous goal"
                             li 
-                                a(href="/monthly/add/") 새 목표 추가                                   
+                                a(href="/monthly/add/")=lang==="ko"? "새 목표 추가" : "Add new goal"                                   
             else
                 li.main-menu
-                    a(href="/monthly/") 월간목표
+                    a(href="/monthly/")=lang==="ko"? "월간목표" : "Monthly"
                     div.detail.hidden
                         ul
                             li 
-                                a(href="/monthly/") 이번 달 목표
+                                a(href="/monthly/")=lang==="ko"? "이번 달 목표" : "Goal of this month"
                             li 
-                                a(href="/monthly/edit/") 이번 달 목표 수정
+                                a(href="/monthly/edit/")=lang==="ko"? "이번 달 목표 수정" : "Edit this month's"
                             li 
-                                a(href="/monthly/previous/") 지난 달 목표 조회
+                                a(href="/monthly/previous/")=lang==="ko"? "지난 달 목표 조회" : "Previous goal"
                             li 
-                                a(href="/monthly/add/") 새 목표 추가                                    
+                                a(href="/monthly/add/")=lang==="ko"? "새 목표 추가" : "Add new goal"                                     
             if pageTitle.includes("Yearly")
                 li.highlighted.main-menu
-                    a(href="/yearly/") 연간목표
+                    a(href="/yearly/")=lang==="ko"? "연간목표" : "Yearly"
                     div.detail.hidden
                         ul
                             li 
-                                a(href="/yearly/") 올해 목표
+                                a(href="/yearly/")=lang==="ko"? "올해 목표" : "Goal of this year"
                             li 
-                                a(href="/yearly/edit/") 올해 목표 수정
+                                a(href="/yearly/edit/")=lang==="ko"? "올해 목표 수정" : "Edit this year's"
                             li 
-                                a(href="/yearly/previous/") 작년 목표 조회
+                                a(href="/yearly/previous/")=lang==="ko"? "작년 목표 조회" : "Previous goal"
                             li 
-                                a(href="/yearly/add/") 새 목표 추가                                    
+                                a(href="/yearly/add/")=lang==="ko"? "새 목표 추가" : "Add new goal"                                   
             else
                 li.main-menu
-                    a(href="/yearly/") 연간목표
+                    a(href="/yearly/")=lang==="ko"? "연간목표" : "Yearly"
                     div.detail.hidden
                         ul
                             li 
-                                a(href="/yearly/") 올해 목표
+                                a(href="/yearly/")=lang==="ko"? "올해 목표" : "Goal of this year"
                             li 
-                                a(href="/yearly/edit/") 올해 목표 수정
+                                a(href="/yearly/edit/")=lang==="ko"? "올해 목표 수정" : "Edit this year's"
                             li 
-                                a(href="/yearly/previous/") 작년 목표 조회
+                                a(href="/yearly/previous/")=lang==="ko"? "작년 목표 조회" : "Previous goal"
                             li 
-                                a(href="/yearly/add/") 새 목표 추가                                
+                                a(href="/yearly/add/")=lang==="ko"? "새 목표 추가" : "Add new goal"                            

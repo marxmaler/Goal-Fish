@@ -4,8 +4,8 @@ import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 import passport from "passport";
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
-const KakaoStrategy = require("passport-kakao").Strategy;
-const NaverStrategy = require("passport-naver").Strategy;
+// const KakaoStrategy = require("passport-kakao").Strategy;
+// const NaverStrategy = require("passport-naver").Strategy;
 
 const isHeroku = process.env.NODE_ENV === "production";
 
@@ -15,16 +15,23 @@ export const getJoin = (req, res) => {
 };
 export const postJoin = async (req, res) => {
   const { name, email, emailValidation, password, passwordConfirm } = req.body;
+  const lang = req.session.lang;
   if (!emailValidation) {
     return res.status(400).render("join", {
       pageTitle: "Join",
-      errorMessage: "이메일 중복 검사를 먼저 진행해주세요.",
+      errorMessage:
+        lang === "ko"
+          ? "이메일 검사를 먼저 진행해주세요."
+          : "Please run email-check first",
     });
   }
   if (password !== passwordConfirm) {
     return res.status(400).render("join", {
       pageTitle: "Join",
-      errorMessage: "비밀번호가 일치하지 않습니다.",
+      errorMessage:
+        lang === "ko"
+          ? "비밀번호가 일치하지 않습니다."
+          : "Passwords do not match.",
     });
   }
 
@@ -42,11 +49,15 @@ export const getLogin = (req, res) => {
 export const postLogin = async (req, res) => {
   const pageTitle = "Login";
   const { email, password } = req.body;
+  const lang = req.session.lang;
   const user = await User.findOne({ email, socialOnly: false });
   if (!user) {
     return res.status(400).render("login", {
       pageTitle,
-      errorMessage: "가입하지 않은 이메일입니다.",
+      errorMessage:
+        lang === "ko"
+          ? "등록되지 않은 이메일입니다."
+          : "The email is not registered.",
     });
   }
 
@@ -54,7 +65,10 @@ export const postLogin = async (req, res) => {
   if (!passwordMatch) {
     return res.status(400).render("login", {
       pageTitle,
-      errorMessage: "비밀번호가 일치하지 않습니다.",
+      errorMessage:
+        lang === "ko"
+          ? "비밀번호가 일치하지 않습니다."
+          : "Passwords do not match.",
     });
   }
 
@@ -88,6 +102,28 @@ export const postQuote = async (req, res) => {
   user.quote = req.body.quote;
   req.session.user = user;
   user.save();
+  return res.redirect("/");
+};
+
+export const getProfile = (req, res) => {
+  const pageTitle = "Profile";
+  return res.render("profile", { pageTitle });
+};
+
+export const postProfile = async (req, res) => {
+  const userId = req.session.user._id;
+  console.log(req.body);
+  const { name, lang } = req.body;
+  const user = await User.findByIdAndUpdate(
+    userId,
+    {
+      name,
+      lang,
+    },
+    { new: true }
+  );
+  req.session.user = user;
+  console.log(user);
   return res.redirect("/");
 };
 
@@ -152,6 +188,7 @@ export const finishGithubAuth = async (req, res) => {
         name: userData.name,
         password: "",
         joinedWithSocial: true,
+        lang: req.session.lang,
       });
     }
     req.session.loggedIn = true;
@@ -165,14 +202,12 @@ export const finishGithubAuth = async (req, res) => {
 //구글로 가입/로그인
 export const googleAuth = async (accessToken, refreshToken, profile, done) => {
   let user = await User.findOne({ email: profile.emails[0].value });
-  if (user) {
-    user.name = profile.displayName;
-    user.save();
-  } else {
+  if (!user) {
     user = await User.create({
       email: profile.emails[0].value,
       name: profile.displayName,
       joinedWithSocial: true,
+      lang: req.session.lang,
     });
   }
   return done(null, user);
@@ -255,3 +290,21 @@ passport.use(
 //     naverAuth
 //   )
 // );
+
+export const postSetLanguage = (req, res) => {
+  let langChange = false;
+  req.session.lang = "en";
+  if (!req.session.lang) {
+    req.session.lang = req.session.user?.lang
+      ? req.session.user.lang
+      : req.params.lang;
+    langChange = true;
+  } else {
+    if (req.session.user && req.session.lang !== req.session.user?.lang) {
+      req.session.lang = req.session.user.lang;
+      langChange = true;
+    }
+  }
+  console.log(langChange, req.session.lang);
+  return res.status(200).send({ langChange, sessionLang: req.session.lang });
+};

@@ -52,8 +52,15 @@
               margin: 0;
               padding: 0;
             }
-            .fa-plus-circle {
-              margin-left: 10px;
+            i {
+              cursor: pointer;
+              &.fa-plus-circle {
+                margin-left: 10px;
+              }
+              &:hover {
+                opacity: 0.8;
+                transform: translateY(1px);
+              }
             }
           }
           &.content-td {

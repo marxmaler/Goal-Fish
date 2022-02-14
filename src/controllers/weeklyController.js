@@ -414,12 +414,15 @@ export const getPreviousWeekly = async (req, res) => {
     currentGoal = await Weekly.findById(goalId);
   }
 
-  const goal = await Weekly.findOne({
-    owner: userId,
-    termEnd: { $lt: currentGoal.termEnd },
-  })
-    .sort({ date: -1 })
-    .populate("subs");
+  let goal = null;
+  if (currentGoal) {
+    goal = await Weekly.findOne({
+      owner: userId,
+      termEnd: { $lt: currentGoal.termEnd },
+    })
+      .sort({ date: -1 })
+      .populate("subs");
+  }
 
   if (goal) {
     termStart = yyyymmdd(goal.termStart);

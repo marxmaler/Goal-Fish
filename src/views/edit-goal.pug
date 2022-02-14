@@ -6,10 +6,10 @@ block mainBlock
             if !pageTitle.includes("Daily")
                 div.editGoal__form__form-container__date-container
                     div
-                        span 시작일: 
+                        span=lang === "ko" ? "시작일:" : "Start Date" 
                         input(type="date", value=termStart, name="termStart")#termStart
                     div
-                        span 종료일: 
+                        span=lang === "ko" ? "종료일:" : "End Date" 
                         input(type="date", value=termEnd, disabled)#termEnd 
             ul
                 each sub in goal.subs
@@ -26,7 +26,7 @@ block mainBlock
                         div.li__container.measurement-setting-box
                             if sub.useMeasure
                                 div
-                                    span 단위 사용:
+                                    span=lang === "ko" ? "단위 사용:" : "Use Measure"
                                     input(type="checkbox", checked, name=`${sub._id}`).measurement-setting-box__use-measurement-checkbox
                                 div
                                     span 단위명:

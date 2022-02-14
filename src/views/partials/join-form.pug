@@ -2,28 +2,28 @@ div.form-wrapper
     if errorMessage
         div.errorMessage-box
             span.errorMessage=errorMessage
-    h1 환영합니다
-    p 필수 정보만 입력하고 시작해보세요!
+    h1=lang==="ko" ? "환영합니다 😄" : "Welcome 😄"
+    p=lang==="ko" ? "필수 정보만 입력하고 시작해보세요" : "Let's fill in the blanks & start right away"
     form(method="POST")
         div.input-box
-            label(for="email") *이메일: 
+            label(for="email")=lang==="ko" ? "*이메일:" : "*Email:" 
             input(type="email", name="email", required)#email
             input(value=false, name="emailValidation").hidden#emailValidation
-            button.validation-check-btn#email-val-btn 중복 검사
+            button.validation-check-btn#email-val-btn=lang==="ko" ? "검사" : "Check"
         div.info-box
             p#emailValResult
         div.input-box 
-            label(for="name") *닉네임: 
+            label(for="name")=lang==="ko" ? "*이름:" : "*Name:" 
             input(type="text", name="name", required)#name
         div.input-box
-            label(for="password") *비밀번호: 
+            label(for="password")=lang==="ko" ? "*비밀번호:" : "*Password" 
             input(type="password", name="password", required)#password
             input(value=false, name="passwordValidation").hidden#passwordValidation
         div.input-box.pw-confirm
-            label(for="password") *비밀번호 확인: 
+            label(for="password")=lang==="ko" ? "*비밀번호 확인:" : "*Confirm Password" 
             input(type="password", name="passwordConfirm", required)
         div.btn-box 
-            button 가입 완료
+            button=lang==="ko" ? "가입" : "Sign Up"
     hr
-    p.social 소셜 아이디로 계속하기
+    p.social=lang==="ko" ? "깃허브/구글로 계속하기" : "Continue with Github/Google"
     include oauth-box.pug

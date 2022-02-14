@@ -8,6 +8,8 @@ import {
   finishGithubAuth,
   getQuote,
   postQuote,
+  getProfile,
+  postProfile,
 } from "../controllers/userController";
 
 const userRouter = express.Router();
@@ -17,6 +19,11 @@ userRouter
   .all(protectorMiddleware)
   .get(getQuote)
   .post(postQuote);
+userRouter
+  .route("/profile")
+  .all(protectorMiddleware)
+  .get(getProfile)
+  .post(postProfile);
 userRouter
   .route("/join/check/email")
   .all(publicOnlyMiddleware)

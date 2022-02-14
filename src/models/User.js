@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String },
   joinedWithSocial: { type: Boolean, default: false },
   quote: { type: String },
+  lang: { type: String },
 });
 
 userSchema.pre("save", async function () {

@@ -2,12 +2,12 @@ extends base.pug
 
 block mainBlock
     div.form-wrapper
-        h1 오늘의 한마디를 등록해보세요!
+        h1=lang==="ko"? "오늘의 한마디를 등록해보세요!" : "Add Today's word!"
         div.suggestion-box
-            p 힘이 나는 문구라면 뭐든 좋아요.
-            p.ex ex: 좌우명, 다짐, 명언, 영화 대사
+            p=lang==="ko"? "힘이 나는 문구라면 뭐든 좋아요." : "Any phrase that will cheer you up"
+            p.ex=lang==="ko"? "ex: 좌우명, 다짐, 명언, 영화 대사" : "ex: mottos, resolutions, quotes, famous lines in a movie"
         form(method="POST")
             div.input-box.textarea-box 
                 textarea(name="quote", cols="30", rows="10")=loggedInUser.quote
             div.btn-box 
-                button 완료
+                button=lang==="ko"? "저장" : "Save"

@@ -4,24 +4,24 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
     if goal
         div(data-goalid=goal._id).goal-container
             if pageTitle==="Daily" 
-                h2 오늘의 목표
+                h2=lang==="ko" ? "오늘의 목표" : "Goal of Today"
                 span=`${date}`
-                p="남은 시간 "
+                p=lang==="ko" ? "남은 시간 " : "Remaining Time "
                     span.goal-container__ramaining-time
             else if pageTitle==="Weekly"
-                h2 이번 주 목표
+                h2=lang==="ko" ? "이번 주 목표" : "Goal of This Week"
                 span#goal-term=`${termStart}~${termEnd}`
-                p="남은 시간 "
+                p=lang==="ko" ? "남은 시간 " : "Remaining Time "
                     span.goal-container__ramaining-time
             else if pageTitle==="Monthly"
                 h2 이번 달 목표
                 span#goal-term=`${termStart}~${termEnd}`
-                p="남은 시간 "
+                p=lang==="ko" ? "남은 시간 " : "Remaining Time "
                     span.goal-container__ramaining-time
             else if pageTitle==="Yearly"
                 h2 올해 목표
                 span#goal-term=`${termStart}~${termEnd}`
-                p="남은 시간 "
+                p=lang==="ko" ? "남은 시간 " : "Remaining Time "
                     span.goal-container__ramaining-time
             else if pageTitle === "Previous Daily"
                 h2.goal-container__previousGoal-date=`일간 목표: ${date}`
@@ -39,95 +39,96 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
             if pageTitle==="Daily"
                 div.goal-container__edit-btn-container
                     a(href="/daily/edit") 
-                        button 수정하기
+                        button=lang==="ko" ? "수정하기" : "Edit"
             else if pageTitle==="Weekly"
                 div.goal-container__edit-btn-container
                     a(href="/weekly/edit") 
-                        button 수정하기
+                        button=lang==="ko" ? "수정하기" : "Edit"
             else if pageTitle==="Monthly"
                 div.goal-container__edit-btn-container
                     a(href="/monthly/edit") 
-                        button 수정하기
+                        button=lang==="ko" ? "수정하기" : "Edit"
             else if pageTitle==="Yearly"
                 div.goal-container__edit-btn-container
                     a(href="/yearly/edit") 
-                        button 수정하기
+                        button=lang==="ko" ? "수정하기" : "Edit"
             else if pageTitle==="Previous Daily"
                 div.goal-container__back-btn-container
                     a(href="/")
-                        button 돌아가기
+                        button=lang==="ko" ? "돌아가기" : "Go Back" 
             else if pageTitle==="Previous Weekly"
                 div.goal-container__back-btn-container
                     a(href="/weekly/")
-                        button 돌아가기
+                        button=lang==="ko" ? "돌아가기" : "Go Back" 
             else if pageTitle==="Previous Monthly"
                 div.goal-container__back-btn-container
                     a(href="/monthly")
-                        button 돌아가기
+                        button=lang==="ko" ? "돌아가기" : "Go Back" 
             else if pageTitle==="Previous Yearly"
                 div.goal-container__back-btn-container
                     a(href="/weekly/")
-                        button 돌아가기
+                        button=lang==="ko" ? "돌아가기" : "Go Back"
         //- 그래프
         div.chart-box
             div.chart-swap-btn
-                span#swap-to-line 그래프 전환
-                span#graph-type 막대 그래프
+                span#swap-to-line=lang==="ko" ? "그래프 전환" : "Swap Chart"  
+                span#graph-type=lang==="ko" ? "막대 그래프" : "Bar Chart"
             div(data-avg=prevAvg, data-prevs=prevGoals, data-prevdates=prevGoalDates)#chart
     else
         if pageTitle==="Daily"    
             div.no-goal-messeage-box
-                p 아직 오늘의 목표를 설정하지 않으셨습니다.
-                p 지금 새로 만들어보세요! 
+                p=lang==="ko" ? "아직 오늘의 목표를 설정하지 않으셨습니다." : "It seems you haven't set a goal of today."
+                p=lang==="ko" ? "지금 새로 만들어보세요!" : "Would you like to establish one now?" 
                 a(href="/daily/add")
-                    button 새 목표 작성
+                    button=lang==="ko" ? "새 목표 작성" : "New Goal"
         else if pageTitle==="Weekly"    
             div.no-goal-messeage-box
-                p 아직 이번 주 목표를 설정하지 않으셨습니다.
-                p 지금 새로 만들어보세요! 
+                p=lang==="ko" ? "아직 이번 주 목표를 설정하지 않으셨습니다." : "It seems you haven't set a goal of this week."
+                p=lang==="ko" ? "지금 새로 만들어보세요!" : "Would you like to establish one now?" 
                 a(href="/weekly/add")
-                    button 새 목표 작성
+                    button=lang==="ko" ? "새 목표 작성" : "New Goal"
         else if pageTitle==="Monthly"    
             div.no-goal-messeage-box
-                p 아직 이번 달 목표를 설정하지 않으셨습니다.
-                p 지금 새로 만들어보세요! 
+                p=lang==="ko" ? "아직 이번 달 목표를 설정하지 않으셨습니다." : "It seems you haven't set a goal of this month."
+                p=lang==="ko" ? "지금 새로 만들어보세요!" : "Would you like to establish one now?" 
                 a(href="/monthly/add")
-                    button 새 목표 작성
+                    button=lang==="ko" ? "새 목표 작성" : "New Goal"
         else if pageTitle==="Yearly"    
             div.no-goal-messeage-box
-                p 아직 올해 목표를 설정하지 않으셨습니다.
-                p 지금 새로 만들어보세요! 
+                p=lang==="ko" ? "아직 올해 목표를 설정하지 않으셨습니다." : "It seems you haven't set a goal of this year."
+                p=lang==="ko" ? "지금 새로 만들어보세요!" : "Would you like to establish one now?" 
                 a(href="/yearly/add")
-                    button 새 목표 작성
+                    button=lang==="ko" ? "새 목표 작성" : "New Goal"
         else if pageTitle==="Previous Daily"
             div.no-goal-messeage-box
-                p 해당 일자에는 일일 목표가 없습니다.
+                p=lang==="ko" ? "해당 일자에는 일일 목표가 없습니다." : "Sorry, there's no previous goal on the date"
             div.goal-container__back-btn-container
                 a(href="/")
-                    button 돌아가기
+                    button=lang==="ko" ? "돌아가기" : "Go Back" 
         else if pageTitle==="Previous Weekly"
             div.no-goal-messeage-box
-                p 해당 일자에는 주간 목표가 없습니다.
+                p=lang==="ko" ? "이전 목표가 없습니다." : "Sorry, there's no previous goal before that."
             div.goal-container__back-btn-container
                 a(href="/weekly/")
-                    button 돌아가기
+                    button=lang==="ko" ? "돌아가기" : "Go Back" 
         else if pageTitle==="Previous Monthly"
             div.no-goal-messeage-box
-                p 해당 일자에는 월간 목표가 없습니다.
+                p=lang==="ko" ? "이전 목표가 없습니다." : "Sorry, there's no previous goal before that."
             div.goal-container__back-btn-container
                 a(href="/monthly/")
-                    button 돌아가기
+                    button=lang==="ko" ? "돌아가기" : "Go Back" 
         else if pageTitle==="Previous Yearly"
             div.no-goal-messeage-box
-                p 해당 일자에는 연간 목표가 없습니다.
+                p=lang==="ko" ? "이전 목표가 없습니다." : "Sorry, there's no previous goal before that."
             div.goal-container__back-btn-container
                 a(href="/yearly/")
-                    button 돌아가기
+                    button=lang==="ko" ? "돌아가기" : "Go Back" 
     
-    div.previous-goal-search      
-        if pageTitle.includes("Daily")
-            p 다른 날짜 조회
+    if pageTitle.includes("Daily")
+        div.previous-goal-search      
+            p=lang==="ko" ? "다른 목표 조회" : "Search By Date"
             input(type="date")#previous-goal-selector
-        else
+    else
+        div.previous-goal-search.not-daily      
             div
-                button#previous-goal-btn 이전 목표 조회
+                button#previous-goal-btn=lang==="ko" ? "이전 목표 조회" : "Previous Goal"  

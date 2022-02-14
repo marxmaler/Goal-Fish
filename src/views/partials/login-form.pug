@@ -2,23 +2,27 @@ div.form-wrapper
     if errorMessage
         div.errorMessage-box
             span.errorMessage=errorMessage
-    h1 안녕하세요!
+    h1=lang==="ko" ?  "안녕하세요👋" : "Hello👋"
     div.greeting-box
-        p 오늘도 <strong>Goal Manager</strong>와 함께 
-        p 목표지향적인 하루 되세요.
+        if lang === "ko"
+            p 오늘도 <strong>Goal Manager</strong>와 함께 
+            p 목표지향적인 하루 되세요.
+        else 
+            p Have another goal-oriented day
+            p with <strong>Goal Manager</strong> 
     form(method="POST")
         div.input-box 
-            label(for="email") *이메일: 
+            label(for="email")=lang==="ko" ?  "*이메일:" : "*Email:" 
             input(type="text", name="email", required)#email
         div.input-box
-            label(for="password") *비밀번호: 
+            label(for="password")=lang==="ko" ? "*비밀번호:" : "*Password:" 
             input(type="password", name="password", required)#password
         div.btn-box 
-            button 로그인
+            button=lang==="ko" ? "로그인" : "Log In"
         br
         div.no-id
-            span 아직 아이디가 없으세요?
-            a(href="/join").to-join &rarr;가입하기
+            span=lang==="ko" ? "아직 아이디가 없으세요?" : "Don't have an account yet?"
+            a(href="/join").to-join=lang==="ko" ? "가입하기" : "Sign Up" 
     hr
-    p.social 소셜 아이디로 계속하기
+    p.social=lang==="ko" ? "깃허브/구글로 계속하기" : "Continue with Github/Google"
     include oauth-box.pug

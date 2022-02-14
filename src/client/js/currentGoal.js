@@ -13,7 +13,10 @@ import {
   getPreviousGoal,
   preventSubmit,
   handleChartSwap,
+  detectLanguage,
 } from "./sharedAll";
+
+export const lang = detectLanguage();
 
 const goalType = document
   .querySelector("title")
@@ -67,8 +70,10 @@ if (goalContainer) {
   );
 
   const chartBox = document.querySelector("#chart");
-  const chartType = document.getElementById("graph-type");
-  const graphType = chartType.innerText === "막대 그래프" ? "bar" : "line";
+  const chartType = document.getElementById("graph-type").innerText;
+  const graphType = ["막대 그래프", "Bar Chart"].includes(chartType)
+    ? "bar"
+    : "line";
   const {
     avg: goalAvg,
     prevs: prevGoals,
@@ -154,7 +159,7 @@ if (goalContainer) {
   const chartSwapBtn = document.getElementById("swap-to-line");
 
   chartSwapBtn.addEventListener("click", (event) =>
-    handleChartSwap(event, chartSwapBtnBox, chartType, charRenderObject)
+    handleChartSwap(event, chartSwapBtnBox, charRenderObject, lang)
   );
 
   if (remainingTimeSpan) {

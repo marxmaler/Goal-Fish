@@ -419,12 +419,15 @@ export const getPreviousMonthly = async (req, res) => {
     currentGoal = await Monthly.findById(goalId);
   }
 
-  const goal = await Monthly.findOne({
-    owner: userId,
-    termEnd: { $lt: currentGoal.termEnd },
-  })
-    .sort({ date: -1 })
-    .populate("subs");
+  let goal = null;
+  if (currentGoal) {
+    goal = await Monthly.findOne({
+      owner: userId,
+      termEnd: { $lt: currentGoal.termEnd },
+    })
+      .sort({ date: -1 })
+      .populate("subs");
+  }
 
   if (goal) {
     termStart = yyyymmdd(goal.termStart);
