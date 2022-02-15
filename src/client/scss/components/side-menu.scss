@@ -28,6 +28,7 @@
     justify-content: space-around;
     border-radius: 10px;
     padding: 10px;
+    width: 110px;
     &:hover {
       opacity: 1;
       transform: translateX(0%);
@@ -57,17 +58,18 @@
           }
           div.detail {
             position: absolute;
-            background-color: rgba(128, 128, 128, 0.5);
             left: 85px;
             top: 0px;
             font-weight: 500;
             ul {
+              width: max-content;
               display: flex;
               flex-direction: column;
               li {
+                background-color: rgba(128, 128, 128, 0.5);
                 box-sizing: content-box;
                 padding: 10px;
-                width: 130px;
+                width: 100%;
                 text-align: center;
                 border-bottom: 0.5px solid white;
               }
@@ -88,6 +90,7 @@
     justify-content: space-around;
     border-radius: 10px;
     padding: 10px;
+    width: 110px;
     ul {
       li.fix-btn-container {
         display: flex;
@@ -112,17 +115,18 @@
         }
         div.detail {
           position: absolute;
-          background-color: rgba(128, 128, 128, 0.5);
-          left: 80px;
+          left: 85px;
           top: 0px;
           font-weight: 500;
           ul {
+            width: max-content;
             display: flex;
             flex-direction: column;
             li {
+              background-color: rgba(128, 128, 128, 0.5);
               box-sizing: content-box;
               padding: 10px;
-              width: 130px;
+              width: 100%;
               text-align: center;
               border-bottom: 0.5px solid white;
             }

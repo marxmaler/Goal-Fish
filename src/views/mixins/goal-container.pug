@@ -2,7 +2,7 @@ include goal-table.pug
 
 mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
     if goal
-        div(data-goalid=goal._id).goal-container
+        div(data-goalid=goal._id, data-lang=lang).goal-container
             if pageTitle==="Daily" 
                 h2=lang==="ko" ? "오늘의 목표" : "Goal of Today"
                 span=`${date}`

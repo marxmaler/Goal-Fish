@@ -16,7 +16,8 @@ import {
   detectLanguage,
 } from "./sharedAll";
 
-export const lang = detectLanguage();
+const header = document.querySelector("header");
+const lang = header.dataset.lang ? header.dataset.lang : detectLanguage();
 
 const goalType = document
   .querySelector("title")
@@ -26,6 +27,7 @@ const goalType = document
 
 //이전 일일 목표로 이동
 const goalContainer = document.querySelector(".goal-container");
+
 let goalId = null;
 
 if (goalContainer) {

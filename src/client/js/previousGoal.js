@@ -11,6 +11,9 @@ import {
   handleChartSwap,
 } from "./sharedAll";
 
+const header = document.querySelector("header");
+const lang = header.dataset.lang ? header.dataset.lang : detectLanguage();
+
 const goalType = document
   .querySelector("title")
   .text.split("|")[1]
@@ -142,6 +145,6 @@ if (goalContainer) {
   const chartSwapBtn = document.getElementById("swap-to-line");
 
   chartSwapBtn.addEventListener("click", (event) =>
-    handleChartSwap(event, chartSwapBtnBox, charRenderObject)
+    handleChartSwap(event, chartSwapBtnBox, charRenderObject, lang)
   );
 }

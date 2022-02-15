@@ -112,7 +112,6 @@ export const getProfile = (req, res) => {
 
 export const postProfile = async (req, res) => {
   const userId = req.session.user._id;
-  console.log(req.body);
   const { name, lang } = req.body;
   const user = await User.findByIdAndUpdate(
     userId,
@@ -123,7 +122,7 @@ export const postProfile = async (req, res) => {
     { new: true }
   );
   req.session.user = user;
-  console.log(user);
+  req.session.lang = user.lang;
   return res.redirect("/");
 };
 
@@ -293,7 +292,6 @@ passport.use(
 
 export const postSetLanguage = (req, res) => {
   let langChange = false;
-  req.session.lang = "en";
   if (!req.session.lang) {
     req.session.lang = req.session.user?.lang
       ? req.session.user.lang
@@ -305,6 +303,5 @@ export const postSetLanguage = (req, res) => {
       langChange = true;
     }
   }
-  console.log(langChange, req.session.lang);
   return res.status(200).send({ langChange, sessionLang: req.session.lang });
 };

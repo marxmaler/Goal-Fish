@@ -24,7 +24,7 @@ export function formSubmit(form) {
   form.submit();
 }
 
-export function addSub(ul) {
+export function addSub(ul, lang) {
   const li = document.createElement("li");
   const impNCntBox = document.createElement("div");
   const impSelect = document.createElement("select");
@@ -60,7 +60,7 @@ export function addSub(ul) {
 
   const useMeasureBox = document.createElement("div");
   const useMeasureSpan = document.createElement("span");
-  useMeasureSpan.innerText = "단위 사용:";
+  useMeasureSpan.innerText = lang === "ko" ? "단위 사용:" : "Use measurement:";
   const useMeasureInput = document.createElement("input");
   useMeasureInput.setAttribute("type", "checkbox");
   useMeasureInput.setAttribute("name", "useMeasures");
@@ -75,10 +75,41 @@ export function addSub(ul) {
   const measureNameBox = document.createElement("div");
   measureNameBox.className = "hidden";
   const measureNameSpan = document.createElement("span");
-  measureNameSpan.innerText = "단위명:";
+  measureNameSpan.innerText = lang === "ko" ? "단위명:" : "Unit name:";
   const measureNameSelect = document.createElement("select");
   measureNameSelect.name = "measureNames";
-  const measureNameOptions = ["시간", "회", "개", "쪽"];
+  const measureNameOptions =
+    lang === "ko"
+      ? [
+          "시간",
+          "회",
+          "개",
+          "쪽",
+          "권",
+          "걸음",
+          "km",
+          "hours",
+          "times",
+          "pages",
+          "books",
+          "steps",
+          "miles",
+        ]
+      : [
+          "hours",
+          "times",
+          "pages",
+          "books",
+          "steps",
+          "miles",
+          "km",
+          "시간",
+          "회",
+          "개",
+          "쪽",
+          "권",
+          "걸음",
+        ];
   for (let i = 0; i < measureNameOptions.length; i++) {
     const option = document.createElement("option");
     option.value = measureNameOptions[i];
@@ -91,7 +122,8 @@ export function addSub(ul) {
   const targetValueBox = document.createElement("div");
   targetValueBox.className = "hidden";
   const targetValueSpan = document.createElement("span");
-  targetValueSpan.innerText = "목표 달성 요구치:";
+  targetValueSpan.innerText =
+    lang === "ko" ? "목표 달성 요구치:" : "Target value:";
   const targetValueInput = document.createElement("input");
   targetValueInput.setAttribute("type", "number");
   targetValueInput.setAttribute("name", "targetValues");
@@ -104,7 +136,10 @@ export function addSub(ul) {
   const eachAsIndependBox = document.createElement("div");
   eachAsIndependBox.className = "hidden";
   const eachAsIndependSpan = document.createElement("span");
-  eachAsIndependSpan.innerText = "각 단위를 단일 목표로 간주:";
+  eachAsIndependSpan.innerText =
+    lang === "ko"
+      ? "각 단위를 단일 목표로 간주:"
+      : "Consider each as independent goal:";
   const eachAsIndependInput = document.createElement("input");
   eachAsIndependInput.setAttribute("type", "checkbox");
   eachAsIndependInput.setAttribute("name", "eachAsIndepend");
@@ -583,8 +618,7 @@ export const getPreviousGoal = (goalId, goalType) => {
 };
 
 export const detectLanguage = async () => {
-  // let detectedLang = window.navigator.userLanguage || window.navigator.language;
-  let detectedLang = "en";
+  let detectedLang = window.navigator.userLanguage || window.navigator.language;
 
   const { langChange, sessionLang } = await (
     await fetch(`/api/language/${detectedLang}`, {

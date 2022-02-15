@@ -9,10 +9,10 @@ block mainBlock
             div.newGoal__form__form-container__date-container
                 if !pageTitle.includes("Daily")
                     div
-                        span 시작일
+                        span=lang === "ko" ? "시작일:" : "Start date" 
                         input(type="date", value=today, name="date")#termStart
                     div
-                        span 종료일
+                        span=lang === "ko" ? "종료일:" : "End date" 
                         if pageTitle.includes("Weekly")
                             input(type="date", value=aWeekFromToday, disabled)#termEnd
                         else if pageTitle.includes("Monthly")
@@ -39,10 +39,10 @@ block mainBlock
                             div.li__container.measurement-setting-box
                                 if sub.useMeasure
                                     div
-                                        span 단위 사용:
+                                        span=lang === "ko" ? "단위 사용:" : "Use measurement:"
                                         input(type="checkbox", checked, name="useMeasures").measurement-setting-box__use-measurement-checkbox
                                     div
-                                        span 단위명:
+                                        span=lang === "ko" ? "단위명:" : "Unit name:"
                                         select(name="measureNames")
                                             each measure in measureNameArray
                                                 if sub.measureName == measure
@@ -50,10 +50,10 @@ block mainBlock
                                                 else
                                                     option(value=measure)=measure
                                     div
-                                        span 목표 달성 요구치:  
+                                        span=lang === "ko" ? "목표 달성 요구치:" : "Target value:"   
                                         input(type="number", name="targetValues", min="0", max="9999", value=sub.targetValue).measurement-setting-box__targetValue
                                     div
-                                        span 각 단위를 단일 목표로 간주:
+                                        span=lang === "ko" ? "각 단위를 단일 목표로 간주:" : "Consider each as independent goal:" 
                                         if sub.eachAsIndepend
                                             input(type="checkbox", name="eachAsIndepend", checked)
                                         else
@@ -61,18 +61,18 @@ block mainBlock
 
                                 else
                                     div
-                                        span 단위 사용:
+                                        span=lang === "ko" ? "단위 사용:" : "Use measurement:"
                                         input(type="checkbox", name="useMeasures").measurement-setting-box__use-measurement-checkbox
                                     div.hidden
-                                        span 단위명:
+                                        span=lang === "ko" ? "단위명:" : "Unit name:"
                                         select(name="measureNames")
                                             each measure in measureNameArray
                                                 option(value=measure)=measure
                                     div.hidden
-                                        span 목표 달성 요구치:  
+                                        span=lang === "ko" ? "목표 달성 요구치:" : "Target value:"   
                                         input(type="number", name="targetValues", min="0", max="9999").measurement-setting-box__targetValue
                                     div.hidden
-                                        span 각 단위를 단일 목표로 간주:
+                                        span=lang === "ko" ? "각 단위를 단일 목표로 간주:" : "Consider each as independent goal:" 
                                         if sub.eachAsIndepend
                                             input(type="checkbox", name="eachAsIndepend", checked)
                                         else
@@ -86,22 +86,22 @@ block mainBlock
                         i(class="fas fa-trash-alt deleteBtn")
                     div.li__container.measurement-setting-box
                         div
-                            span 단위 사용:
+                            span=lang === "ko" ? "단위 사용:" : "Use measurement:"
                             input(type="checkbox", name="useMeasures").measurement-setting-box__use-measurement-checkbox
                         div.hidden
-                            span 단위명:
+                            span=lang === "ko" ? "단위명:" : "Unit name:"
                             select(name="measureNames")
                                 each measure in measureNameArray
                                     option(value=`${measure}`)=measure
                         div.hidden
-                            span 목표 달성 요구치:  
+                            span=lang === "ko" ? "목표 달성 요구치:" : "Target value:" 
                             input(type="number", name="targetValues", min="0", max="9999").measurement-setting-box__targetValue
                         div.hidden
-                            span 각 단위를 단일 목표로 간주:
+                            span=lang === "ko" ? "각 단위를 단일 목표로 간주:" : "Consider each as independent goal:"
                             input(type="checkbox", name="eachAsIndepend")
             div.newGoal__form__form-container__btn-container
-                button(class="addSub-btn") 새 목표 추가
-                input(class="submit-btn", type="submit", value="작성 완료")
+                button(class="addSub-btn")=lang === "ko" ?  "목표 추가" : "Add goal"
+                input(class="submit-btn", type="submit", value=(lang === "ko" ? "작성 완료": "Complete"))
 
 block scriptBlock 
     script(src="/assets/js/newGoal.js") 

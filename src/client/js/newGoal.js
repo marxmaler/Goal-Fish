@@ -8,6 +8,9 @@ import {
   handleTermStartChange,
 } from "./sharedAll";
 
+const header = document.querySelector("header");
+const lang = header.dataset.lang ? header.dataset.lang : detectLanguage();
+
 const form = document.querySelector(".newGoal__form");
 const subList = document.querySelector(".newGoal__form__form-container__ul");
 const addSubBtn = document.querySelector(".addSub-btn");
@@ -33,23 +36,30 @@ useMeasureCheckboxes.forEach((box) =>
 window.onload = function () {
   let loadUnfinished = false;
   if (unfinished.length > 0) {
+    let message = "";
     if (goalType === "daily") {
-      loadUnfinished = window.confirm(
-        "어제 세운 목표 중 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
-      );
+      message =
+        lang === "ko"
+          ? "어제 세운 목표 중 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
+          : "It seems you didn't complete all the goals of yesterday. Should I bring the unfinished goals?";
+      loadUnfinished = window.confirm(message);
     } else if (goalType === "weekly") {
-      loadUnfinished = window.confirm(
-        "지난 주간 목표에 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
-      );
+      message =
+        lang === "ko"
+          ? "지난 주간 목표에 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
+          : "It seems you didn't complete all the goals of last week. Should I bring the unfinished goals?";
     } else if (goalType === "monthly") {
-      loadUnfinished = window.confirm(
-        "지난 월간 목표에 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
-      );
+      message =
+        lang === "ko"
+          ? "지난 월간 목표에 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
+          : "It seems you didn't complete all the goals of last month. Should I bring the unfinished goals?";
     } else {
-      loadUnfinished = window.confirm(
-        "지난 연간 목표 중 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
-      );
+      message =
+        lang === "ko"
+          ? "지난 연간 목표 중 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
+          : "It seems you didn't complete all the goals of last year. Should I bring the unfinished goals?";
     }
+    loadUnfinished = window.confirm(message);
   }
   if (loadUnfinished) {
     for (let i = 0; i < unfinished.length; i++) {
@@ -64,7 +74,7 @@ window.onload = function () {
 
 // submit
 form.addEventListener("submit", preventSubmit);
-addSubBtn.addEventListener("click", () => addSub(subList));
+addSubBtn.addEventListener("click", () => addSub(subList, lang));
 submitBtn.addEventListener("click", () => {
   formatMeasureSettingDatas();
   manualSubmit(form);
