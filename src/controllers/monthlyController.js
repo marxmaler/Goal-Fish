@@ -35,6 +35,9 @@ export const getMonthlyHome = async (req, res) => {
 
   if (goal) {
     //평균 구하기
+    prevGoalArr = [goal.total];
+    prevGoalDates = [`${yymm(goal.termStart)}~${yymm(goal.termEnd)}`];
+
     prevGoals = await Monthly.find({
       owner: userId,
       termEnd: { $lt: goal.termEnd },
@@ -50,6 +53,11 @@ export const getMonthlyHome = async (req, res) => {
         })
       : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    prevGoalArr.length > 3 ? (prevGoalArr = prevGoalArr.slice(0, 3)) : null;
+    prevGoalDates.length > 3
+      ? (prevGoalDates = prevGoalDates.slice(0, 3))
+      : null;
 
     prevGoalArr = prevGoalArr.reverse();
     prevGoalDates = prevGoalDates.reverse();

@@ -30,6 +30,9 @@ export const getWeeklyHome = async (req, res) => {
 
   if (goal) {
     //평균 구하기
+    prevGoalArr = [goal.total];
+    prevGoalDates = [`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`];
+
     prevGoals = await Weekly.find({
       owner: userId,
       termEnd: { $lt: goal.termEnd },
@@ -45,6 +48,11 @@ export const getWeeklyHome = async (req, res) => {
         })
       : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+
+    prevGoalArr.length > 4 ? (prevGoalArr = prevGoalArr.slice(0, 4)) : null;
+    prevGoalDates.length > 4
+      ? (prevGoalDates = prevGoalDates.slice(0, 4))
+      : null;
 
     prevGoalArr = prevGoalArr.reverse();
     prevGoalDates = prevGoalDates.reverse();
