@@ -634,3 +634,17 @@ export const detectLanguage = async () => {
   }
   return sessionLang;
 };
+
+export const detectLocalTime = async () => {
+  const timezDiff = console.log(-new Date().getTimezoneOffset() / 60);
+  // const { langChange, sessionLang } = await (
+  //   await fetch(`/api/language/${detectedLang}`, {
+  //     method: "POST",
+  //   })
+  // ).json();
+  // if (langChange) {
+  //   const currentUrl = window.location.href;
+  //   window.location.href = currentUrl;
+  // }
+  return sessionLocalTime;
+};

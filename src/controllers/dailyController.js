@@ -4,7 +4,6 @@ import { getToday, mmdd, yyyymmdd } from "../functions/time";
 import { convertImp } from "../functions/convertImp";
 
 export const getDailyHome = async (req, res) => {
-  console.log(req);
   const pageTitle = "Daily";
   const date = getToday();
   console.log(date);
