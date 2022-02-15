@@ -201,12 +201,13 @@ export const finishGithubAuth = async (req, res) => {
 //구글로 가입/로그인
 export const googleAuth = async (accessToken, refreshToken, profile, done) => {
   let user = await User.findOne({ email: profile.emails[0].value });
+  console.log(profile);
   if (!user) {
     user = await User.create({
       email: profile.emails[0].value,
       name: profile.displayName,
       joinedWithSocial: true,
-      lang: req.session.lang,
+      lang: profile.locale,
     });
   }
   return done(null, user);
