@@ -16,6 +16,7 @@ import {
   postYearlyMeasure,
 } from "../controllers/yearlyController";
 import { postSetLanguage } from "../controllers/userController";
+import { postSetTimeDiff } from "../controllers/timeController";
 
 const apiRouter = express.Router();
 
@@ -28,5 +29,6 @@ apiRouter.route("/monthly/measure/:id").post(postMonthlyMeasure);
 apiRouter.route("/yearly/checkbox/:id").post(postYearlyCompleted);
 apiRouter.route("/yearly/measure/:id").post(postYearlyMeasure);
 apiRouter.route("/language/:lang").post(postSetLanguage);
+apiRouter.route("/time/:diff").post(postSetTimeDiff);
 
 export default apiRouter;

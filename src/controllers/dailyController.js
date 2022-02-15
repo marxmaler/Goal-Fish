@@ -5,8 +5,8 @@ import { convertImp } from "../functions/convertImp";
 
 export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
-  const date = getToday();
-  console.log(date);
+  const timeDiff = req.session.timeDiff;
+  const date = getToday(timeDiff);
   const userId = req.session.user._id;
   const goal = await Daily.findOne({
     owner: userId,
@@ -118,8 +118,10 @@ export const getNewDaily = async (req, res) => {
       }
     }
   }
+
+  const timeDiff = req.session.timeDiff;
   return res.render("newGoal", {
-    today: getToday(),
+    today: getToday(timeDiff),
     unfinishedSubs,
     pageTitle,
   });
@@ -134,8 +136,9 @@ export const postNewDaily = async (req, res) => {
     date,
   });
   if (dateExists) {
+    const timeDiff = req.session.timeDiff;
     return res.render("newGoal", {
-      today: getToday(),
+      today: getToday(timeDiff),
       errorMessage: "동일한 날짜에 대해 이미 설정된 일일 목표가 존재합니다.",
       pageTitle,
     });
@@ -264,9 +267,10 @@ export const postNewDaily = async (req, res) => {
 export const getEditDaily = async (req, res) => {
   const pageTitle = "Edit Daily";
   const userId = req.session.user._id;
+  const timeDiff = req.session.timeDiff;
   const goal = await Daily.findOne({
     owner: userId,
-    date: getToday(),
+    date: getToday(timeDiff),
   }).populate("subs");
 
   if (!goal) {
@@ -304,9 +308,10 @@ export const postEditDaily = async (req, res) => {
   }
 
   const userId = req.session.user._id;
+  const timeDiff = req.session.timeDiff;
   const daily = await Daily.findOne({
     owner: userId,
-    date: getToday(),
+    date: getToday(timeDiff),
   });
 
   //sub 삭제
@@ -410,7 +415,8 @@ export const postEditDaily = async (req, res) => {
 
 export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const userId = req.session.user._id;
 
   let date = req.params.date;

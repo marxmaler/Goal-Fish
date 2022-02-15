@@ -2,10 +2,8 @@ function timeFormat(time) {
   return String(time).padStart(2, "0");
 }
 
-export function getToday() {
-  const now = new Date();
-  // console.log(now);
-  console.log(-new Date().getTimezoneOffset() / 60);
+export function getToday(diff) {
+  const now = new Date(new Date().getTime() + 1000 * 60 * 60 * diff);
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
   let date = now.getDate();
@@ -14,8 +12,8 @@ export function getToday() {
   return today;
 }
 
-export function getYesterday() {
-  const now = new Date();
+export function getYesterday(diff) {
+  const now = new Date(new Date().getTime() + 1000 * 60 * 60 * diff);
   now.setDate(now.getDate() - 1);
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
@@ -25,8 +23,8 @@ export function getYesterday() {
   return yesterday;
 }
 
-export function getAWeekFromToday() {
-  const now = new Date();
+export function getAWeekFromToday(diff) {
+  const now = new Date(new Date().getTime() + 1000 * 60 * 60 * diff);
   now.setDate(now.getDate() + 7);
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
@@ -47,8 +45,8 @@ export function getAWeekLater(inputDate) {
   return aWeekLater;
 }
 
-export function getAMonthFromToday() {
-  const now = new Date();
+export function getAMonthFromToday(diff) {
+  const now = new Date(new Date().getTime() + 1000 * 60 * 60 * diff);
   now.setDate(now.getDate() + 30);
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
@@ -69,8 +67,8 @@ export function getAMonthLater(inputDate) {
   return aMonthLater;
 }
 
-export function getAYearFromToday() {
-  const now = new Date();
+export function getAYearFromToday(diff) {
+  const now = new Date(new Date().getTime() + 1000 * 60 * 60 * diff);
   now.setDate(now.getDate() + 365);
   const year = now.getFullYear();
   const month = now.getMonth() + 1;

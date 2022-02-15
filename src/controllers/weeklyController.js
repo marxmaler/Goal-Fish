@@ -5,7 +5,8 @@ import { convertImp } from "../functions/convertImp";
 
 export const getWeeklyHome = async (req, res) => {
   const pageTitle = "Weekly";
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const goal = await Weekly.findOne({
     owner: userId,
@@ -86,9 +87,10 @@ export const getNewWeekly = async (req, res) => {
       }
     }
   }
+  const timeDiff = req.session.timeDiff;
   return res.render("newGoal", {
-    today: getToday(),
-    aWeekFromToday: getAWeekFromToday(),
+    today: getToday(timeDiff),
+    aWeekFromToday: getAWeekFromToday(timeDiff),
     unfinishedSubs,
     pageTitle,
   });
@@ -99,7 +101,8 @@ export const postNewWeekly = async (req, res) => {
   const userId = req.session.user._id;
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const pageTitle = "New Weekly";
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const dateExists = await Weekly.exists({
     termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
     termEnd: { $gte: new Date(date) }, //termEnd가 오늘과 같거나 나중에 있는 weekly를 찾습니다.
@@ -243,7 +246,8 @@ export const postNewWeekly = async (req, res) => {
 export const getEditWeekly = async (req, res) => {
   const pageTitle = "Edit Weekly";
   const userId = req.session.user._id;
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const goal = await Weekly.findOne({
     owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
@@ -289,8 +293,8 @@ export const postEditWeekly = async (req, res) => {
     rest.splice(rest.indexOf("targetValues"), 1);
     rest.splice(rest.indexOf("eachAsIndepend"), 1);
   }
-
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const weekly = await Weekly.findOne({
     owner: userId,
@@ -406,7 +410,8 @@ export const postEditWeekly = async (req, res) => {
 
 export const getPreviousWeekly = async (req, res) => {
   const pageTitle = "Previous Weekly";
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const { id: goalId } = req.params;
   const userId = req.session.user._id;
   let termStart = "";

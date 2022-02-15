@@ -5,7 +5,8 @@ import { convertImp } from "../functions/convertImp";
 
 export const getYearlyHome = async (req, res) => {
   const pageTitle = "Yearly";
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const goal = await Yearly.findOne({
     owner: userId,
@@ -86,9 +87,10 @@ export const getNewYearly = async (req, res) => {
       }
     }
   }
+  const timeDiff = req.session.timeDiff;
   return res.render("newGoal", {
-    today: getToday(),
-    aYearFromToday: getAYearFromToday(),
+    today: getToday(timeDiff),
+    aYearFromToday: getAYearFromToday(timeDiff),
     unfinishedSubs,
     pageTitle,
   });
@@ -99,7 +101,8 @@ export const postNewYearly = async (req, res) => {
   const userId = req.session.user._id;
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const pageTitle = "New Yearly";
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const dateExists = await Yearly.exists({
     termStart: { $lte: new Date(date) },
     termEnd: { $gte: new Date(date) },
@@ -243,7 +246,8 @@ export const postNewYearly = async (req, res) => {
 export const getEditYearly = async (req, res) => {
   const pageTitle = "Edit Yearly";
   const userId = req.session.user._id;
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const goal = await Yearly.findOne({
     owner: userId,
     termStart: { $lte: new Date(today) }, //termStart가 오늘과 같거나 앞에 있고 yearly를 찾습니다.
@@ -289,8 +293,8 @@ export const postEditYearly = async (req, res) => {
     rest.splice(rest.indexOf("targetValues"), 1);
     rest.splice(rest.indexOf("eachAsIndepend"), 1);
   }
-
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const yearly = await Yearly.findOne({
     owner: userId,
@@ -406,7 +410,8 @@ export const postEditYearly = async (req, res) => {
 
 export const getPreviousYearly = async (req, res) => {
   const pageTitle = "Previous Yearly";
-  const today = getToday();
+  const timeDiff = req.session.timeDiff;
+  const today = getToday(timeDiff);
   const { id: goalId } = req.params;
   const userId = req.session.user._id;
   let termStart = "";

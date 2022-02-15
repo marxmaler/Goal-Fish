@@ -2,6 +2,7 @@ import { async } from "regenerator-runtime";
 import { detectLanguage, preventSubmit } from "./sharedAll";
 
 export const lang = detectLanguage();
+detectLocalTime();
 const emailValBtn = document.getElementById("email-val-btn");
 
 const validateEmail = async (event) => {
