@@ -57,8 +57,8 @@ export const getYearlyHome = async (req, res) => {
     prevGoalArr = prevGoalArr.reverse();
     prevGoalDates = prevGoalDates.reverse();
 
-    termStart = yyyymmdd(goal.termStart);
-    termEnd = yyyymmdd(goal.termEnd);
+    termStart = yymm(goal.termStart);
+    termEnd = yymm(goal.termEnd);
   }
 
   return res.render("currentGoal", {
@@ -432,19 +432,18 @@ export const getPreviousYearly = async (req, res) => {
       .populate("subs");
   }
 
-  if (goal) {
-    termStart = yyyymmdd(goal.termStart);
-    termEnd = yyyymmdd(goal.termEnd);
-  }
-
-  //평균 구하기
   let prevTotal = 0;
   let prevAvg = 0;
+  let prevGoals = null;
   let prevGoalArr = [];
   let prevGoalDates = [];
 
-  if (termEnd !== "") {
-    const prevGoals = await Yearly.find({
+  if (goal) {
+    //평균 구하기
+    prevGoalArr = [goal.total];
+    prevGoalDates = [`${yymm(goal.termStart)}~${yymm(goal.termEnd)}`];
+
+    prevGoals = await Yearly.find({
       owner: userId,
       termEnd: { $lt: goal.termEnd },
     })
@@ -460,16 +459,19 @@ export const getPreviousYearly = async (req, res) => {
       : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
 
+    prevGoalArr.length > 2 ? (prevGoalArr = prevGoalArr.slice(0, 2)) : null;
+    prevGoalDates.length > 2
+      ? (prevGoalDates = prevGoalDates.slice(0, 2))
+      : null;
+
     prevGoalArr = prevGoalArr.reverse();
     prevGoalDates = prevGoalDates.reverse();
 
-    termStart = termStart.split("-");
-    termStart =
-      termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
-    termEnd = termEnd.split("-");
-    termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
+    termStart = yymm(goal.termStart);
+    termEnd = yymm(goal.termEnd);
   }
 
+  console.log(goal);
   return res.render("previousGoal", {
     goal,
     termStart,

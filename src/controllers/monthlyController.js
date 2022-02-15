@@ -4,7 +4,7 @@ import {
   getToday,
   getAMonthFromToday,
   yyyymmdd,
-  yymm,
+  mmdd,
 } from "../functions/time";
 import { convertImp } from "../functions/convertImp";
 
@@ -36,7 +36,7 @@ export const getMonthlyHome = async (req, res) => {
   if (goal) {
     //평균 구하기
     prevGoalArr = [goal.total];
-    prevGoalDates = [`${yymm(goal.termStart)}~${yymm(goal.termEnd)}`];
+    prevGoalDates = [`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`];
 
     prevGoals = await Monthly.find({
       owner: userId,
@@ -49,7 +49,7 @@ export const getMonthlyHome = async (req, res) => {
       ? prevGoals.forEach((goal) => {
           prevTotal += goal.total;
           prevGoalArr.push(goal.total);
-          prevGoalDates.push(`${yymm(goal.termStart)}~${yymm(goal.termEnd)}`);
+          prevGoalDates.push(`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`);
         })
       : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
@@ -62,8 +62,8 @@ export const getMonthlyHome = async (req, res) => {
     prevGoalArr = prevGoalArr.reverse();
     prevGoalDates = prevGoalDates.reverse();
 
-    termStart = yyyymmdd(goal.termStart);
-    termEnd = yyyymmdd(goal.termEnd);
+    termStart = mmdd(goal.termStart);
+    termEnd = mmdd(goal.termEnd);
   }
 
   return res.render("currentGoal", {
@@ -437,19 +437,18 @@ export const getPreviousMonthly = async (req, res) => {
       .populate("subs");
   }
 
-  if (goal) {
-    termStart = yyyymmdd(goal.termStart);
-    termEnd = yyyymmdd(goal.termEnd);
-  }
-
-  //평균 구하기
   let prevTotal = 0;
   let prevAvg = 0;
+  let prevGoals = null;
   let prevGoalArr = [];
   let prevGoalDates = [];
 
-  if (termEnd !== "") {
-    const prevGoals = await Monthly.find({
+  if (goal) {
+    //평균 구하기
+    prevGoalArr = [goal.total];
+    prevGoalDates = [`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`];
+
+    prevGoals = await Monthly.find({
       owner: userId,
       termEnd: { $lt: goal.termEnd },
     })
@@ -465,14 +464,16 @@ export const getPreviousMonthly = async (req, res) => {
       : null;
     prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
 
+    prevGoalArr.length > 3 ? (prevGoalArr = prevGoalArr.slice(0, 3)) : null;
+    prevGoalDates.length > 3
+      ? (prevGoalDates = prevGoalDates.slice(0, 3))
+      : null;
+
     prevGoalArr = prevGoalArr.reverse();
     prevGoalDates = prevGoalDates.reverse();
 
-    termStart = termStart.split("-");
-    termStart =
-      termStart[0] + "년 " + termStart[1] + "월 " + termStart[2] + "일";
-    termEnd = termEnd.split("-");
-    termEnd = termEnd[0] + "년 " + termEnd[1] + "월 " + termEnd[2] + "일";
+    termStart = mmdd(goal.termStart);
+    termEnd = mmdd(goal.termEnd);
   }
 
   return res.render("previousGoal", {

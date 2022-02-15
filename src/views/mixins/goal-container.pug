@@ -24,13 +24,13 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
                 p=lang==="ko" ? "남은 시간 " : "Remaining Time "
                     span.goal-container__ramaining-time
             else if pageTitle === "Previous Daily"
-                h2.goal-container__previousGoal-date=`일간 목표: ${date}`
+                h2.goal-container__previousGoal-date=lang==="ko" ? `일간 목표: ${date}` : `Daily Goal: ${date}` 
             else if pageTitle === "Previous Weekly"
-                h2.goal-container__previousGoal-date=`주간 목표: ${termStart}~${termEnd}`
+                h2.goal-container__previousGoal-date=lang==="ko" ? `주간 목표: ${termStart}~${termEnd}` : `Weekly Goal: ${termStart}~${termEnd}`
             else if pageTitle === "Previous Monthly"
-                h2.goal-container__previousGoal-date=`월간 목표: ${termStart}~${termEnd}`
+                h2.goal-container__previousGoal-date=lang==="ko" ? `월간 목표: ${termStart}~${termEnd}` : `Monthly Goal: ${termStart}~${termEnd}`
             else if pageTitle === "Previous Yearly"
-                h2.goal-container__previousGoal-date=`연간 목표: ${termStart}~${termEnd}`
+                h2.goal-container__previousGoal-date=lang==="ko" ? `연간 목표: ${termStart}~${termEnd}` : `Yearly Goal: ${termStart}~${termEnd}`
             +goalTable(goal)
             div.goal-container__progress-bar-container
                 h4=lang==="ko" ? "진행 상황: ": "Progress: " 
@@ -129,6 +129,7 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
             p=lang==="ko" ? "다른 목표 조회" : "Search By Date"
             input(type="date")#previous-goal-selector
     else
-        div.previous-goal-search.not-daily      
-            div
-                button#previous-goal-btn=lang==="ko" ? "이전 목표 조회" : "Previous Goal"  
+        if !(pageTitle.includes("Previous") && !goal)
+            div.previous-goal-search.not-daily      
+                div
+                    button#previous-goal-btn=lang==="ko" ? "이전 목표 조회" : "Previous Goal"  
