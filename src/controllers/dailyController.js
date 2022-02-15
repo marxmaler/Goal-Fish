@@ -424,7 +424,9 @@ export const getPreviousDaily = async (req, res) => {
       owner: userId,
       date: { $lt: new Date(today) },
     }).sort({ date: -1 });
-    return res.redirect(`/daily/${yyyymmdd(goal.date)}`);
+    if (goal) {
+      return res.redirect(`/daily/${yyyymmdd(goal.date)}`);
+    }
   } else {
     goal = await Daily.findOne({ owner: userId, date }).populate("subs");
   }
