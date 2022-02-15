@@ -1,4 +1,4 @@
-header(data-lang= loggedInUser ? (loggedInUser.lang === lang ? lang : loggedInUser.lang) : lang)
+header
     div
         if loggedIn
             p#cheer=lang==="ko" ? `힘내요, ${loggedInUser.name}님. 할 수 있어요!` : `Don't give up. You can do it, ${loggedInUser.name}!`

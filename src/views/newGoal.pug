@@ -4,7 +4,8 @@ block mainBlock
     if errorMessage 
         span(class="errorMessage")=errorMessage
         p
-    form(method="POST").newGoal__form
+        
+    form(data-lang=lang, method="POST").newGoal__form
         div.newGoal__form__form-container
             div.newGoal__form__form-container__date-container
                 if !pageTitle.includes("Daily")

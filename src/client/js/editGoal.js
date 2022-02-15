@@ -8,10 +8,8 @@ import {
   handleTermStartChange,
 } from "./sharedAll";
 
-const header = document.querySelector("header");
-const lang = header.dataset.lang;
-
 const form = document.querySelector("form");
+const lang = form.dataset.lang;
 const subList = document.querySelector("div.editGoal__form__form-container ul");
 const addSubBtn = document.querySelector(".addSub-btn");
 const submitBtn = document.querySelector(".submit-btn");
