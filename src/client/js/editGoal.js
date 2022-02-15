@@ -6,11 +6,10 @@ import {
   formatMeasureSettingDatas,
   hideDeleted,
   handleTermStartChange,
-  detectLanguage,
 } from "./sharedAll";
 
 const header = document.querySelector("header");
-const lang = header.dataset.lang ? header.dataset.lang : detectLanguage();
+const lang = header.dataset.lang;
 
 const form = document.querySelector("form");
 const subList = document.querySelector("div.editGoal__form__form-container ul");

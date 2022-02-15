@@ -12,7 +12,7 @@ import {
 } from "./sharedAll";
 
 const header = document.querySelector("header");
-const lang = header.dataset.lang ? header.dataset.lang : detectLanguage();
+const lang = header.dataset.lang;
 
 const goalType = document
   .querySelector("title")

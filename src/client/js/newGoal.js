@@ -9,7 +9,7 @@ import {
 } from "./sharedAll";
 
 const header = document.querySelector("header");
-const lang = header.dataset.lang ? header.dataset.lang : detectLanguage();
+const lang = header.dataset.lang;
 
 const form = document.querySelector(".newGoal__form");
 const subList = document.querySelector(".newGoal__form__form-container__ul");
