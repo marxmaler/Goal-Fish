@@ -471,7 +471,6 @@ export const getPreviousYearly = async (req, res) => {
     termEnd = yymm(goal.termEnd);
   }
 
-  console.log(goal);
   return res.render("previousGoal", {
     goal,
     termStart,

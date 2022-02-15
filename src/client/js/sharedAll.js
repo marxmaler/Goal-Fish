@@ -491,6 +491,9 @@ export function getOptions(
           : null;
       })
     : null;
+
+  let adjustedPrevGoals = JSON.parse(prevGoals);
+  adjustedPrevGoals[adjustedPrevGoals.length - 1] = todayTotal;
   const options = {
     theme: { mode: "dark" },
     chart: {
@@ -505,7 +508,7 @@ export function getOptions(
         data:
           graphType === "bar"
             ? [parseInt(goalAvg, 10), parseInt(todayTotal, 10)]
-            : JSON.parse(prevGoals),
+            : adjustedPrevGoals,
       },
     ],
     xaxis: {

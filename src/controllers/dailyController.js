@@ -442,7 +442,7 @@ export const getPreviousDaily = async (req, res) => {
 
     prevGoals = await Daily.find({
       owner: userId,
-      date: { $lte: new Date(date) },
+      date: { $lt: new Date(date) },
     })
       .sort({ date: -1 })
       .limit(7);

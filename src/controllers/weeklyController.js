@@ -57,8 +57,8 @@ export const getWeeklyHome = async (req, res) => {
     prevGoalArr = prevGoalArr.reverse();
     prevGoalDates = prevGoalDates.reverse();
 
-    termStart = yyyymmdd(goal.termStart);
-    termEnd = yyyymmdd(goal.termEnd);
+    termStart = mmdd(goal.termStart);
+    termEnd = mmdd(goal.termEnd);
   }
 
   return res.render("currentGoal", {
