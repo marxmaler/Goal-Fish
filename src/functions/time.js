@@ -4,6 +4,7 @@ function timeFormat(time) {
 
 export function getToday() {
   const now = new Date();
+  console.log(now);
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
   let date = now.getDate();
