@@ -4,13 +4,13 @@ mixin goalTable(goal)
             thead 
                 tr
                     th.th-imp
-                        div 중요도
+                        div=lang === "ko" ? "중요도" : "Imp."
                     th.th-comp
-                        div 완료
+                        div=lang === "ko" ? "완료" : "Done" 
                     th.th-content 
-                        div 내용
+                        div=lang === "ko" ? "내용" : "Content"  
                     th.th-measure 
-                        div 측정
+                        div=lang === "ko" ? "측정" : "Measure"   
             tbody
                 each sub in goal.subs
                     tr

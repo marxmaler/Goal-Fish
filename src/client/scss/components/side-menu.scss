@@ -141,11 +141,12 @@
   aside.fix {
     display: flex;
     justify-content: center;
+
     ul {
       margin: 3% 0%;
       border-radius: 10px;
       padding: 10px;
-      width: 70vw;
+      width: max-content;
       text-align: center;
       background-color: rgb(255, 255, 255);
       display: flex;

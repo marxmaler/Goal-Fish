@@ -93,3 +93,12 @@
     }
   }
 }
+
+@media screen and (max-width: 300px) {
+  .goal-container {
+    background-color: transparent;
+    border-radius: 0px;
+    padding: 0px;
+    width: min-content;
+  }
+}

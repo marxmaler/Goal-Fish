@@ -11,7 +11,7 @@
     thead {
       width: fit-content;
       color: black;
-      font-weight: 900;
+      font-weight: 700;
       font-size: 20px;
       tr {
         th {
@@ -168,3 +168,32 @@
     }
   }
 }
+
+// @media screen and (max-width: 375px) {
+//   .goal-table-wrapper {
+//     .goal-table {
+//       thead {
+//         tr {
+//           th {
+//             &.th-imp {
+//               div {
+//                 width: max-content;
+//               }
+//             }
+//             font-size: 10px;
+//             padding: 5px;
+//           }
+//         }
+//       }
+
+//       tbody {
+//         tr {
+//           td {
+//             &.content-td {
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// }

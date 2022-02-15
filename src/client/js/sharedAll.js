@@ -562,7 +562,7 @@ export const handleChartSwap = (
       newSwapBtn.setAttribute("id", "swap-to-bar");
       newSwapBtn.innerText = lang === "ko" ? "그래프 전환" : "Swap Chart";
       newSwapBtn.addEventListener("click", (event) =>
-        handleChartSwap(event, chartSwapBtnBox, charRenderObject)
+        handleChartSwap(event, chartSwapBtnBox, charRenderObject, lang)
       );
       event.target.remove();
       chartSwapBtnBox.appendChild(newSwapBtn);
@@ -589,7 +589,7 @@ export const handleChartSwap = (
       newSwapBtn.setAttribute("id", "swap-to-line");
       newSwapBtn.innerText = lang === "ko" ? "그래프 전환" : "Swap Chart";
       newSwapBtn.addEventListener("click", (event) =>
-        handleChartSwap(event, chartSwapBtnBox, charRenderObject)
+        handleChartSwap(event, chartSwapBtnBox, charRenderObject, lang)
       );
       event.target.remove();
       chartSwapBtnBox.prepend(newSwapBtn);
