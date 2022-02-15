@@ -6,6 +6,7 @@ import { convertImp } from "../functions/convertImp";
 export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
   const date = getToday();
+  console.log(date);
   const userId = req.session.user._id;
   const goal = await Daily.findOne({
     owner: userId,
