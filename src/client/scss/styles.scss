@@ -14,6 +14,7 @@
 @import "./components/complete-modal.scss";
 @import "./components/chart-box.scss";
 @import "./components/profile-form.scss";
+@import "./components/fish-bowl.scss";
 
 //Screens
 @import "./screens/previousGoal.scss";
@@ -28,6 +29,7 @@
 }
 
 body {
+  z-index: -3;
   min-height: 100vh;
   position: relative;
   padding: 0px 20px;
@@ -85,6 +87,7 @@ input[type="date"] {
   border-radius: 10px;
   font-family: inherit;
   color: black;
+  border: 0;
 }
 
 input[type="number"]::-webkit-inner-spin-button {

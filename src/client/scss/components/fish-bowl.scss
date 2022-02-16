@@ -1,0 +1,349 @@
+.fish-bowl {
+  position: absolute;
+  width: 92vw;
+  background-color: black;
+  z-index: -2;
+  i {
+    z-index: -1;
+    position: absolute;
+    &:first-child {
+      opacity: 0;
+      color: rgba(231, 76, 60, 0.4);
+      top: 12vh;
+      transform: rotateZ(180deg);
+      animation: swim1 48s linear infinite;
+      animation-delay: 3s;
+    }
+    &:nth-child(2) {
+      opacity: 0;
+      color: rgba(231, 76, 60, 0.4);
+      top: 30vh;
+      transform: rotateZ(180deg);
+      animation: swim2 77s linear infinite;
+    }
+    &:nth-child(3) {
+      opacity: 0;
+      color: rgba(231, 76, 60, 0.4);
+      top: 1vh;
+      transform: rotateZ(180deg);
+      animation: swim3 37s linear infinite;
+    }
+    &:nth-child(4) {
+      opacity: 0;
+      color: rgba(230, 126, 34, 0.4);
+      top: 15vh;
+      transform: rotateZ(180deg);
+      animation: swim4 30s linear infinite;
+    }
+    &:nth-child(5) {
+      opacity: 0;
+      color: rgba(241, 196, 15, 0.4);
+      top: 3vh;
+      transform: rotateZ(180deg);
+      animation: swim5 40s linear infinite;
+      animation-delay: 7s;
+    }
+    &:nth-child(6) {
+      opacity: 0;
+      color: rgba(230, 126, 34, 0.4);
+      top: 3vh;
+      animation: swim6 47s linear infinite;
+      animation-delay: 5s;
+    }
+    &:nth-child(7) {
+      opacity: 0;
+      color: rgba(241, 196, 15, 0.4);
+      top: 19vh;
+      animation: swim7 60s linear infinite;
+    }
+    &:nth-child(8) {
+      opacity: 0;
+      color: rgba(241, 196, 15, 0.4);
+      top: 8vh;
+      animation: swim8 35s linear infinite;
+    }
+    &:nth-child(9) {
+      opacity: 0;
+      color: rgba(243, 156, 18, 0.4);
+      top: 10vh;
+      animation: swim9 19s linear infinite;
+      animation-delay: 10s;
+    }
+    &:nth-child(10) {
+      opacity: 0;
+      color: rgba(241, 196, 15, 0.4);
+      top: 7vh;
+      animation: swim10 50s linear infinite;
+    }
+  }
+}
+
+@keyframes swim1 {
+  0% {
+    opacity: 1;
+    right: -5vw;
+    top: 12vh;
+  }
+  3% {
+    top: 15vh;
+  }
+  15% {
+    top: 20vh;
+  }
+  30% {
+    top: 18vh;
+  }
+  50% {
+    top: 27vh;
+  }
+  60% {
+    top: 30vh;
+  }
+  70% {
+    top: 22vh;
+  }
+  100% {
+    top: 19vh;
+    right: 96.5vw;
+  }
+}
+
+@keyframes swim2 {
+  0% {
+    opacity: 1;
+    right: -5vw;
+    top: 30vh;
+  }
+  3% {
+    top: 27vh;
+  }
+  15% {
+    top: 31vh;
+  }
+  30% {
+    top: 24vh;
+  }
+  50% {
+    top: 24vh;
+  }
+  60% {
+    top: 28vh;
+  }
+  70% {
+    top: 30vh;
+  }
+  100% {
+    top: 40vh;
+    right: 96.5vw;
+  }
+}
+
+@keyframes swim3 {
+  0% {
+    opacity: 1;
+    right: -5vw;
+    top: 1vh;
+  }
+  3% {
+    top: 3vh;
+  }
+  15% {
+    top: 7vh;
+  }
+  30% {
+    top: 4vh;
+  }
+  50% {
+    top: 10vh;
+  }
+  60% {
+    top: 8vh;
+  }
+  70% {
+    top: 13vh;
+  }
+  100% {
+    top: 10vh;
+    right: 96.5vw;
+  }
+}
+
+@keyframes swim4 {
+  0% {
+    opacity: 1;
+    right: -5vw;
+    top: 15vh;
+  }
+  3% {
+    top: 17vh;
+  }
+  15% {
+    top: 20vh;
+  }
+  30% {
+    top: 16vh;
+  }
+  50% {
+    top: 24vh;
+  }
+  60% {
+    top: 31vh;
+  }
+  70% {
+    top: 26vh;
+  }
+  100% {
+    top: 30vh;
+    right: 96.5vw;
+  }
+}
+
+@keyframes swim5 {
+  0% {
+    opacity: 1;
+    right: -5vw;
+    top: 3vh;
+  }
+  3% {
+    top: 5vh;
+  }
+  15% {
+    top: 12vh;
+  }
+  30% {
+    top: 20vh;
+  }
+  50% {
+    top: 31vh;
+  }
+  60% {
+    top: 29vh;
+  }
+  70% {
+    top: 35vh;
+  }
+  100% {
+    top: 40vh;
+    right: 96.5vw;
+  }
+}
+
+@keyframes swim6 {
+  0% {
+    opacity: 1;
+    left: -3vw;
+    top: 3vh;
+  }
+  3% {
+    top: 5vh;
+  }
+  15% {
+    top: 8vh;
+  }
+  30% {
+    top: 27vh;
+  }
+  50% {
+    top: 34vh;
+  }
+  70% {
+    top: 21vh;
+  }
+  100% {
+    top: 25vh;
+    left: 96.5vw;
+  }
+}
+
+@keyframes swim7 {
+  0% {
+    opacity: 1;
+    left: -3vw;
+    top: 19vh;
+  }
+  3% {
+    top: 15vh;
+  }
+  15% {
+    top: 24vh;
+  }
+  50% {
+    top: 34vh;
+  }
+  70% {
+    top: 19vh;
+  }
+  100% {
+    top: 25vh;
+    left: 96.5vw;
+  }
+}
+
+@keyframes swim8 {
+  0% {
+    opacity: 1;
+    left: -3vw;
+    top: 8vh;
+  }
+  3% {
+    top: 14vh;
+  }
+  15% {
+    top: 20vh;
+  }
+  50% {
+    top: 30vh;
+  }
+  70% {
+    top: 50vh;
+  }
+  100% {
+    top: 40vh;
+    left: 96.5vw;
+  }
+}
+
+@keyframes swim9 {
+  0% {
+    opacity: 1;
+    left: -3vw;
+    top: 45vh;
+  }
+  3% {
+    top: 43vh;
+  }
+  15% {
+    top: 35vh;
+  }
+  50% {
+    top: 40vh;
+  }
+  70% {
+    top: 34vh;
+  }
+  100% {
+    top: 28vh;
+    left: 96.5vw;
+  }
+}
+
+@keyframes swim10 {
+  0% {
+    opacity: 1;
+    left: -3vw;
+    top: 7vh;
+  }
+  3% {
+    top: 9vh;
+  }
+  50% {
+    top: 0vh;
+  }
+  70% {
+    top: 7vh;
+  }
+  100% {
+    top: 14vh;
+    left: 96.5vw;
+  }
+}

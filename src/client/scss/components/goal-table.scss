@@ -8,17 +8,18 @@
   .goal-table {
     text-align: center;
     border: none;
-    color: rgb(5, 26, 21);
+    color: rgb(0, 0, 0);
     thead {
       width: fit-content;
-      color: rgb(5, 26, 21);
+      color: rgb(0, 0, 0);
       font-weight: 700;
       font-size: 20px;
       tr {
         th {
           width: max-content;
           padding: 10px;
-          border-bottom: 3px double rgba(22, 160, 133, 1);
+          // border-bottom: 3px double rgba(22, 160, 133, 1);
+          border-bottom: 3px double black;
           &.th-imp {
             div {
               width: max-content;
@@ -52,11 +53,12 @@
               border: none;
               margin: 0;
               padding: 0;
-              color: rgb(5, 26, 21);
+              color: rgb(0, 0, 0);
             }
             i {
               cursor: pointer;
-              color: rgba(22, 160, 133, 1);
+              // color: rgba(22, 160, 133, 1);
+              color: inherit;
               &.fa-plus-circle {
                 margin-left: 10px;
               }
