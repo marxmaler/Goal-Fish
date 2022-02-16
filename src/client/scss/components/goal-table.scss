@@ -8,17 +8,17 @@
   .goal-table {
     text-align: center;
     border: none;
-    color: black;
+    color: rgb(5, 26, 21);
     thead {
       width: fit-content;
-      color: black;
+      color: rgb(5, 26, 21);
       font-weight: 700;
       font-size: 20px;
       tr {
         th {
           width: max-content;
           padding: 10px;
-          border-bottom: 3px double black;
+          border-bottom: 3px double rgba(22, 160, 133, 1);
           &.th-imp {
             div {
               width: max-content;
@@ -52,9 +52,11 @@
               border: none;
               margin: 0;
               padding: 0;
+              color: rgb(5, 26, 21);
             }
             i {
               cursor: pointer;
+              color: rgba(22, 160, 133, 1);
               &.fa-plus-circle {
                 margin-left: 10px;
               }
