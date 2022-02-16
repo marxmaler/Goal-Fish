@@ -40,6 +40,7 @@
   margin: 20px;
 
   p {
+    width: 100%;
     line-height: 1.5em;
   }
 
@@ -84,6 +85,7 @@
         color: rgba(97, 221, 196, 0.884);
         text-shadow: 1px 1px 1px rgba($color: white, $alpha: 0.2);
         transition: all 0.3s linear;
+        border-bottom: rgba(97, 221, 196, 0.884) 4px solid;
         &:hover {
           background-color: rgba(97, 221, 196, 0.884);
           color: white;

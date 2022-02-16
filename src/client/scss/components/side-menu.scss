@@ -16,7 +16,7 @@
 @media screen and (min-width: 900px) {
   aside.no-fix {
     transform: translateX(-95%);
-    background-color: white;
+    background-color: rgba(245, 246, 250, 1);
     transition: all 0.3s ease-in;
     opacity: 0.1;
     color: transparent;
@@ -53,7 +53,7 @@
           color: black;
           &.highlighted {
             background-color: black;
-            color: white;
+            color: rgba(245, 246, 250, 1);
             font-weight: 900;
           }
           div.detail {
@@ -71,7 +71,7 @@
                 padding: 10px;
                 width: 100%;
                 text-align: center;
-                border-bottom: 0.5px solid white;
+                border-bottom: 0.5px solid rgba(245, 246, 250, 1);
               }
             }
           }
@@ -110,7 +110,7 @@
         color: black;
         &.highlighted {
           background-color: black;
-          color: white;
+          color: rgba(245, 246, 250, 1);
           font-weight: 900;
         }
         div.detail {
@@ -128,7 +128,7 @@
               padding: 10px;
               width: 100%;
               text-align: center;
-              border-bottom: 0.5px solid white;
+              border-bottom: 0.5px solid rgba(245, 246, 250, 1);
             }
           }
         }
@@ -145,29 +145,36 @@
     ul {
       margin: 3% 0%;
       border-radius: 10px;
-      padding: 10px;
+      padding: 3px;
+      border: 1px solid rgba(245, 246, 250, 1);
       width: max-content;
       text-align: center;
-      background-color: rgb(255, 255, 255);
       display: flex;
       justify-content: center;
+      align-items: center;
       li.fix-btn-container {
         i {
           display: none;
         }
       }
       li.main-menu {
+        background-color: rgba(22, 160, 133, 0.5);
         padding: 10px;
         position: relative;
-        border-radius: 5px;
+        border-radius: 7px;
         text-shadow: 1px 1px 1px rgba($color: black, $alpha: 0.2);
-        color: rgba($color: #000000, $alpha: 0.8);
+        color: rgba(245, 246, 250, 0.8);
         border: lightgray 1px solid;
         border-bottom: 4px solid rgba($color: lightgray, $alpha: 1);
+        transition: 0.3s ease-in-out all;
+        &:hover {
+          transform: translateY(1px);
+        }
         &.highlighted {
-          background-color: black;
+          background-color: rgb(22, 160, 132);
           border-bottom: 4px solid rgba($color: gray, $alpha: 0.4);
-          color: white;
+          color: rgba(245, 246, 250, 1);
+          transform: translateY(1px);
           font-weight: 900;
         }
         div.detail {
