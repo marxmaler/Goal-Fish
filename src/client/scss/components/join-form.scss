@@ -27,6 +27,9 @@
       margin-bottom: 10px;
       display: flex;
       align-items: center;
+      label {
+        width: max-content;
+      }
       input {
         margin-left: 5px;
         border: none;

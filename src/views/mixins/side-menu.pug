@@ -1,5 +1,5 @@
 mixin side-menu(pageTitle)
-    aside.fix
+    aside(class=loggedInUser ? "fix" : "no-fix")
         ul
             li.fix-btn-container
                 i.fas.fa-dot-circle#fix-btn
