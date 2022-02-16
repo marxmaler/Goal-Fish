@@ -94,6 +94,10 @@ input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
+input[type="checkbox"] {
+  background-color: rgba(241, 196, 15, 0.8);
+}
+
 .errorMessage {
   color: red;
   font-size: 12px;

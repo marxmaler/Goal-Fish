@@ -1,0 +1,8 @@
+extends base.pug
+include mixins/goal-container.pug
+
+block mainBlock
+    div.info-box
+        span=lang === "ko" ? "시차를 계산하고 있습니다. 잠시만 기다려주세요.": "Sorry, we are calculating time difference. Please wait for a second."
+block scriptBlock 
+    script(src="/assets/js/diff-detection.js") 

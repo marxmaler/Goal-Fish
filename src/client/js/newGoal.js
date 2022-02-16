@@ -40,7 +40,6 @@ window.onload = function () {
         lang === "ko"
           ? "어제 세운 목표 중 완수하지 못한 목표가 있습니다. 불러오시겠습니까?"
           : "It seems you didn't complete all the goals of yesterday. Should I bring the unfinished goals?";
-      loadUnfinished = window.confirm(message);
     } else if (goalType === "weekly") {
       message =
         lang === "ko"

@@ -1,4 +1,3 @@
-import { detectLanguage, detectLocalTime } from "./sharedAll";
+import { detectLanguage } from "./sharedAll";
 
 export const lang = detectLanguage();
-detectLocalTime();
