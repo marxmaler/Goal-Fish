@@ -6,6 +6,10 @@ import { convertImp } from "../functions/convertImp";
 export const getYearlyHome = async (req, res) => {
   const pageTitle = "Yearly";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const goal = await Yearly.findOne({
@@ -88,6 +92,10 @@ export const getNewYearly = async (req, res) => {
     }
   }
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   return res.render("newGoal", {
     today: getToday(timeDiff),
     aYearFromToday: getAYearFromToday(timeDiff),
@@ -102,6 +110,10 @@ export const postNewYearly = async (req, res) => {
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const pageTitle = "New Yearly";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const dateExists = await Yearly.exists({
     termStart: { $lte: new Date(date) },
@@ -247,6 +259,10 @@ export const getEditYearly = async (req, res) => {
   const pageTitle = "Edit Yearly";
   const userId = req.session.user._id;
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const goal = await Yearly.findOne({
     owner: userId,
@@ -294,6 +310,10 @@ export const postEditYearly = async (req, res) => {
     rest.splice(rest.indexOf("eachAsIndepend"), 1);
   }
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const yearly = await Yearly.findOne({
@@ -411,6 +431,10 @@ export const postEditYearly = async (req, res) => {
 export const getPreviousYearly = async (req, res) => {
   const pageTitle = "Previous Yearly";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const { id: goalId } = req.params;
   const userId = req.session.user._id;

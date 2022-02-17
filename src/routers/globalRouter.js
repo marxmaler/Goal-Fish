@@ -20,5 +20,4 @@ globalRouter
   .all(publicOnlyMiddleware)
   .get(getLogin)
   .post(postLogin);
-
 export default globalRouter;

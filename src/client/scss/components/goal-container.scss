@@ -56,7 +56,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: solid 1px rgba(245, 246, 250, 0.8);
+  border: solid 1px rgba(245, 246, 250, 0.5);
   background-color: rgba(47, 54, 64, 0.2);
   min-width: 300px;
   border-radius: 10px;
@@ -77,23 +77,13 @@
 
   &.not-daily {
     background-color: transparent;
-
+    border: none;
     div {
+      padding: 30px;
+      border: solid 1px rgba(245, 246, 250, 0.5);
+      background-color: rgba(46, 204, 113, 0.3);
+      border-radius: 10px;
       button {
-        background-color: transparent;
-        border: rgba(97, 221, 196, 0.884) 2px solid;
-        color: rgba(97, 221, 196, 0.884);
-        text-shadow: 1px 1px 1px rgba($color: white, $alpha: 0.2);
-        transition: all 0.3s linear;
-        border-bottom: rgba(97, 221, 196, 0.884) 4px solid;
-        &:hover {
-          background-color: rgba(97, 221, 196, 0.884);
-          color: white;
-          border-bottom: 4px solid rgba($color: #043027, $alpha: 0.4);
-        }
-        &:active {
-          transform: translateY(1px);
-        }
       }
     }
   }

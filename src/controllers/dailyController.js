@@ -6,6 +6,10 @@ import { convertImp } from "../functions/convertImp";
 export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const date = getToday(timeDiff);
   const userId = req.session.user._id;
   const goal = await Daily.findOne({
@@ -120,6 +124,10 @@ export const getNewDaily = async (req, res) => {
   }
 
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   return res.render("newGoal", {
     today: getToday(timeDiff),
     unfinishedSubs,
@@ -137,6 +145,10 @@ export const postNewDaily = async (req, res) => {
   });
   if (dateExists) {
     const timeDiff = req.session.timeDiff;
+    if (!timeDiff) {
+      req.session.destroy();
+      return res.redirect("/login");
+    }
     return res.render("newGoal", {
       today: getToday(timeDiff),
       errorMessage: "동일한 날짜에 대해 이미 설정된 일일 목표가 존재합니다.",
@@ -268,6 +280,10 @@ export const getEditDaily = async (req, res) => {
   const pageTitle = "Edit Daily";
   const userId = req.session.user._id;
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const goal = await Daily.findOne({
     owner: userId,
     date: getToday(timeDiff),
@@ -309,6 +325,10 @@ export const postEditDaily = async (req, res) => {
 
   const userId = req.session.user._id;
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const daily = await Daily.findOne({
     owner: userId,
     date: getToday(timeDiff),
@@ -416,6 +436,10 @@ export const postEditDaily = async (req, res) => {
 export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
 

@@ -13,7 +13,6 @@ import {
   getPreviousGoal,
   preventSubmit,
   handleChartSwap,
-  detectLocalTime,
 } from "./sharedAll";
 
 const goalType = document
@@ -21,8 +20,6 @@ const goalType = document
   .text.split("|")[1]
   .replace(" ", "")
   .toLowerCase();
-
-detectLocalTime();
 
 //이전 일일 목표로 이동
 const goalContainer = document.querySelector(".goal-container");

@@ -6,6 +6,10 @@ import { convertImp } from "../functions/convertImp";
 export const getWeeklyHome = async (req, res) => {
   const pageTitle = "Weekly";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const goal = await Weekly.findOne({
@@ -88,6 +92,10 @@ export const getNewWeekly = async (req, res) => {
     }
   }
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   return res.render("newGoal", {
     today: getToday(timeDiff),
     aWeekFromToday: getAWeekFromToday(timeDiff),
@@ -102,6 +110,10 @@ export const postNewWeekly = async (req, res) => {
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const pageTitle = "New Weekly";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const dateExists = await Weekly.exists({
     termStart: { $lte: new Date(date) }, //termStart가 오늘과 같거나 앞에 있고 weekly를 찾습니다.
@@ -247,6 +259,10 @@ export const getEditWeekly = async (req, res) => {
   const pageTitle = "Edit Weekly";
   const userId = req.session.user._id;
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const goal = await Weekly.findOne({
     owner: userId,
@@ -294,6 +310,10 @@ export const postEditWeekly = async (req, res) => {
     rest.splice(rest.indexOf("eachAsIndepend"), 1);
   }
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const weekly = await Weekly.findOne({
@@ -411,6 +431,10 @@ export const postEditWeekly = async (req, res) => {
 export const getPreviousWeekly = async (req, res) => {
   const pageTitle = "Previous Weekly";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const { id: goalId } = req.params;
   const userId = req.session.user._id;

@@ -1,5 +1,5 @@
 import { async } from "regenerator-runtime";
-import { detectLanguage, detectLocalTime, preventSubmit } from "./sharedAll";
+import { detectLanguage, preventSubmit } from "./sharedAll";
 
 export const lang = detectLanguage();
 detectLocalTime();

@@ -11,6 +11,10 @@ import { convertImp } from "../functions/convertImp";
 export const getMonthlyHome = async (req, res) => {
   const pageTitle = "Monthly";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const goal = await Monthly.findOne({
@@ -93,6 +97,10 @@ export const getNewMonthly = async (req, res) => {
     }
   }
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   return res.render("newGoal", {
     today: getToday(timeDiff),
     aMonthFromToday: getAMonthFromToday(timeDiff),
@@ -107,6 +115,10 @@ export const postNewMonthly = async (req, res) => {
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const pageTitle = "New Monthly";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const dateExists = await Monthly.exists({
     termStart: { $lte: new Date(date) },
@@ -252,6 +264,10 @@ export const getEditMonthly = async (req, res) => {
   const pageTitle = "Edit Monthly";
   const userId = req.session.user._id;
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const goal = await Monthly.findOne({
     owner: userId,
@@ -299,6 +315,10 @@ export const postEditMonthly = async (req, res) => {
     rest.splice(rest.indexOf("eachAsIndepend"), 1);
   }
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const monthly = await Monthly.findOne({
@@ -416,6 +436,10 @@ export const postEditMonthly = async (req, res) => {
 export const getPreviousMonthly = async (req, res) => {
   const pageTitle = "Previous Monthly";
   const timeDiff = req.session.timeDiff;
+  if (!timeDiff) {
+    req.session.destroy();
+    return res.redirect("/login");
+  }
   const today = getToday(timeDiff);
   const { id: goalId } = req.params;
   const userId = req.session.user._id;

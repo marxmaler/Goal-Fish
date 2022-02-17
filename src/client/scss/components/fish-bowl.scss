@@ -1,7 +1,6 @@
 .fish-bowl {
   position: absolute;
-  width: 92vw;
-  background-color: black;
+  width: 98%;
   z-index: -2;
   i {
     z-index: -1;
@@ -80,8 +79,8 @@
 
 @keyframes swim1 {
   0% {
-    opacity: 1;
-    right: -5vw;
+    opacity: 0;
+    right: 0vw;
     top: 12vh;
   }
   3% {
@@ -94,6 +93,7 @@
     top: 18vh;
   }
   50% {
+    opacity: 1;
     top: 27vh;
   }
   60% {
@@ -103,15 +103,16 @@
     top: 22vh;
   }
   100% {
+    opacity: 0;
     top: 19vh;
-    right: 96.5vw;
+    right: 98%;
   }
 }
 
 @keyframes swim2 {
   0% {
-    opacity: 1;
-    right: -5vw;
+    opacity: 0;
+    right: 0vw;
     top: 30vh;
   }
   3% {
@@ -124,6 +125,7 @@
     top: 24vh;
   }
   50% {
+    opacity: 1;
     top: 24vh;
   }
   60% {
@@ -133,15 +135,16 @@
     top: 30vh;
   }
   100% {
+    opacity: 0;
     top: 40vh;
-    right: 96.5vw;
+    right: 98%;
   }
 }
 
 @keyframes swim3 {
   0% {
-    opacity: 1;
-    right: -5vw;
+    opacity: 0;
+    right: 0vw;
     top: 1vh;
   }
   3% {
@@ -151,6 +154,7 @@
     top: 7vh;
   }
   30% {
+    opacity: 1;
     top: 4vh;
   }
   50% {
@@ -163,15 +167,16 @@
     top: 13vh;
   }
   100% {
+    opacity: 0;
     top: 10vh;
-    right: 96.5vw;
+    right: 98%;
   }
 }
 
 @keyframes swim4 {
   0% {
-    opacity: 1;
-    right: -5vw;
+    opacity: 0;
+    right: 0vw;
     top: 15vh;
   }
   3% {
@@ -181,6 +186,7 @@
     top: 20vh;
   }
   30% {
+    opacity: 1;
     top: 16vh;
   }
   50% {
@@ -193,15 +199,16 @@
     top: 26vh;
   }
   100% {
+    opacity: 0;
     top: 30vh;
-    right: 96.5vw;
+    right: 98%;
   }
 }
 
 @keyframes swim5 {
   0% {
-    opacity: 1;
-    right: -5vw;
+    opacity: 0;
+    right: 0vw;
     top: 3vh;
   }
   3% {
@@ -214,6 +221,7 @@
     top: 20vh;
   }
   50% {
+    opacity: 1;
     top: 31vh;
   }
   60% {
@@ -223,15 +231,16 @@
     top: 35vh;
   }
   100% {
+    opacity: 0;
     top: 40vh;
-    right: 96.5vw;
+    right: 98%;
   }
 }
 
 @keyframes swim6 {
   0% {
-    opacity: 1;
-    left: -3vw;
+    opacity: 0;
+    left: 0vw;
     top: 3vh;
   }
   3% {
@@ -244,21 +253,23 @@
     top: 27vh;
   }
   50% {
+    opacity: 1;
     top: 34vh;
   }
   70% {
     top: 21vh;
   }
   100% {
+    opacity: 0;
     top: 25vh;
-    left: 96.5vw;
+    left: 98%;
   }
 }
 
 @keyframes swim7 {
   0% {
-    opacity: 1;
-    left: -3vw;
+    opacity: 0;
+    left: 0vw;
     top: 19vh;
   }
   3% {
@@ -268,21 +279,23 @@
     top: 24vh;
   }
   50% {
+    opacity: 1;
     top: 34vh;
   }
   70% {
     top: 19vh;
   }
   100% {
+    opacity: 0;
     top: 25vh;
-    left: 96.5vw;
+    left: 98%;
   }
 }
 
 @keyframes swim8 {
   0% {
-    opacity: 1;
-    left: -3vw;
+    opacity: 0;
+    left: 0vw;
     top: 8vh;
   }
   3% {
@@ -292,21 +305,23 @@
     top: 20vh;
   }
   50% {
+    opacity: 1;
     top: 30vh;
   }
   70% {
     top: 50vh;
   }
   100% {
+    opacity: 0;
     top: 40vh;
-    left: 96.5vw;
+    left: 98%;
   }
 }
 
 @keyframes swim9 {
   0% {
-    opacity: 1;
-    left: -3vw;
+    opacity: 0;
+    left: 0vw;
     top: 45vh;
   }
   3% {
@@ -316,34 +331,38 @@
     top: 35vh;
   }
   50% {
+    opacity: 1;
     top: 40vh;
   }
   70% {
     top: 34vh;
   }
   100% {
+    opacity: 0;
     top: 28vh;
-    left: 96.5vw;
+    left: 98%;
   }
 }
 
 @keyframes swim10 {
   0% {
-    opacity: 1;
-    left: -3vw;
+    opacity: 0;
+    left: 0vw;
     top: 7vh;
   }
   3% {
     top: 9vh;
   }
   50% {
+    opacity: 1;
     top: 0vh;
   }
   70% {
     top: 7vh;
   }
   100% {
+    opacity: 0;
     top: 14vh;
-    left: 96.5vw;
+    left: 98%;
   }
 }
