@@ -18,6 +18,7 @@
         th {
           width: max-content;
           padding: 10px;
+          text-shadow: 0.3px 0.3px 0.3px rgba(0, 0, 0, 0.5);
           border-bottom: 3px double rgba(0, 0, 0, 0.8);
           &.th-imp {
             div {
@@ -55,6 +56,7 @@
               color: rgba(0, 0, 0, 0.8);
             }
             i {
+              text-shadow: 1px 1px 1px lightgray;
               cursor: pointer;
               // color: rgba(22, 160, 133, 1);
               color: inherit;
@@ -86,15 +88,18 @@
       }
 
       .A {
-        color: red;
+        color: rgba(231, 76, 60, 1);
+        text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
       }
 
       .B {
-        color: orange;
+        color: rgba(243, 156, 18, 1);
+        text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
       }
 
       .C {
-        color: silver;
+        color: rgba(189, 195, 199, 1);
+        text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
       }
     }
   }

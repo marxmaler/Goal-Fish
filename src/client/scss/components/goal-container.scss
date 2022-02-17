@@ -15,6 +15,16 @@
     margin-bottom: 10px;
     font-weight: 900;
   }
+  p {
+    margin-top: 1em;
+    font-size: 10px;
+    span.goal-container__ramaining-time {
+      margin-left: 5px;
+      font-size: 14px;
+      font-family: "Roboto Mono", monospace;
+      color: rgba(192, 57, 43, 1);
+    }
+  }
 
   .goal-container__progress-bar-container {
     margin: 20px;
@@ -144,8 +154,7 @@
 
 @media screen and (max-width: 300px) {
   .goal-container {
-    background-color: transparent;
-    padding: 5px;
+    padding: 5px 8px;
   }
 }
 

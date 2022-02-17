@@ -22,7 +22,7 @@
     opacity: 0.1;
     color: transparent;
     margin-top: 10%;
-    position: absolute;
+    position: fixed;
     height: 200px;
     display: flex;
     flex-direction: column;
@@ -41,6 +41,7 @@
           i {
             transform: translateY(-10px);
             color: black;
+            text-shadow: 1px 1px 1px gray;
             cursor: pointer;
             &:hover {
               opacity: 0.5;
@@ -92,7 +93,7 @@
     border: rgba(0, 0, 0, 0.5) solid 1px;
     background-color: white;
     margin-top: 10%;
-    position: absolute;
+    position: fixed;
     height: 200px;
     display: flex;
     flex-direction: column;
