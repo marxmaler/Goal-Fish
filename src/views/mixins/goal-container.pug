@@ -72,7 +72,7 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
         div.chart-box
             div.chart-swap-btn
                 span#swap-to-line=lang==="ko" ? "그래프 전환" : "Swap Chart"  
-                span#graph-type=lang==="ko" ? "막대 그래프" : "Bar Chart"
+                span#graph-type=lang==="ko" ? "막대" : "Bar"
             div(data-avg=prevAvg, data-prevs=prevGoals, data-prevdates=prevGoalDates)#chart
     else
         if pageTitle==="Daily"    

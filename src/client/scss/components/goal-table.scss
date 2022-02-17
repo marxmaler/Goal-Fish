@@ -8,17 +8,17 @@
   .goal-table {
     text-align: center;
     border: none;
-    color: rgb(0, 0, 0);
+    color: rgba(0, 0, 0, 0.8);
     thead {
       width: fit-content;
-      color: rgb(0, 0, 0);
+      color: rgba(0, 0, 0, 0.8);
       font-weight: 700;
       font-size: 20px;
       tr {
         th {
           width: max-content;
           padding: 10px;
-          border-bottom: 3px double black;
+          border-bottom: 3px double rgba(0, 0, 0, 0.8);
           &.th-imp {
             div {
               width: max-content;
@@ -52,7 +52,7 @@
               border: none;
               margin: 0;
               padding: 0;
-              color: rgb(0, 0, 0);
+              color: rgba(0, 0, 0, 0.8);
             }
             i {
               cursor: pointer;
@@ -155,6 +155,7 @@
 
 @media screen and (max-width: 400px) {
   .goal-table-wrapper {
+    padding: 5px;
     .goal-table {
       thead {
         tr {
@@ -173,31 +174,43 @@
   }
 }
 
-// @media screen and (max-width: 375px) {
-//   .goal-table-wrapper {
-//     .goal-table {
-//       thead {
-//         tr {
-//           th {
-//             &.th-imp {
-//               div {
-//                 width: max-content;
-//               }
-//             }
-//             font-size: 10px;
-//             padding: 5px;
-//           }
-//         }
-//       }
+@media screen and (max-width: 375px) {
+  .goal-table-wrapper {
+    max-width: 250px;
+    .goal-table {
+      thead {
+        tr {
+          th {
+            &.th-imp {
+              display: none;
+              div {
+                width: max-content;
+              }
+            }
+            font-size: 10px;
+            padding: 5px;
+          }
+        }
+      }
 
-//       tbody {
-//         tr {
-//           td {
-//             &.content-td {
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+      tbody {
+        tr {
+          td {
+            &:first-child {
+              display: none;
+            }
+            &:last-child {
+              i {
+                margin: 0;
+              }
+              .measureName-span {
+                display: none;
+                margin: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

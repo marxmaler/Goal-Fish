@@ -31,6 +31,7 @@
 body {
   z-index: -3;
   min-height: 100vh;
+  min-width: 100vw;
   position: relative;
   padding: 0px 20px;
   background: linear-gradient(
@@ -106,4 +107,14 @@ strong {
 
 h1 {
   text-shadow: 1px 1px 1px rgba($color: black, $alpha: 0.2);
+}
+
+@media screen and (max-width: 375px) {
+  button,
+  input[type="submit"] {
+    font-size: 11px;
+    border-radius: 12px;
+    padding: 5px 10px;
+    text-shadow: 0.6px 0.6px 0.6px rgba($color: black, $alpha: 0.2);
+  }
 }

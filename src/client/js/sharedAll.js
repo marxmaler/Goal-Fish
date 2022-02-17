@@ -368,7 +368,7 @@ export const calculateProgress = ({
   progress.value = progVal;
   progressPoint.innerText = `${Math.round(progVal)}%`;
 
-  const graphType = ["막대 그래프", "Bar Chart"].includes(
+  const graphType = ["막대", "Bar"].includes(
     document.getElementById("graph-type").innerText
   )
     ? "bar"
@@ -570,7 +570,7 @@ export const handleChartSwap = (
       event.target.remove();
       chartSwapBtnBox.appendChild(newSwapBtn);
 
-      chartType.innerText = lang === "ko" ? "꺾은 선 그래프" : "Line Chart";
+      chartType.innerText = lang === "ko" ? "꺾은 선" : "Line";
     }, 300);
 
     const graphType = "line";
@@ -596,7 +596,7 @@ export const handleChartSwap = (
       );
       event.target.remove();
       chartSwapBtnBox.prepend(newSwapBtn);
-      chartType.innerText = lang === "ko" ? "막대 그래프" : "Bar Chart";
+      chartType.innerText = lang === "ko" ? "막대" : "Bar";
     }, 300);
 
     const graphType = "bar";

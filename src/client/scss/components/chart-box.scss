@@ -67,4 +67,19 @@
       }
     }
   }
+  #chart {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .chart-box {
+    .chart-swap-btn {
+      font-size: 12px;
+      min-width: 180px;
+      span {
+        padding: 7px;
+      }
+    }
+  }
 }

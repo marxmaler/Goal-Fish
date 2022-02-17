@@ -4,7 +4,7 @@ mixin side-menu(pageTitle)
             li.fix-btn-container
                 i.fas.fa-dot-circle#fix-btn
             if pageTitle.includes("Daily")
-                li.highlighted.main-menu
+                li.highlighted.main-menu.first-menu
                     a(href="/")=lang==="ko"? "일간목표" : "Daily"
                     div.detail.hidden
                         ul
@@ -17,7 +17,7 @@ mixin side-menu(pageTitle)
                             li 
                                 a(href="/daily/add/")=lang==="ko"? "새 목표 추가" : "Add new Goal"
             else
-                li.main-menu
+                li.main-menu.first-menu
                     a(href="/")=lang==="ko"? "일간목표" : "Daily"
                     div.detail.hidden
                         ul
