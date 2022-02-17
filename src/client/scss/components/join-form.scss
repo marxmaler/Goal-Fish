@@ -1,3 +1,26 @@
+@keyframes hop {
+  0% {
+    transform: translate(0%, 0%) scale(1.25, 0.75);
+  }
+  50% {
+    transform: translate(0%, -100%) scale(1, 1);
+  }
+  55% {
+    transform: translate(0%, -100%) rotate(15deg);
+  }
+  60% {
+    transform: translate(0%, -100%) rotate(-15deg);
+  }
+  65% {
+    transform: translate(0%, -100%) rotate(15deg);
+  }
+  70% {
+    transform: translate(0%, -100%) rotate(-15deg);
+  }
+  100% {
+    transform: translate(0%, 0%) scale(1.25, 0.75);
+  }
+}
 .form-wrapper {
   position: relative;
   margin-top: 130px;
@@ -14,6 +37,15 @@
     margin-bottom: 15px;
     font-weight: 900;
     font-size: 30px;
+  }
+  div.greeting-box {
+    strong {
+      position: relative;
+      i.title-fish {
+        color: rgba(231, 76, 60, 1);
+        animation: hop 1s ease-in-out infinite;
+      }
+    }
   }
   p {
     text-align: center;
