@@ -1,9 +1,9 @@
 header
     div
         if loggedIn
-            p#cheer=lang==="ko" ? `힘내요, ${loggedInUser.name}님. 할 수 있어요!` : `Don't give up. You can do it, ${loggedInUser.name}!`
+            p=lang==="ko" ? `힘내요, ${loggedInUser.name}님. 할 수 있어요!` : `Don't give up. You can do it, ${loggedInUser.name}!`
             a(href="/user/profile").profile-link=lang==="ko" ? "프로필" : "Profile"
-            a(href="/user/logout")=lang==="ko" ? "로그아웃" : "Log Out"
+            a(href="/user/logout").logout-link=lang==="ko" ? "로그아웃" : "Log Out"
         else
             a(href="/join").join-link=lang==="ko" ? "가입" : "Sign Up"
             a(href="/login")=lang==="ko" ? "로그인" : "Log In"

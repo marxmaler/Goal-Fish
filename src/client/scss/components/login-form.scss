@@ -34,10 +34,12 @@
         background-color: transparent;
         margin-left: 5px;
         border: none;
-        border-bottom: 1px solid black;
+        padding: 0px 5px;
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.5);
+        transition: 0.3s ease-in-out all;
         &:focus {
           outline: none;
-          background-color: rgba(0, 0, 0);
+          background-color: rgba(241, 196, 15, 0.8);
           color: white;
           border-radius: 10px;
         }
