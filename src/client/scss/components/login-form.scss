@@ -1,3 +1,39 @@
+@keyframes hop {
+  0% {
+    transform: translate(0%, 0%) scale(1.25, 0.75);
+  }
+  50% {
+    transform: translate(0%, -100%) scale(1, 1);
+  }
+  55% {
+    transform: translate(0%, -100%) rotate(15deg);
+  }
+  60% {
+    transform: translate(0%, -100%) rotate(-15deg);
+  }
+  65% {
+    transform: translate(0%, -100%) rotate(15deg);
+  }
+  70% {
+    transform: translate(0%, -100%) rotate(-15deg);
+  }
+  100% {
+    transform: translate(0%, 0%) scale(1.25, 0.75);
+  }
+}
+
+@keyframes waveHand {
+  0% {
+    transform: rotate(-40deg);
+  }
+  50% {
+    transform: rotate(40deg) translateY(10%);
+  }
+  100% {
+    transform: rotate(-40deg);
+  }
+}
+
 .form-wrapper {
   position: relative;
   margin-top: 130px;
@@ -14,12 +50,27 @@
     margin-bottom: 15px;
     font-weight: 900;
     font-size: 30px;
+    position: relative;
+    span.hey {
+      bottom: 5px;
+      position: absolute;
+      display: inline-block;
+      transform-origin: bottom;
+      right: 25px;
+      animation: waveHand 1s ease-in-out infinite;
+    }
   }
-  .greeting-box {
-    margin-bottom: 20px;
+  div.greeting-box {
     p {
-      margin: 8px 0px;
-      text-align: center;
+      margin: 5px 0px;
+      line-height: 1em;
+    }
+    strong {
+      position: relative;
+      i.title-fish {
+        color: rgba(231, 76, 60, 1);
+        animation: hop 1s ease-in-out infinite;
+      }
     }
   }
   form {
@@ -67,5 +118,50 @@
     border-radius: 10px;
     padding: 10px;
     font-weight: 900;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .form-wrapper {
+    margin-top: 70px;
+    padding: 20px 10px;
+    h1 {
+      span.hey {
+        bottom: 10%;
+        position: absolute;
+        display: inline-block;
+        transform-origin: bottom;
+        right: 3%;
+        animation: waveHand 1s ease-in-out infinite;
+      }
+    }
+    form {
+      width: 250px;
+      .input-box {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        input {
+          width: 130px;
+          background-color: transparent;
+          margin-left: 5px;
+          border: none;
+          padding: 0px 5px;
+          border-bottom: 0.5px solid rgba(0, 0, 0, 0.5);
+          transition: 0.3s ease-in-out all;
+          &:focus {
+            outline: none;
+            background-color: rgba(241, 196, 15, 0.8);
+            color: white;
+            border-radius: 10px;
+          }
+        }
+
+        .btn-box {
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
   }
 }

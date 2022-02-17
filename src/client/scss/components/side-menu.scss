@@ -52,6 +52,13 @@
           padding: 10px;
           position: relative;
           color: black;
+          border-radius: 5px;
+          border-bottom: 1px solid rgba(189, 195, 199, 0.5);
+          border-right: 1px solid rgba(189, 195, 199, 0.5);
+          border-left: 1px solid rgba(189, 195, 199, 0.5);
+          &.first-menu {
+            border-top: 1px solid rgba(189, 195, 199, 0.5);
+          }
           &.highlighted {
             background-color: rgba(241, 196, 15, 0.7);
             color: white;
@@ -100,6 +107,7 @@
         i {
           transform: translateY(-5px);
           color: rgba(0, 0, 0, 0.8);
+          text-shadow: 1px 1px 1px gray;
           cursor: pointer;
           &:hover {
             opacity: 0.5;

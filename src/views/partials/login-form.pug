@@ -2,14 +2,15 @@ div.form-wrapper
     if errorMessage
         div.errorMessage-box
             span.errorMessage=errorMessage
-    h1=lang==="ko" ?  "안녕하세요👋" : "Hello👋"
+    h1=lang==="ko" ?  "안녕하세요" : "Hello"
+        span.hey="✋"
     div.greeting-box
         if lang === "ko"
             p 오늘도 <strong>Goal Fish<i class="fa-solid fa-fish title-fish"></i></strong>와 함께 
             p 목표지향적인 하루 되세요.
         else 
             p Have another goal-oriented day
-            p with <strong>Goal Manager</strong> 
+            p with <strong>Goal Fish<i class="fa-solid fa-fish title-fish"></i></strong> 
     form(method="POST")
         div.input-box 
             label(for="email")=lang==="ko" ?  "*이메일:" : "*Email:" 

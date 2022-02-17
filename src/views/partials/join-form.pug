@@ -2,8 +2,8 @@ div.form-wrapper
     if errorMessage
         div.errorMessage-box
             span.errorMessage=errorMessage
-    h1=lang==="ko" ? "환영합니다 😄" : "Welcome 😄"
-    p=lang==="ko" ? "필수 정보만 입력하고 시작해보세요" : "Let's fill in the blanks & start right away"
+    h1=lang==="ko" ? "🎉 환영합니다 🥳" : "🎉 Welcome 🥳"
+    p=lang==="ko" ? "필수 정보만 입력하고 시작해보세요!" : "Let's fill in the blanks & start right away!"
     form(method="POST")
         div.input-box
             label(for="email")=lang==="ko" ? "*이메일:" : "*Email:" 
@@ -20,8 +20,8 @@ div.form-wrapper
             input(type="password", name="password", required)#password
             input(value=false, name="passwordValidation").hidden#passwordValidation
         div.input-box.pw-confirm
-            label(for="password")=lang==="ko" ? "*비밀번호 확인:" : "*Confirm Password" 
-            input(type="password", name="passwordConfirm", required)
+            label(for="password")=lang==="ko" ? "*확인:" : "*Confirm" 
+            input(type="password", name="passwordConfirm", required, placeholder=lang==="ko" ? "비밀번호 재입력" : "Retype password")
         div.btn-box 
             button=lang==="ko" ? "가입" : "Sign Up"
     hr
