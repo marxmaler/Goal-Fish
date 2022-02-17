@@ -498,9 +498,14 @@ export function getOptions(
     theme: { mode: "dark" },
     chart: {
       type: graphType,
+      height: "100%",
+      background: "transparent",
       toolbar: {
         show: false,
       },
+    },
+    markers: {
+      size: [3],
     },
     series: [
       {
