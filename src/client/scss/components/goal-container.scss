@@ -57,7 +57,7 @@
   flex-direction: column;
   align-items: center;
   border: solid 1px rgba(245, 246, 250, 0.5);
-  background-color: rgba(47, 54, 64, 0.2);
+  background-color: rgba(47, 54, 64, 0.1);
   min-width: 300px;
   border-radius: 10px;
   padding: 20px 0px;
@@ -81,9 +81,63 @@
     div {
       padding: 30px;
       border: solid 1px rgba(245, 246, 250, 0.5);
-      background-color: rgba(46, 204, 113, 0.3);
+      background-color: rgba(47, 54, 64, 0.1);
       border-radius: 10px;
-      button {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      p {
+        margin-bottom: 20px;
+      }
+      & div.clock {
+        opacity: 0.5;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        width: fit-content;
+        border: none;
+        cursor: pointer;
+        transition: ease-in-out 0.3s all;
+        i {
+          font-size: 40px;
+          color: rgba(46, 204, 113);
+          cursor: pointer;
+          animation: rotateClock 2s linear infinite;
+          font-weight: 600;
+        }
+        span {
+          margin: 0;
+          padding: 0;
+          color: rgba(46, 204, 113);
+          position: absolute;
+
+          &.dot {
+            display: none;
+            top: 10%;
+            font-size: 20px;
+            font-weight: 800;
+          }
+          &.hour-hand {
+            top: 27%;
+            font-size: 8px;
+            transform-origin: bottom;
+            font-weight: 700;
+            animation: rotateClock 120s linear infinite;
+          }
+          &.minute-hand {
+            top: 24%;
+            font-weight: 700;
+            transform-origin: bottom;
+            animation: rotateClock 3s linear infinite;
+            font-size: 11px;
+          }
+        }
+
+        &:hover {
+          opacity: 1;
+        }
       }
     }
   }
@@ -95,5 +149,15 @@
     border-radius: 0px;
     padding: 0px;
     width: min-content;
+  }
+}
+
+@keyframes rotateClock {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }

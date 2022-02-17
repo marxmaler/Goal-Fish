@@ -132,4 +132,9 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
         if !(pageTitle.includes("Previous") && !goal)
             div.previous-goal-search.not-daily      
                 div
-                    button#previous-goal-btn=lang==="ko" ? "이전 목표 조회" : "Previous Goal"  
+                    p=lang==="ko" ? "이전 목표 조회" : "Previous Goal" 
+                    div.clock#previous-goal-btn 
+                        i.fa-solid.fa-arrow-rotate-right
+                        span.dot="."
+                        span.hour-hand="|" 
+                        span.minute-hand="|"
