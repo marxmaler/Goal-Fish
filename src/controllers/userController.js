@@ -87,7 +87,11 @@ export const checkEmail = async (req, res) => {
 };
 
 export const logout = (req, res) => {
+  const lang = req.session.lang;
+  const timeDiff = req.session.timeDiff;
   req.session.destroy();
+  req.session.lang = lang;
+  req.session.timeDiff = timeDiff;
   return res.redirect("/");
 };
 

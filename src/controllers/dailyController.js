@@ -8,10 +8,11 @@ export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
-
   timeDiff = isHeroku ? timeDiff : 0;
   const date = getToday(timeDiff);
   const userId = req.session.user._id;
@@ -128,7 +129,9 @@ export const getNewDaily = async (req, res) => {
 
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -150,7 +153,9 @@ export const postNewDaily = async (req, res) => {
   if (dateExists) {
     let timeDiff = req.session.timeDiff;
     if (!timeDiff) {
+      const lang = req.session.lang;
       req.session.destroy();
+      req.session.lang = lang;
       return res.redirect("/login");
     }
     timeDiff = isHeroku ? timeDiff : 0;
@@ -286,7 +291,9 @@ export const getEditDaily = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -332,7 +339,9 @@ export const postEditDaily = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -444,7 +453,9 @@ export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;

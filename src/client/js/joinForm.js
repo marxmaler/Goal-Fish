@@ -1,8 +1,11 @@
 import { async } from "regenerator-runtime";
 import { detectLanguage, detectLocalTime, preventSubmit } from "./sharedAll";
 
-export const lang = detectLanguage();
-detectLocalTime();
+const loginFormWrapper = document.querySelector(".form-wrapper");
+let { lang, timediff } = loginFormWrapper.dataset;
+lang = lang ? lang : detectLanguage();
+timediff = timediff ? timediff : detectLocalTime();
+
 const emailValBtn = document.getElementById("email-val-btn");
 
 const validateEmail = async (event) => {

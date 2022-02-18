@@ -63,26 +63,31 @@ header {
   header {
     display: flex;
     justify-content: flex-end;
-
+    i {
+      margin-top: 15px;
+      color: rgba(241, 196, 15, 1);
+      cursor: pointer;
+    }
     div {
       border: rgba(0, 0, 0, 0.5) solid 1px;
-      opacity: 0.1;
-      color: transparent;
+      display: none;
+      // opacity: 0.1;
+      // color: transparent;
       border-radius: 10px;
       width: fit-content;
       padding: 10px;
       font-size: 12px;
-      display: flex;
+      // display: flex;
       justify-content: center;
       align-items: center;
       background-color: rgba(245, 246, 250);
-      transition: all 0.2s ease-in;
+      // transition: all 0.2s ease-in;
 
-      &:hover {
-        transform: translateY(0%);
-        color: rgba(0, 0, 0);
-        opacity: 1;
-      }
+      // &:hover {
+      //   transform: translateY(0%);
+      //   color: rgba(0, 0, 0);
+      //   opacity: 1;
+      // }
       p {
         margin-right: 10px;
         font-style: italic;

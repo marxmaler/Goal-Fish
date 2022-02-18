@@ -156,6 +156,35 @@
   .goal-container {
     padding: 5px 8px;
   }
+
+  .no-goal-messeage-box {
+    p {
+      width: 100%;
+      font-size: 14px;
+      line-height: 1.5em;
+    }
+
+    a {
+      margin-top: 18px;
+      button {
+        margin: 10px;
+        display: block;
+      }
+    }
+  }
+
+  .previous-goal-search {
+    display: flex;
+    padding: 20px 0px;
+    p {
+      margin: 0px 50px;
+      min-width: max-content;
+      font-weight: 900;
+      text-shadow: 1px 1px 1px rgba($color: black, $alpha: 0.2);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+  }
 }
 
 @keyframes rotateClock {

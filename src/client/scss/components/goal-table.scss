@@ -179,10 +179,11 @@
   }
 }
 
-@media screen and (max-width: 375px) {
+@media screen and (max-width: 374px) {
   .goal-table-wrapper {
     max-width: 250px;
     .goal-table {
+      // background-color: #f1c40f;
       thead {
         tr {
           th {

@@ -1,4 +1,6 @@
 import { detectLanguage, detectLocalTime } from "./sharedAll";
 
-export const lang = detectLanguage();
-detectLocalTime();
+const loginFormWrapper = document.querySelector(".form-wrapper");
+let { lang, timediff } = loginFormWrapper.dataset;
+lang = lang ? lang : detectLanguage();
+timediff = timediff ? timediff : detectLocalTime();

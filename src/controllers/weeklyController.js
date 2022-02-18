@@ -9,7 +9,9 @@ export const getWeeklyHome = async (req, res) => {
 
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -99,7 +101,9 @@ export const getNewWeekly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -118,7 +122,9 @@ export const postNewWeekly = async (req, res) => {
   const pageTitle = "New Weekly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -268,7 +274,9 @@ export const getEditWeekly = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -320,7 +328,9 @@ export const postEditWeekly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -442,7 +452,9 @@ export const getPreviousWeekly = async (req, res) => {
   const pageTitle = "Previous Weekly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
+    const lang = req.session.lang;
     req.session.destroy();
+    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
