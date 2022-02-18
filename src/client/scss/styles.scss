@@ -34,7 +34,7 @@
 body {
   z-index: -3;
   min-height: 100vh;
-  min-width: 100vw;
+  min-width: max-content;
   position: relative;
 
   background: linear-gradient(
@@ -51,7 +51,7 @@ body {
 }
 
 main {
-  padding: 0px 20px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
