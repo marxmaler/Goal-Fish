@@ -1,5 +1,6 @@
 header
-    i.fa-solid.fa-bars.menu-open-btn
+    div.menu-open-btn
+        i.fa-solid.fa-caret-down
     div.menu-box
         if loggedIn
             p=lang==="ko" ? `힘내요, ${loggedInUser.name}님. 할 수 있어요!` : `Don't give up. You can do it, ${loggedInUser.name}!`

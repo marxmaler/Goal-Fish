@@ -25,20 +25,39 @@ header {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 10px;
-  i.menu-open-btn {
+  .menu-open-btn {
+    &.hidden {
+      display: none;
+    }
+    background: rgba(241, 196, 15, 1);
+    border: 0.5px rgba(255, 255, 255, 0.3) solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    width: 25px;
+    height: 25px;
     margin-top: 3%;
     margin-right: 7%;
-    font-size: 25px;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-    color: rgba(241, 196, 15, 1);
     cursor: pointer;
     transition: ease-in-out 0.3s all;
     &:hover,
     &:active {
+      border: rgba(0, 0, 0, 0.3) solid 1px;
+      background: rgba(255, 255, 255, 1);
       transform: translateX(-10%) scale(1.2);
+      i.fa-caret-down {
+        color: rgba(241, 196, 15, 1);
+      }
+    }
+    i.fa-caret-down {
+      font-size: 25px;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+      color: rgba(255, 255, 255, 1);
     }
   }
   div.menu-box {
+    overflow: hidden;
     display: none;
     &.opened {
       opacity: 0;
@@ -47,6 +66,7 @@ header {
       margin: 0;
       margin-right: 3%;
       border: rgba(245, 246, 250, 0.7) solid 1px;
+      border-radius: 10px;
       height: 100%;
       width: 100%;
       max-width: 300px;
@@ -57,7 +77,12 @@ header {
       text-shadow: 0.3px 0.3px 0.3px rgba(189, 195, 199, 0.5);
       p {
         padding: 10px 0px;
-        border: 0.5px solid rgba(255, 255, 255, 0.5);
+        background-color: rgba(236, 240, 241, 0.5);
+        color: rgba(0, 0, 0, 0.7);
+        font-weight: 900;
+        font-style: italic;
+        text-shadow: 0.5px 0.5px 0.5px rgba(127, 140, 141, 0.7);
+        border-bottom: 0.5px solid rgba(255, 255, 255, 0.5);
         text-align: center;
         display: block;
       }
@@ -66,7 +91,7 @@ header {
         padding: 10px 0px;
         text-align: center;
         display: block;
-        border: 0.5px solid rgba(255, 255, 255, 0.5);
+        border-bottom: 0.5px solid rgba(255, 255, 255, 0.5);
         transition: ease-in-out 0.2s all;
         &:hover {
           background-color: white;
@@ -91,48 +116,6 @@ header {
       opacity: 1;
       transform: translateY(0%);
       animation: menuClose 0.5s ease-in-out;
-      // margin: 0;
-      // margin-right: 3%;
-      // border: rgba(245, 246, 250, 0.7) solid 1px;
-      // height: 100%;
-      // width: 100%;
-      // max-width: 300px;
-      // background-color: rgba(241, 196, 15, 1);
-      // display: flex;
-      // flex-direction: column;
-      // font-weight: 600;
-      // text-shadow: 0.3px 0.3px 0.3px rgba(189, 195, 199, 0.5);
-      // p {
-      //   padding: 10px 0px;
-      //   border: 0.5px solid rgba(255, 255, 255, 0.5);
-      //   text-align: center;
-      //   display: block;
-      // }
-      // a {
-      //   border: 0;
-      //   padding: 10px 0px;
-      //   text-align: center;
-      //   display: block;
-      //   border: 0.5px solid rgba(255, 255, 255, 0.5);
-      //   transition: ease-in-out 0.2s all;
-      //   &:hover {
-      //     background-color: white;
-      //     color: black;
-      //     transform: scale(1.1);
-      //   }
-      // }
-      // i.menu-close-btn {
-      //   text-align: end;
-      //   margin-right: 5%;
-      //   font-size: 25px;
-      //   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-      //   cursor: pointer;
-      //   transition: ease-in-out 0.3s all;
-      //   &:hover,
-      //   &:active {
-      //     transform: translateX(-10%) scale(1.2);
-      //   }
-      // }
     }
   }
 }
