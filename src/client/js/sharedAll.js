@@ -627,7 +627,6 @@ export const getPreviousGoal = (goalId, goalType) => {
 
 export const detectLanguage = async () => {
   let detectedLang = window.navigator.userLanguage || window.navigator.language;
-
   const { langChange, sessionLang } = await (
     await fetch(`/api/language/${detectedLang}`, {
       method: "POST",
