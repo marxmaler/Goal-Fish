@@ -10,17 +10,17 @@ mixin goalContainer(goal, pageTitle, date, termStart, termEnd)
                     span.goal-container__ramaining-time
             else if pageTitle==="Weekly"
                 h2=lang==="ko" ? "이번 주 목표" : "Goal of This Week"
-                span#goal-term=`${termStart}~${termEnd}`
+                span(data-termend=termEndDate)#goal-term=`${termStart}~${termEnd}`
                 p=lang==="ko" ? "남은 시간 " : "Remaining Time "
                     span.goal-container__ramaining-time
             else if pageTitle==="Monthly"
                 h2=lang==="ko" ? "이번 달 목표" : "Goal of This Month"
-                span#goal-term=`${termStart}~${termEnd}`
+                span(data-termend=termEndDate)#goal-term=`${termStart}~${termEnd}`
                 p=lang==="ko" ? "남은 시간 " : "Remaining Time "
                     span.goal-container__ramaining-time
             else if pageTitle==="Yearly"
                 h2=lang==="ko" ? "올해 목표" : "Goal of This Year" 
-                span#goal-term=`${termStart}~${termEnd}`
+                span(data-termend=termEndDate)#goal-term=`${termStart}~${termEnd}`
                 p=lang==="ko" ? "남은 시간 " : "Remaining Time "
                     span.goal-container__ramaining-time
             else if pageTitle === "Previous Daily"

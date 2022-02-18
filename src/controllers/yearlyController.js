@@ -2,14 +2,16 @@ import Yearly from "../models/Yearly";
 import YearlySub from "../models/YearlySub";
 import { getToday, getAYearFromToday, yyyymmdd, yymm } from "../functions/time";
 import { convertImp } from "../functions/convertImp";
+import { isHeroku } from "../init";
 
 export const getYearlyHome = async (req, res) => {
   const pageTitle = "Yearly";
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const goal = await Yearly.findOne({
@@ -27,6 +29,7 @@ export const getYearlyHome = async (req, res) => {
 
   let termStart = "";
   let termEnd = "";
+  let termEndDate = "";
   let prevTotal = 0;
   let prevAvg = 0;
   let prevGoals = null;
@@ -64,12 +67,14 @@ export const getYearlyHome = async (req, res) => {
 
     termStart = yymm(goal.termStart);
     termEnd = yymm(goal.termEnd);
+    termEndDate = yyyymmdd(goal.termEnd);
   }
 
   return res.render("currentGoal", {
     goal,
     termStart,
     termEnd,
+    termEndDate,
     pageTitle,
     prevAvg,
     prevGoals: prevGoalArr,
@@ -91,11 +96,12 @@ export const getNewYearly = async (req, res) => {
       }
     }
   }
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   return res.render("newGoal", {
     today: getToday(timeDiff),
     aYearFromToday: getAYearFromToday(timeDiff),
@@ -109,11 +115,12 @@ export const postNewYearly = async (req, res) => {
   const userId = req.session.user._id;
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const pageTitle = "New Yearly";
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const dateExists = await Yearly.exists({
     termStart: { $lte: new Date(date) },
@@ -258,11 +265,12 @@ export const postNewYearly = async (req, res) => {
 export const getEditYearly = async (req, res) => {
   const pageTitle = "Edit Yearly";
   const userId = req.session.user._id;
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const goal = await Yearly.findOne({
     owner: userId,
@@ -309,11 +317,12 @@ export const postEditYearly = async (req, res) => {
     rest.splice(rest.indexOf("targetValues"), 1);
     rest.splice(rest.indexOf("eachAsIndepend"), 1);
   }
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const yearly = await Yearly.findOne({
@@ -430,11 +439,12 @@ export const postEditYearly = async (req, res) => {
 
 export const getPreviousYearly = async (req, res) => {
   const pageTitle = "Previous Yearly";
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const { id: goalId } = req.params;
   const userId = req.session.user._id;

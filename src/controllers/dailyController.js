@@ -2,14 +2,17 @@ import Daily from "../models/Daily";
 import DailySub from "../models/DailySub";
 import { getToday, mmdd, yyyymmdd } from "../functions/time";
 import { convertImp } from "../functions/convertImp";
+import { isHeroku } from "../init";
 
 export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+
+  timeDiff = isHeroku ? timeDiff : 0;
   const date = getToday(timeDiff);
   const userId = req.session.user._id;
   const goal = await Daily.findOne({
@@ -123,11 +126,12 @@ export const getNewDaily = async (req, res) => {
     }
   }
 
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   return res.render("newGoal", {
     today: getToday(timeDiff),
     unfinishedSubs,
@@ -144,11 +148,12 @@ export const postNewDaily = async (req, res) => {
     date,
   });
   if (dateExists) {
-    const timeDiff = req.session.timeDiff;
+    let timeDiff = req.session.timeDiff;
     if (!timeDiff) {
       req.session.destroy();
       return res.redirect("/login");
     }
+    timeDiff = isHeroku ? timeDiff : 0;
     return res.render("newGoal", {
       today: getToday(timeDiff),
       errorMessage: "동일한 날짜에 대해 이미 설정된 일일 목표가 존재합니다.",
@@ -279,11 +284,12 @@ export const postNewDaily = async (req, res) => {
 export const getEditDaily = async (req, res) => {
   const pageTitle = "Edit Daily";
   const userId = req.session.user._id;
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const goal = await Daily.findOne({
     owner: userId,
     date: getToday(timeDiff),
@@ -324,11 +330,12 @@ export const postEditDaily = async (req, res) => {
   }
 
   const userId = req.session.user._id;
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const daily = await Daily.findOne({
     owner: userId,
     date: getToday(timeDiff),
@@ -435,11 +442,12 @@ export const postEditDaily = async (req, res) => {
 
 export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
 

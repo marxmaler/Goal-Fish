@@ -7,14 +7,16 @@ import {
   mmdd,
 } from "../functions/time";
 import { convertImp } from "../functions/convertImp";
+import { isHeroku } from "../init";
 
 export const getMonthlyHome = async (req, res) => {
   const pageTitle = "Monthly";
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const goal = await Monthly.findOne({
@@ -32,6 +34,7 @@ export const getMonthlyHome = async (req, res) => {
 
   let termStart = "";
   let termEnd = "";
+  let termEndDate = "";
   let prevTotal = 0;
   let prevAvg = 0;
   let prevGoals = null;
@@ -69,12 +72,14 @@ export const getMonthlyHome = async (req, res) => {
 
     termStart = mmdd(goal.termStart);
     termEnd = mmdd(goal.termEnd);
+    termEndDate = yyyymmdd(goal.termEnd);
   }
 
   return res.render("currentGoal", {
     goal,
     termStart,
     termEnd,
+    termEndDate,
     pageTitle,
     prevAvg,
     prevGoals: prevGoalArr,
@@ -96,11 +101,12 @@ export const getNewMonthly = async (req, res) => {
       }
     }
   }
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   return res.render("newGoal", {
     today: getToday(timeDiff),
     aMonthFromToday: getAMonthFromToday(timeDiff),
@@ -114,11 +120,12 @@ export const postNewMonthly = async (req, res) => {
   const userId = req.session.user._id;
   //해당 날짜에 대해 이미 생성된 일일 목표가 있는지 중복 체크
   const pageTitle = "New Monthly";
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const dateExists = await Monthly.exists({
     termStart: { $lte: new Date(date) },
@@ -263,11 +270,12 @@ export const postNewMonthly = async (req, res) => {
 export const getEditMonthly = async (req, res) => {
   const pageTitle = "Edit Monthly";
   const userId = req.session.user._id;
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const goal = await Monthly.findOne({
     owner: userId,
@@ -314,11 +322,12 @@ export const postEditMonthly = async (req, res) => {
     rest.splice(rest.indexOf("targetValues"), 1);
     rest.splice(rest.indexOf("eachAsIndepend"), 1);
   }
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const userId = req.session.user._id;
   const monthly = await Monthly.findOne({
@@ -435,11 +444,12 @@ export const postEditMonthly = async (req, res) => {
 
 export const getPreviousMonthly = async (req, res) => {
   const pageTitle = "Previous Monthly";
-  const timeDiff = req.session.timeDiff;
+  let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
     req.session.destroy();
     return res.redirect("/login");
   }
+  timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const { id: goalId } = req.params;
   const userId = req.session.user._id;

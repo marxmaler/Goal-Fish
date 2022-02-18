@@ -143,12 +143,10 @@ if (goalContainer) {
   }
 
   // 남은 시간
-  let goalTerm = "";
   let termEnd = "";
   let termEndDate = "";
   if (goalType !== "daily") {
-    goalTerm = document.getElementById("goal-term").innerText;
-    termEnd = goalTerm.split("~")[1];
+    termEnd = document.getElementById("goal-term").dataset.termend;
     termEndDate = new Date(termEnd);
     termEndDate.setHours(0, 0, 0, 0);
     termEndDate.setDate(termEndDate.getDate() + 1); //날짜를 termEnd보다 하루 뒤로 해야 남은 날짜가 정확하게 나옴

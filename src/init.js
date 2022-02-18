@@ -23,3 +23,5 @@ const handleListening = () => {
   );
 };
 app.listen(process.env.PORT, handleListening);
+
+export const isHeroku = process.env.NODE_ENV === "production";
