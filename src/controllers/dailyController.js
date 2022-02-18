@@ -2,17 +2,15 @@ import Daily from "../models/Daily";
 import DailySub from "../models/DailySub";
 import { getToday, mmdd, yyyymmdd } from "../functions/time";
 import { convertImp } from "../functions/convertImp";
-import { isHeroku } from "../init";
 
 export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
+  const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;
   const date = getToday(timeDiff);
   const userId = req.session.user._id;
@@ -129,11 +127,10 @@ export const getNewDaily = async (req, res) => {
 
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
+  const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;
   return res.render("newGoal", {
     today: getToday(timeDiff),
@@ -153,11 +150,10 @@ export const postNewDaily = async (req, res) => {
   if (dateExists) {
     let timeDiff = req.session.timeDiff;
     if (!timeDiff) {
-      const lang = req.session.lang;
       req.session.destroy();
-      req.session.lang = lang;
       return res.redirect("/login");
     }
+    const isHeroku = process.env.NODE_ENV === "production";
     timeDiff = isHeroku ? timeDiff : 0;
     return res.render("newGoal", {
       today: getToday(timeDiff),
@@ -291,11 +287,10 @@ export const getEditDaily = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
+  const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;
   const goal = await Daily.findOne({
     owner: userId,
@@ -339,11 +334,10 @@ export const postEditDaily = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
+  const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;
   const daily = await Daily.findOne({
     owner: userId,
@@ -453,11 +447,10 @@ export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
+  const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
   const userId = req.session.user._id;

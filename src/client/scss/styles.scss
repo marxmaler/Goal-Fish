@@ -36,7 +36,7 @@ body {
   min-height: 100vh;
   min-width: 100vw;
   position: relative;
-  padding: 0px 20px;
+
   background: linear-gradient(
     to left top,
     rgba(22, 160, 133, 1),
@@ -51,6 +51,7 @@ body {
 }
 
 main {
+  padding: 0px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     main: "./src/client/js/main.js",
     sideMenu: "./src/client/js/sideMenu.js",
+    headerMenu: "./src/client/js/headerMenu.js",
     editGoal: "./src/client/js/editGoal.js",
     newGoal: "./src/client/js/newGoal.js",
     previousGoal: "./src/client/js/previousGoal.js",

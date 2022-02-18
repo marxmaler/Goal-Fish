@@ -13,9 +13,7 @@ export const getMonthlyHome = async (req, res) => {
   const pageTitle = "Monthly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -105,9 +103,7 @@ export const getNewMonthly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -126,9 +122,7 @@ export const postNewMonthly = async (req, res) => {
   const pageTitle = "New Monthly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -278,9 +272,7 @@ export const getEditMonthly = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -332,9 +324,7 @@ export const postEditMonthly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -456,9 +446,7 @@ export const getPreviousMonthly = async (req, res) => {
   const pageTitle = "Previous Monthly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;

@@ -8,9 +8,7 @@ export const getYearlyHome = async (req, res) => {
   const pageTitle = "Yearly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -100,9 +98,7 @@ export const getNewYearly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -121,9 +117,7 @@ export const postNewYearly = async (req, res) => {
   const pageTitle = "New Yearly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -273,9 +267,7 @@ export const getEditYearly = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -327,9 +319,7 @@ export const postEditYearly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
@@ -451,9 +441,7 @@ export const getPreviousYearly = async (req, res) => {
   const pageTitle = "Previous Yearly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    const lang = req.session.lang;
     req.session.destroy();
-    req.session.lang = lang;
     return res.redirect("/login");
   }
   timeDiff = isHeroku ? timeDiff : 0;
