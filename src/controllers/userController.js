@@ -218,7 +218,7 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT,
       clientSecret: process.env.GOOGLE_SECRET,
       callbackURL: isHeroku
-        ? `https://goal-manager220213.herokuapp.com/user/auth/google/finish`
+        ? `https://goal-fish.herokuapp.com/user/auth/google/finish`
         : `http://localhost:${process.env.PORT}/user/auth/google/finish`,
     },
     googleAuth
