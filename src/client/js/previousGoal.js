@@ -20,10 +20,13 @@ const goalType = document
 //이전 일일 목표로 이동
 const goalContainer = document.querySelector(".goal-container");
 let lang = goalContainer?.dataset.lang;
-if (!lang) {
+
+if (!goalContainer) {
   const messageBox = document.querySelector(".no-goal-messeage-box");
-  lang = messageBox.dataset.lang;
+  lang = messageBox?.dataset.lang;
 }
+
+lang = lang ?? detectLanguage();
 
 let goalId = null;
 
