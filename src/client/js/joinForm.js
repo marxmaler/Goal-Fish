@@ -3,8 +3,12 @@ import { detectLanguage, detectLocalTime, preventSubmit } from "./sharedAll";
 
 const loginFormWrapper = document.querySelector(".form-wrapper");
 let { lang, timediff } = loginFormWrapper.dataset;
-lang = lang ? lang : detectLanguage();
-timediff = timediff ? timediff : detectLocalTime();
+lang = lang ?? detectLanguage();
+timediff = timediff ?? detectLocalTime();
+const noti = document.querySelector(".lang-detection-noti");
+if (lang && timediff) {
+  noti.remove();
+}
 
 const emailValBtn = document.getElementById("email-val-btn");
 
