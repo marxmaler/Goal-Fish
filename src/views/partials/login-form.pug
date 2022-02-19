@@ -2,14 +2,15 @@ div.form-wrapper(data-lang=lang, data-timediff=timeDiff)
     if errorMessage
         div.errorMessage-box
             span.errorMessage=errorMessage
-    div.lang-detection-noti
-        div
-            p="언어 설정을 감지하고 있습니다." 
-            p="잠시만 기다려주세요."
-        progress
-        div
-            p="Detecting language settings..." 
-            p="Please wait."
+    if !lang
+        div.lang-detection-noti
+            div
+                p="언어 설정을 감지하고 있습니다." 
+                p="잠시만 기다려주세요."
+            progress
+            div
+                p="Detecting language settings..." 
+                p="Please wait."
 
     h1=lang==="ko" ?  "안녕하세요" : "Hello"
         span.hey="✋"

@@ -6,7 +6,7 @@ let { lang, timediff } = loginFormWrapper.dataset;
 lang = lang ?? detectLanguage();
 timediff = timediff ?? detectLocalTime();
 const noti = document.querySelector(".lang-detection-noti");
-if (lang && timediff) {
+if (noti && lang && timediff) {
   noti.remove();
 }
 
