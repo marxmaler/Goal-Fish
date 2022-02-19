@@ -272,12 +272,19 @@ export function changeOnMeasure(event, goalType, progressControlObj) {
       convertImp(tr.querySelector(".importance").innerText) * diff;
     const modal = document.createElement("div");
     modal.className = "complete-modal";
+    const modalFish = document.createElement("i");
+    const fishColor =
+      impPoint === 5 ? "red" : impPoint === 3 ? "orange" : "yellow";
+
+    modal.appendChild(modalFish);
     td.appendChild(modal);
 
     animateModalValue(modal, 0, 99, 750);
     animateModalValue(modal, 99, impPoint, 750);
     setTimeout(() => {
-      modal.remove();
+      modalFish.className = "fa-solid fa-fish modal-fish";
+      modalFish.classList.add(fishColor);
+      // modal.remove();
     }, 2100);
   } else if (checkbox.classList.contains("ind-check")) {
     calculateProgress(progressControlObj);
@@ -319,13 +326,26 @@ export function changeOnMeasureNoEvent(
     const impPoint = convertImp(tr.querySelector(".importance").innerText);
     const modal = document.createElement("div");
     modal.className = "complete-modal";
+
+    const modalFish = document.createElement("i");
+    const fishColor =
+      impPoint === 5 ? "red" : impPoint === 3 ? "orange" : "yellow";
+
     td.appendChild(modal);
 
     animateModalValue(modal, 0, 99, 750);
     animateModalValue(modal, 99, impPoint, 750);
     setTimeout(() => {
+      modalFish.className = "fa-solid fa-fish modal-fish";
+      modalFish.classList.add(fishColor);
+      modal.appendChild(modalFish);
+    }, 1000);
+    setTimeout(() => {
+      modalFish.classList.add("fade-away");
+    }, 2000);
+    setTimeout(() => {
       modal.remove();
-    }, 2100);
+    }, 3000);
   } else if (checkbox.classList.contains("ind-check")) {
     calculateProgress(progressControlObj);
   }
@@ -403,12 +423,19 @@ export function changeOnCheckbox(event, progressControlObj, goalType) {
     const impPoint = convertImp(tr.querySelector(".importance").innerText);
     const modal = document.createElement("div");
     modal.className = "complete-modal";
+    const modalFish = document.createElement("i");
+    const fishColor =
+      impPoint === 5 ? "red" : impPoint === 3 ? "orange" : "yellow";
+
+    modal.appendChild(modalFish);
     td.appendChild(modal);
 
     animateModalValue(modal, 0, 99, 750);
     animateModalValue(modal, 99, impPoint, 750);
     setTimeout(() => {
-      modal.remove();
+      modalFish.className = "fa-solid fa-fish modal-fish";
+      modalFish.classList.add(fishColor);
+      // modal.remove();
     }, 2100);
   }
 

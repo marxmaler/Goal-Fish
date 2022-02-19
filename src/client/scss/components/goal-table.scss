@@ -40,6 +40,9 @@
         td {
           position: relative;
           padding: 20px;
+          &.position-static {
+            position: static;
+          }
           div {
             display: flex;
             align-items: center;

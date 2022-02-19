@@ -32,11 +32,11 @@
 }
 
 body {
+  overflow-x: hidden;
   z-index: -3;
   min-height: 100vh;
-  min-width: max-content;
+  min-width: 100vw;
   position: relative;
-
   background: linear-gradient(
     to left top,
     rgba(22, 160, 133, 1),
