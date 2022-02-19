@@ -276,7 +276,6 @@ export function changeOnMeasure(event, goalType, progressControlObj) {
     const fishColor =
       impPoint === 5 ? "red" : impPoint === 3 ? "orange" : "yellow";
 
-    modal.appendChild(modalFish);
     td.appendChild(modal);
 
     animateModalValue(modal, 0, 99, 750);
@@ -284,8 +283,14 @@ export function changeOnMeasure(event, goalType, progressControlObj) {
     setTimeout(() => {
       modalFish.className = "fa-solid fa-fish modal-fish";
       modalFish.classList.add(fishColor);
-      // modal.remove();
-    }, 2100);
+      modal.appendChild(modalFish);
+    }, 1000);
+    setTimeout(() => {
+      modalFish.classList.add("fade-away");
+    }, 2000);
+    setTimeout(() => {
+      modal.remove();
+    }, 3000);
   } else if (checkbox.classList.contains("ind-check")) {
     calculateProgress(progressControlObj);
   }
@@ -427,7 +432,6 @@ export function changeOnCheckbox(event, progressControlObj, goalType) {
     const fishColor =
       impPoint === 5 ? "red" : impPoint === 3 ? "orange" : "yellow";
 
-    modal.appendChild(modalFish);
     td.appendChild(modal);
 
     animateModalValue(modal, 0, 99, 750);
@@ -435,8 +439,14 @@ export function changeOnCheckbox(event, progressControlObj, goalType) {
     setTimeout(() => {
       modalFish.className = "fa-solid fa-fish modal-fish";
       modalFish.classList.add(fishColor);
-      // modal.remove();
-    }, 2100);
+      modal.appendChild(modalFish);
+    }, 1000);
+    setTimeout(() => {
+      modalFish.classList.add("fade-away");
+    }, 2000);
+    setTimeout(() => {
+      modal.remove();
+    }, 3000);
   }
 
   calculateProgress(progressControlObj);
