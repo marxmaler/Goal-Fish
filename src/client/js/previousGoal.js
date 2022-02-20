@@ -26,7 +26,7 @@ if (!goalContainer) {
   lang = messageBox?.dataset.lang;
 }
 
-lang = lang ?? detectLanguage();
+if (!lang) lang = detectLanguage();
 
 let goalId = null;
 

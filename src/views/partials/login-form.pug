@@ -1,8 +1,8 @@
-div.form-wrapper(data-lang=lang, data-timediff=timeDiff)
+div.form-wrapper(data-lang=lang, data-prevlang=prevLang, data-prevtimediff=prevTimeDiff, data-timediff=timeDiff)
     if errorMessage
         div.errorMessage-box
             span.errorMessage=errorMessage
-    if !lang
+    if !lang && !prevLang
         div.lang-detection-noti
             div
                 p="언어 설정을 감지하고 있습니다." 
@@ -12,10 +12,10 @@ div.form-wrapper(data-lang=lang, data-timediff=timeDiff)
                 p="Detecting language settings..." 
                 p="Please wait."
 
-    h1=lang==="ko" ?  "안녕하세요" : "Hello"
+    h1=(lang==="ko" || prevLang ==="ko") ?  "안녕하세요" : "Hello"
         span.hey="✋"
     div.greeting-box
-        if lang === "ko"
+        if (lang==="ko" || prevLang ==="ko")
             p 오늘도 <strong>Goal Fish<i class="fa-solid fa-fish title-fish"></i></strong>와 함께 
             p 목표지향적인 하루 되세요.
         else 
@@ -23,17 +23,17 @@ div.form-wrapper(data-lang=lang, data-timediff=timeDiff)
             p with <strong>Goal Fish<i class="fa-solid fa-fish title-fish"></i></strong> 
     form(method="POST")
         div.input-box 
-            label(for="email")=lang==="ko" ?  "*이메일:" : "*Email:" 
+            label(for="email")=(lang==="ko" || prevLang ==="ko") ?  "*이메일:" : "*Email:" 
             input(type="text", name="email", required)#email
         div.input-box
-            label(for="password")=lang==="ko" ? "*비밀번호:" : "*Password:" 
+            label(for="password")=(lang==="ko" || prevLang ==="ko") ? "*비밀번호:" : "*Password:" 
             input(type="password", name="password", required)#password
         div.btn-box 
-            button=lang==="ko" ? "로그인" : "Log In"
+            button=(lang==="ko" || prevLang ==="ko") ? "로그인" : "Log In"
         br
         div.no-id
-            span=lang==="ko" ? "아직 아이디가 없으세요?" : "Don't have an account yet?"
-            a(href="/join").to-join=lang==="ko" ? "가입하기" : "Sign Up" 
+            span=(lang==="ko" || prevLang ==="ko")? "아직 아이디가 없으세요?" : "Don't have an account yet?"
+            a(href="/join").to-join=(lang==="ko" || prevLang ==="ko") ? "가입하기" : "Sign Up" 
     hr
-    p.social=lang==="ko" ? "깃허브/구글로 계속하기" : "Continue with Github/Google"
+    p.social=(lang==="ko" || prevLang ==="ko") ? "깃허브/구글로 계속하기" : "Continue with Github/Google"
     include oauth-box.pug

@@ -3,6 +3,7 @@ import User from "../models/User";
 import bcrypt from "bcrypt";
 import fetch from "node-fetch";
 import passport from "passport";
+import e from "express";
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 // const KakaoStrategy = require("passport-kakao").Strategy;
 // const NaverStrategy = require("passport-naver").Strategy;
@@ -87,8 +88,15 @@ export const checkEmail = async (req, res) => {
 };
 
 export const logout = (req, res) => {
+  const lang = req.session.lang;
+  const timeDiff = req.session.timeDiff;
   req.session.destroy();
-  return res.redirect("/");
+  const pageTitle = "Login";
+  return res.render("login", {
+    pageTitle,
+    prevLang: lang,
+    prevTimeDiff: timeDiff,
+  });
 };
 
 export const getQuote = (req, res) => {
@@ -293,15 +301,22 @@ passport.use(
 export const postSetLanguage = (req, res) => {
   let langChange = false;
   if (!req.session.lang) {
-    req.session.lang = req.session.user?.lang
-      ? req.session.user.lang
-      : req.params.lang;
-    langChange = true;
-  } else {
-    if (req.session.user && req.session.lang !== req.session.user?.lang) {
-      req.session.lang = req.session.user.lang;
-      langChange = true;
+    if (req.session.user || req.session.passport?.user) {
+      req.session.lang =
+        req.session.user?.lang ?? req.session.passport?.user?.lang;
+      req.session.lang === "ko" ? (langChange = true) : null;
+    } else {
+      req.session.lang = req.params.lang;
+      req.session.lang === "ko" ? (langChange = true) : null;
     }
   }
+
   return res.status(200).send({ langChange, sessionLang: req.session.lang });
+};
+
+export const postUpdateSession = (req, res) => {
+  const { lang, timeDiff } = req.params;
+  req.session.lang = req.session.lang ?? lang;
+  req.session.timeDiff = req.session.timeDiff ?? timeDiff;
+  return res.sendStatus(200);
 };

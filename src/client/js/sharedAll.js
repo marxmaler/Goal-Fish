@@ -683,3 +683,9 @@ export const detectLocalTime = () => {
   });
   return diff;
 };
+
+export const updateSession = (lang, timeDiff) => {
+  fetch(`/api/session/${lang}/${timeDiff}`, {
+    method: "POST",
+  });
+};

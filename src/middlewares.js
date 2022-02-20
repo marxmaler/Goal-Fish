@@ -35,7 +35,7 @@ export const localsMiddleware = (req, res, next) => {
           "걸음",
         ];
   res.locals.langArr = ["ko", "en"];
-  res.locals.lang = req.session.lang;
+  res.locals.lang = req.session.lang ?? req.session.passport?.lang;
   res.locals.timeDiff = req.session.timeDiff;
   next();
 };

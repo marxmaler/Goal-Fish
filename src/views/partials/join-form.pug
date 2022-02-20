@@ -1,8 +1,8 @@
-div.form-wrapper(data-lang=lang, data-timediff=timeDiff)
+div.form-wrapper(data-lang=lang, data-prevlang=prevLang, data-prevtimediff=prevTimeDiff, data-timediff=timeDiff)
     if errorMessage
         div.errorMessage-box
             span.errorMessage=errorMessage
-    if !lang
+    if !lang && !prevLang
         div.lang-detection-noti
             div
                 p="언어 설정을 감지하고 있습니다." 
@@ -11,28 +11,28 @@ div.form-wrapper(data-lang=lang, data-timediff=timeDiff)
             div
                 p="Detecting language settings..." 
                 p="Please wait."
-    h1=lang==="ko" ? "🎉 환영합니다 🥳" : "🎉 Welcome 🥳"
-    p=lang==="ko" ? "필수 정보만 입력하고 시작해보세요!" : "Let's fill in the blanks & start right away!"
+    h1=(lang==="ko" || prevLang ==="ko") ? "🎉 환영합니다 🥳" : "🎉 Welcome 🥳"
+    p=(lang==="ko" || prevLang ==="ko") ? "필수 정보만 입력하고 시작해보세요!" : "Let's fill in the blanks & start right away!"
     form(method="POST")
         div.input-box
-            label(for="email")=lang==="ko" ? "*이메일:" : "*Email:" 
+            label(for="email")=(lang==="ko" || prevLang ==="ko") ? "*이메일:" : "*Email:" 
             input(type="email", name="email", required)#email
             input(value=false, name="emailValidation").hidden#emailValidation
-            button.validation-check-btn#email-val-btn=lang==="ko" ? "검사" : "Check"
+            button.validation-check-btn#email-val-btn=(lang==="ko" || prevLang ==="ko") ? "검사" : "Check"
         div.info-box
             p#emailValResult
         div.input-box 
-            label(for="name")=lang==="ko" ? "*이름:" : "*Name:" 
+            label(for="name")=(lang==="ko" || prevLang ==="ko") ? "*이름:" : "*Name:" 
             input(type="text", name="name", required)#name
         div.input-box
-            label(for="password")=lang==="ko" ? "*비밀번호:" : "*Password" 
+            label(for="password")=(lang==="ko" || prevLang ==="ko") ? "*비밀번호:" : "*Password" 
             input(type="password", name="password", required)#password
             input(value=false, name="passwordValidation").hidden#passwordValidation
         div.input-box.pw-confirm
-            label(for="password")=lang==="ko" ? "*확인:" : "*Confirm" 
-            input(type="password", name="passwordConfirm", required, placeholder=lang==="ko" ? "비밀번호 재입력" : "Retype password")
+            label(for="password")=(lang==="ko" || prevLang ==="ko") ? "*확인:" : "*Confirm" 
+            input(type="password", name="passwordConfirm", required, placeholder=(lang==="ko" || prevLang ==="ko") ? "비밀번호 재입력" : "Retype password")
         div.btn-box 
-            button=lang==="ko" ? "가입" : "Sign Up"
+            button=(lang==="ko" || prevLang ==="ko") ? "가입" : "Sign Up"
     hr
-    p.social=lang==="ko" ? "깃허브/구글로 계속하기" : "Continue with Github/Google"
+    p.social=(lang==="ko" || prevLang ==="ko") ? "깃허브/구글로 계속하기" : "Continue with Github/Google"
     include oauth-box.pug
