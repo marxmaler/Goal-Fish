@@ -35,6 +35,7 @@
 }
 
 .form-wrapper {
+  border: 1px solid rgba(0, 0, 0, 0.5);
   position: relative;
   margin-top: 130px;
   background-color: rgba(245, 246, 250, 1);
@@ -78,6 +79,9 @@
       transform-origin: bottom;
       right: 25px;
       animation: waveHand 1s ease-in-out infinite;
+      &.en {
+        right: 20% !important;
+      }
     }
   }
   div.greeting-box {
@@ -135,6 +139,7 @@
     background-color: rgba(22, 160, 133, 0.8);
     margin-top: 0;
     color: white;
+    text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
     padding: 10px;
     font-weight: 900;
@@ -147,12 +152,15 @@
     padding: 20px 10px;
     h1 {
       span.hey {
+        right: 3%;
         bottom: 10%;
         position: absolute;
         display: inline-block;
         transform-origin: bottom;
-        right: 3%;
         animation: waveHand 1s ease-in-out infinite;
+        &.en {
+          right: 20% !important;
+        }
       }
     }
     form {

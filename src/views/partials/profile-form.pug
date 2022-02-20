@@ -12,7 +12,7 @@ div.form-wrapper
             label(for="lang")=lang === "ko" ? "*언어:" : "*Language:" 
             select(name="lang")#lang
                 each option in langArr
-                    if lang == option
+                    if lang === option
                         option(value=`${option}`, selected)=option==="ko" ? "한국어":"English"
                     else
                         option(value=`${option}`)=option==="ko" ? "한국어":"English"

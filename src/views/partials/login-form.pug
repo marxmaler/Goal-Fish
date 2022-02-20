@@ -13,7 +13,7 @@ div.form-wrapper(data-lang=lang, data-prevlang=prevLang, data-prevtimediff=prevT
                 p="Please wait."
 
     h1=(lang==="ko" || prevLang ==="ko") ?  "안녕하세요" : "Hello"
-        span.hey="✋"
+        span(class=(lang==="ko" || prevLang ==="ko") ? "hey":"en hey")="✋"
     div.greeting-box
         if (lang==="ko" || prevLang ==="ko")
             p 오늘도 <strong>Goal Fish<i class="fa-solid fa-fish title-fish"></i></strong>와 함께 

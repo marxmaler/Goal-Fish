@@ -22,6 +22,7 @@
   }
 }
 .form-wrapper {
+  border: 1px solid rgba(0, 0, 0, 0.5);
   position: relative;
   margin-top: 130px;
   background-color: white;
@@ -72,9 +73,12 @@
         padding: 0;
         border-radius: 0;
         border: none;
+        background-color: transparent;
+        transition: all 0.3s ease-in-out;
+        // text-shadow: 0.5px 0.5px 0.5px rgba(211, 211, 211, 0.5);
         &:hover {
-          background-color: transparent;
-          color: rgba(0, 0, 0, 0.5);
+          color: rgba(241, 196, 15, 1);
+          text-shadow: 0.5px 0.5px 0.5px rgba(128, 128, 128, 0.8);
         }
       }
     }
@@ -94,12 +98,18 @@
       }
     }
     .btn-box {
+      margin-top: 10px !important;
       display: flex;
       justify-content: center;
     }
   }
   .social {
-    margin-top: 10px;
+    background-color: rgba(22, 160, 133, 0.8);
+    margin-top: 0;
+    color: white;
+    text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 10px;
     font-weight: 900;
   }
   .image-box {
