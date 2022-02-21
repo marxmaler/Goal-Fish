@@ -6,6 +6,7 @@ export const localsMiddleware = (req, res, next) => {
     req.session.lang === "ko"
       ? [
           "시간",
+          "일",
           "회",
           "개",
           "쪽",
@@ -13,6 +14,7 @@ export const localsMiddleware = (req, res, next) => {
           "걸음",
           "km",
           "hours",
+          "days",
           "times",
           "pages",
           "books",
@@ -21,6 +23,7 @@ export const localsMiddleware = (req, res, next) => {
         ]
       : [
           "hours",
+          "days",
           "times",
           "pages",
           "books",
@@ -28,6 +31,7 @@ export const localsMiddleware = (req, res, next) => {
           "miles",
           "km",
           "시간",
+          "일",
           "회",
           "개",
           "쪽",
