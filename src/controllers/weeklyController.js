@@ -57,19 +57,16 @@ export const getWeeklyHome = async (req, res) => {
       }
     }
 
-    prevGoals
-      ? prevGoals.forEach((goal) => {
-          prevTotal += goal.total;
-          prevGoalArr.push(goal.total);
-          prevGoalDates.push(`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`);
-        })
-      : null;
-    prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+    prevGoals &&
+      prevGoals.forEach((goal) => {
+        prevTotal += goal.total;
+        prevGoalArr.push(goal.total);
+        prevGoalDates.push(`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`);
+      });
+    prevTotal !== 0 && (prevAvg = prevTotal / prevGoals.length);
 
-    prevGoalArr.length > 4 ? (prevGoalArr = prevGoalArr.slice(0, 4)) : null;
-    prevGoalDates.length > 4
-      ? (prevGoalDates = prevGoalDates.slice(0, 4))
-      : null;
+    prevGoalArr.length > 4 && (prevGoalArr = prevGoalArr.slice(0, 4));
+    prevGoalDates.length > 4 && (prevGoalDates = prevGoalDates.slice(0, 4));
 
     prevGoalArr = prevGoalArr.reverse();
     prevGoalDates = prevGoalDates.reverse();
@@ -347,18 +344,14 @@ export const postEditWeekly = async (req, res) => {
       const impPoint = convertImp(deletedSub.importance);
       deletedSub.eachAsIndepend
         ? (weekly.total -= impPoint * deletedSub.currentValue)
-        : deletedSub.completed
-        ? (weekly.total -= impPoint)
-        : null;
+        : deletedSub.completed && (weekly.total -= impPoint);
     } else {
       for (let i = 0; i < deletedSubs.length; i++) {
         const deletedSub = await WeeklySub.findByIdAndDelete(deletedSubs[i]);
         const impPoint = convertImp(deletedSub.importance);
         deletedSub.eachAsIndepend
           ? (weekly.total -= impPoint * deletedSub.currentValue)
-          : deletedSub.completed
-          ? (weekly.total -= impPoint)
-          : null;
+          : deletedSub.completed && (weekly.total -= impPoint);
       }
     }
     weekly.save();
@@ -498,19 +491,16 @@ export const getPreviousWeekly = async (req, res) => {
       .sort({ termEnd: -1 })
       .limit(4);
 
-    prevGoals
-      ? prevGoals.forEach((goal) => {
-          prevTotal += goal.total;
-          prevGoalArr.push(goal.total);
-          prevGoalDates.push(`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`);
-        })
-      : null;
-    prevTotal !== 0 ? (prevAvg = prevTotal / prevGoals.length) : null;
+    prevGoals &&
+      prevGoals.forEach((goal) => {
+        prevTotal += goal.total;
+        prevGoalArr.push(goal.total);
+        prevGoalDates.push(`${mmdd(goal.termStart)}~${mmdd(goal.termEnd)}`);
+      });
+    prevTotal !== 0 && (prevAvg = prevTotal / prevGoals.length);
 
-    prevGoalArr.length > 4 ? (prevGoalArr = prevGoalArr.slice(0, 4)) : null;
-    prevGoalDates.length > 4
-      ? (prevGoalDates = prevGoalDates.slice(0, 4))
-      : null;
+    prevGoalArr.length > 4 && (prevGoalArr = prevGoalArr.slice(0, 4));
+    prevGoalDates.length > 4 && (prevGoalDates = prevGoalDates.slice(0, 4));
 
     prevGoalArr = prevGoalArr.reverse();
     prevGoalDates = prevGoalDates.reverse();

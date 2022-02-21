@@ -304,10 +304,10 @@ export const postSetLanguage = (req, res) => {
     if (req.session.user || req.session.passport?.user) {
       req.session.lang =
         req.session.user?.lang ?? req.session.passport?.user?.lang;
-      req.session.lang === "ko" ? (langChange = true) : null;
+      req.session.lang === "ko" && (langChange = true);
     } else {
       req.session.lang = req.params.lang;
-      req.session.lang === "ko" ? (langChange = true) : null;
+      req.session.lang === "ko" && (langChange = true);
     }
   }
 

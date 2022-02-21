@@ -392,7 +392,7 @@ export const calculateProgress = ({
   let targetTotal = 0;
   let currentTotal = 0;
   for (let i = 0; i < indCheckboxes.length; i++) {
-    indCheckboxes[i].checked ? indCheckedCnt++ : null;
+    indCheckboxes[i].checked && indCheckedCnt++;
     const tr = indCheckboxes[i].parentElement.parentElement;
     const measureValInput = tr.querySelector("input[type=number]");
     targetTotal += parseInt(measureValInput.max, 10);
@@ -518,28 +518,24 @@ export function getOptions(
   noIndCheckboxes
 ) {
   let todayTotal = 0;
-  indMeasureInputs
-    ? indMeasureInputs.forEach((input) => {
-        const value = input.value;
-        const imp = convertImp(
-          input.parentElement.parentElement.parentElement.querySelector(
-            ".importance"
-          ).innerText
-        );
-        todayTotal += value * imp;
-      })
-    : null;
+  indMeasureInputs &&
+    indMeasureInputs.forEach((input) => {
+      const value = input.value;
+      const imp = convertImp(
+        input.parentElement.parentElement.parentElement.querySelector(
+          ".importance"
+        ).innerText
+      );
+      todayTotal += value * imp;
+    });
 
-  noIndCheckboxes
-    ? noIndCheckboxes.forEach((box) => {
-        box.checked
-          ? (todayTotal += convertImp(
-              box.parentElement.parentElement.querySelector(".importance")
-                .innerText
-            ))
-          : null;
-      })
-    : null;
+  noIndCheckboxes &&
+    noIndCheckboxes.forEach((box) => {
+      box.checked &&
+        (todayTotal += convertImp(
+          box.parentElement.parentElement.querySelector(".importance").innerText
+        ));
+    });
 
   let adjustedPrevGoals = JSON.parse(prevGoals);
   adjustedPrevGoals[adjustedPrevGoals.length - 1] = todayTotal;

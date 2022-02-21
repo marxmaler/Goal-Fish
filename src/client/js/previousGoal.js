@@ -65,14 +65,15 @@ if (goalContainer) {
   const measureBoxes = document.querySelectorAll("input[type=number]");
 
   let indMeasureInputs = [];
-  measureBoxes?.forEach((box) =>
-    box.parentElement.parentElement.parentElement.querySelector(".ind-check")
-      ? indMeasureInputs.push(box)
-      : null
+  measureBoxes?.forEach(
+    (box) =>
+      box.parentElement.parentElement.parentElement.querySelector(
+        ".ind-check"
+      ) && indMeasureInputs.push(box)
   );
   let noIndCheckboxes = [];
-  checkboxes?.forEach((box) =>
-    !box.classList.contains("ind-check") ? noIndCheckboxes.push(box) : null
+  checkboxes?.forEach(
+    (box) => !box.classList.contains("ind-check") && noIndCheckboxes.push(box)
   );
 
   const chartBox = document.querySelector("#chart");
