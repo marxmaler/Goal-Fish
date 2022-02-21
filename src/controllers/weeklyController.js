@@ -533,7 +533,9 @@ export const postWeeklyCompleted = async (req, res) => {
   if (!weeklySub.eachAsIndepend) {
     const impPoint = convertImp(weeklySub.importance);
     const weekly = await Weekly.findById(weeklySub.weekly);
-    weekly.total += impPoint;
+    weeklySub.completed
+      ? (weekly.total += impPoint)
+      : (weekly.total -= impPoint);
     weekly.save();
   }
   return res.sendStatus(200);

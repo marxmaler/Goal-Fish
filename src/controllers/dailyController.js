@@ -81,7 +81,8 @@ export const postDailyCompleted = async (req, res) => {
   if (!dailySub.eachAsIndepend) {
     const impPoint = convertImp(dailySub.importance);
     const daily = await Daily.findById(dailySub.daily);
-    daily.total += impPoint;
+    dailySub.completed ? (daily.total += impPoint) : (daily.total -= impPoint);
+    console.log(daily.total);
     daily.save();
   }
   return res.sendStatus(200);

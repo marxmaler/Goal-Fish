@@ -532,7 +532,9 @@ export const postYearlyCompleted = async (req, res) => {
   if (!yearlySub.eachAsIndepend) {
     const impPoint = convertImp(yearlySub.importance);
     const yearly = await Yearly.findById(yearlySub.yearly);
-    yearly.total += impPoint;
+    yearlySub.completed
+      ? (yearly.total += impPoint)
+      : (yearly.total -= impPoint);
     yearly.save();
   }
   return res.sendStatus(200);

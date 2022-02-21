@@ -537,7 +537,9 @@ export const postMonthlyCompleted = async (req, res) => {
   if (!monthlySub.eachAsIndepend) {
     const impPoint = convertImp(monthlySub.importance);
     const monthly = await Monthly.findById(monthlySub.monthly);
-    monthly.total += impPoint;
+    monthlySub.completed
+      ? (monthly.total += impPoint)
+      : (monthly.total -= impPoint);
     monthly.save();
   }
   return res.sendStatus(200);
