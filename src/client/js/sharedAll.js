@@ -247,59 +247,71 @@ export const formatMeasureSettingDatas = () => {
 };
 
 export function changeOnMeasure(event, goalType, progressControlObj) {
-  const { id, oldval } = event.target.dataset;
-  const { value, max } = event.target;
-  const isPlus = oldval < value ? true : false;
-  const diff = value - oldval;
-  fetch(`/api/${goalType}/measure/${id}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ value }),
-  });
-  event.target.dataset.oldval = value;
+  let { id, oldval } = event.target.dataset;
+  let { value, max } = event.target;
+  oldval = parseInt(oldval, 10);
+  value = parseInt(value, 10);
+  max = parseInt(max, 10);
 
-  const checkbox =
-    event.target.parentElement.parentElement.parentElement.querySelector(
-      "input[type=checkbox]"
-    );
-
-  const tr = checkbox.parentElement.parentElement;
-  const td = tr.querySelector(".measure-td");
-
-  if (checkbox.classList.contains("ind-check") && isPlus) {
-    calculateProgress(progressControlObj);
-    const impPoint =
-      convertImp(tr.querySelector(".importance").innerText) * diff;
-    const modal = document.createElement("div");
-    modal.className = "complete-modal";
-    const modalFish = document.createElement("i");
-    const fishColor =
-      impPoint === 5 ? "red" : impPoint === 3 ? "orange" : "yellow";
-
-    td.appendChild(modal);
-
-    animateModalValue(modal, 0, 99, 750);
-    animateModalValue(modal, 99, impPoint, 750);
-    setTimeout(() => {
-      modalFish.className = "fa-solid fa-fish modal-fish";
-      modalFish.classList.add(fishColor);
-      modal.appendChild(modalFish);
-    }, 1000);
-    setTimeout(() => {
-      modalFish.classList.add("fade-away");
-    }, 2000);
-    setTimeout(() => {
-      modal.remove();
-    }, 3000);
-  } else if (checkbox.classList.contains("ind-check")) {
-    calculateProgress(progressControlObj);
+  if (max < value) {
+    value = oldval;
+    event.target.value = oldval;
   }
 
-  if (
-    (parseInt(value, 10) === parseInt(max, 10) && !checkbox.checked) ||
-    (parseInt(value, 10) < parseInt(max, 10) && checkbox.checked)
-  ) {
-    checkbox.click();
+  const diff = value - oldval;
+  const isPlus = diff > 0 ? true : false;
+  if (diff !== 0) {
+    fetch(`/api/${goalType}/measure/${id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value }),
+    });
+
+    event.target.dataset.oldval = value;
+
+    const checkbox =
+      event.target.parentElement.parentElement.parentElement.querySelector(
+        "input[type=checkbox]"
+      );
+
+    const tr = checkbox.parentElement.parentElement;
+    const td = tr.querySelector(".measure-td");
+
+    if (checkbox.classList.contains("ind-check") && isPlus) {
+      calculateProgress(progressControlObj);
+      const impPoint =
+        convertImp(tr.querySelector(".importance").innerText) * diff;
+      const modal = document.createElement("div");
+      modal.className = "complete-modal";
+      const modalFish = document.createElement("i");
+      const fishColor =
+        impPoint === 5 ? "red" : impPoint === 3 ? "orange" : "yellow";
+
+      td.appendChild(modal);
+
+      animateModalValue(modal, 0, 99, 750);
+      animateModalValue(modal, 99, impPoint, 750);
+      setTimeout(() => {
+        modalFish.className = "fa-solid fa-fish modal-fish";
+        modalFish.classList.add(fishColor);
+        modal.appendChild(modalFish);
+      }, 1000);
+      setTimeout(() => {
+        modalFish.classList.add("fade-away");
+      }, 2000);
+      setTimeout(() => {
+        modal.remove();
+      }, 3000);
+    } else if (checkbox.classList.contains("ind-check")) {
+      calculateProgress(progressControlObj);
+    }
+
+    if (
+      (parseInt(value, 10) === parseInt(max, 10) && !checkbox.checked) ||
+      (parseInt(value, 10) < parseInt(max, 10) && checkbox.checked)
+    ) {
+      checkbox.click();
+    }
   }
 }
 
