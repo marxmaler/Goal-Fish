@@ -45,9 +45,17 @@ export const getWeeklyHome = async (req, res) => {
     prevGoals = await Weekly.find({
       owner: userId,
       termEnd: { $lt: goal.termEnd },
-    })
-      .sort({ termEnd: -1 })
-      .limit(4);
+    }).sort({ termEnd: -1 });
+
+    if (prevGoals.length > 4) {
+      const oldGoals = prevGoals.slice(4);
+      prevGoals = prevGoals.slice(0, 4);
+
+      for (let i = 0; i < oldGoals.length; i++) {
+        await WeeklySub.deleteMany({ weekly: oldGoals[i]._id });
+        await Weekly.deleteOne({ _id: oldGoals[i]._id });
+      }
+    }
 
     prevGoals
       ? prevGoals.forEach((goal) => {

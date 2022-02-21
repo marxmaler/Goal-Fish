@@ -44,9 +44,17 @@ export const getYearlyHome = async (req, res) => {
     prevGoals = await Yearly.find({
       owner: userId,
       termEnd: { $lt: goal.termEnd },
-    })
-      .sort({ termEnd: -1 })
-      .limit(2);
+    }).sort({ termEnd: -1 });
+
+    if (prevGoals.length > 2) {
+      const oldGoals = prevGoals.slice(2);
+      prevGoals = prevGoals.slice(0, 2);
+
+      for (let i = 0; i < oldGoals.length; i++) {
+        await YearlySub.deleteMany({ yearly: oldGoals[i]._id });
+        await Yearly.deleteOne({ _id: oldGoals[i]._id });
+      }
+    }
 
     prevGoals
       ? prevGoals.forEach((goal) => {

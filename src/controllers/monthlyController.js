@@ -49,9 +49,17 @@ export const getMonthlyHome = async (req, res) => {
     prevGoals = await Monthly.find({
       owner: userId,
       termEnd: { $lt: goal.termEnd },
-    })
-      .sort({ termEnd: -1 })
-      .limit(3);
+    }).sort({ termEnd: -1 });
+
+    if (prevGoals.length > 3) {
+      const oldGoals = prevGoals.slice(3);
+      prevGoals = prevGoals.slice(0, 3);
+
+      for (let i = 0; i < oldGoals.length; i++) {
+        await MonthlySub.deleteMany({ monthly: oldGoals[i]._id });
+        await Monthly.deleteOne({ _id: oldGoals[i]._id });
+      }
+    }
 
     prevGoals
       ? prevGoals.forEach((goal) => {

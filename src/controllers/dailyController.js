@@ -38,9 +38,18 @@ export const getDailyHome = async (req, res) => {
     prevGoals = await Daily.find({
       owner: userId,
       date: { $lt: new Date(date) },
-    })
-      .sort({ date: -1 })
-      .limit(7);
+    }).sort({ date: -1 });
+
+    //통계에 안잡히는 오래된 goal 지우기
+    if (prevGoals.length > 7) {
+      const oldGoals = prevGoals.slice(7);
+      prevGoals = prevGoals.slice(0, 7);
+
+      for (let i = 0; i < oldGoals.length; i++) {
+        await DailySub.deleteMany({ daily: oldGoals[i]._id });
+        await Daily.deleteOne({ _id: oldGoals[i]._id });
+      }
+    }
 
     prevGoals
       ? prevGoals.forEach((goal) => {
@@ -82,7 +91,6 @@ export const postDailyCompleted = async (req, res) => {
     const impPoint = convertImp(dailySub.importance);
     const daily = await Daily.findById(dailySub.daily);
     dailySub.completed ? (daily.total += impPoint) : (daily.total -= impPoint);
-    console.log(daily.total);
     daily.save();
   }
   return res.sendStatus(200);
