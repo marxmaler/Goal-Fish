@@ -549,6 +549,7 @@ export function getOptions(
         show: false,
       },
     },
+    colors: ["#1bd5ea"],
     markers: {
       size: [3],
     },

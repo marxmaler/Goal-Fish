@@ -1,7 +1,7 @@
 .goal-table-wrapper {
   margin: 15px 0px;
   background-color: rgba(245, 246, 250, 1);
-  border: rgba(56, 173, 169, 0.5) solid 1px;
+  border: rgba(5, 47, 72, 0.5) solid 1px;
   padding: 3px 20px 12px 20px;
   border-radius: 15px;
 
@@ -61,7 +61,6 @@
             i {
               text-shadow: 1px 1px 1px lightgray;
               cursor: pointer;
-              // color: rgba(22, 160, 133, 1);
               color: inherit;
               &.fa-plus-circle {
                 margin-left: 10px;

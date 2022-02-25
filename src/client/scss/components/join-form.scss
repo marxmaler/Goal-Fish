@@ -63,9 +63,7 @@
         transition: 0.3s ease-in-out all;
         &:focus {
           outline: none;
-          background-color: rgba(241, 196, 15, 0.8);
-          color: white;
-          border-radius: 10px;
+          text-decoration-color: rgb(27, 213, 234);
         }
       }
       .validation-check-btn {

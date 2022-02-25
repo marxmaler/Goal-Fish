@@ -114,9 +114,10 @@
         transition: 0.3s ease-in-out all;
         &:focus {
           outline: none;
-          background-color: rgba(241, 196, 15, 0.8);
           color: white;
-          border-radius: 10px;
+          background-color: rgb(27, 213, 234, 0.5);
+          border-radius: 5px;
+          border-bottom: none;
         }
       }
 
@@ -136,7 +137,7 @@
     }
   }
   .social {
-    background-color: rgba(22, 160, 133, 0.8);
+    background-color: rgb(7, 155, 193, 0.8);
     margin-top: 0;
     color: white;
     text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
@@ -179,9 +180,7 @@
           transition: 0.3s ease-in-out all;
           &:focus {
             outline: none;
-            background-color: rgba(241, 196, 15, 0.8);
-            color: white;
-            border-radius: 10px;
+            text-decoration-color: rgb(27, 213, 234);
           }
         }
 

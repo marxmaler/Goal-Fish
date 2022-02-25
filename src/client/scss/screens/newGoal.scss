@@ -51,14 +51,14 @@
         select {
           font-weight: 600;
           color: white;
-          background-color: rgba(241, 196, 15, 0.8);
+          background-color: rgb(27, 213, 234, 0.8);
         }
         input {
           text-align: center;
         }
         i {
           margin-left: 5px;
-          color: rgba(241, 196, 15, 1);
+          color: rgb(27, 213, 234);
           cursor: pointer;
           &:hover {
             animation: shakeBin 0.5s linear;
