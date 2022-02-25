@@ -12,6 +12,8 @@
   display: flex;
   justify-content: center;
   textarea {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     border-radius: 10px;
     width: 100%;
     resize: none;
@@ -19,7 +21,8 @@
     outline: none;
     transition: all 0.3s ease-in-out;
     &:focus {
-      outline: rgb(27, 213, 234, 0.5) 1px solid;
+      outline: rgb(6, 101, 139, 0.2) 2px solid;
+      background-color: rgb(184, 250, 250, 0.5);
     }
   }
 }
