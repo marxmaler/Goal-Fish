@@ -18,11 +18,17 @@
   p {
     margin-top: 1em;
     font-size: 10px;
+
     span.goal-container__ramaining-time {
-      margin-left: 5px;
+      margin: 5px 5px;
+      display: inline-block;
       font-size: 14px;
       font-family: "Roboto Mono", monospace;
-      color: rgba(4, 12, 27, 0.8);
+      color: rgb(7, 155, 193);
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 5px;
+      padding: 5px;
+      border: 1px solid rgb(5, 47, 72, 0.2);
     }
   }
 

@@ -16,10 +16,10 @@
     width: 100%;
     resize: none;
     padding: 10px;
+    outline: none;
     transition: all 0.3s ease-in-out;
     &:focus {
-      background-color: black;
-      color: white;
+      outline: rgb(27, 213, 234, 0.5) 1px solid;
     }
   }
 }

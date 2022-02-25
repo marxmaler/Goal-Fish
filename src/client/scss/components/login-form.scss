@@ -115,7 +115,8 @@
         &:focus {
           outline: none;
           color: white;
-          background-color: rgb(27, 213, 234, 0.5);
+          text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.8);
+          background-color: rgb(27, 213, 234, 0.8);
           border-radius: 5px;
           border-bottom: none;
         }
@@ -180,7 +181,11 @@
           transition: 0.3s ease-in-out all;
           &:focus {
             outline: none;
-            text-decoration-color: rgb(27, 213, 234);
+            color: white;
+            text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.8);
+            background-color: rgb(27, 213, 234, 0.8);
+            border-radius: 5px;
+            border-bottom: none;
           }
         }
 
