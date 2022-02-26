@@ -7,8 +7,7 @@ export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;
@@ -133,8 +132,7 @@ export const getNewDaily = async (req, res) => {
 
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;
@@ -156,8 +154,7 @@ export const postNewDaily = async (req, res) => {
   if (dateExists) {
     let timeDiff = req.session.timeDiff;
     if (!timeDiff) {
-      req.session.destroy();
-      return res.redirect("/login");
+      return res.redirect("/user/logout");
     }
     const isHeroku = process.env.NODE_ENV === "production";
     timeDiff = isHeroku ? timeDiff : 0;
@@ -293,8 +290,7 @@ export const getEditDaily = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;
@@ -340,8 +336,7 @@ export const postEditDaily = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;
@@ -449,8 +444,7 @@ export const getPreviousDaily = async (req, res) => {
   const pageTitle = "Previous Daily";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;

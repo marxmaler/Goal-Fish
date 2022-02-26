@@ -9,8 +9,7 @@ export const getWeeklyHome = async (req, res) => {
 
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -104,8 +103,7 @@ export const getNewWeekly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   return res.render("newGoal", {
@@ -123,8 +121,7 @@ export const postNewWeekly = async (req, res) => {
   const pageTitle = "New Weekly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -273,8 +270,7 @@ export const getEditWeekly = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -325,8 +321,7 @@ export const postEditWeekly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -443,8 +438,7 @@ export const getPreviousWeekly = async (req, res) => {
   const pageTitle = "Previous Weekly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);

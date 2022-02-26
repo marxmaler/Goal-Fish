@@ -8,8 +8,7 @@ export const getYearlyHome = async (req, res) => {
   const pageTitle = "Yearly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -103,8 +102,7 @@ export const getNewYearly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   return res.render("newGoal", {
@@ -122,8 +120,7 @@ export const postNewYearly = async (req, res) => {
   const pageTitle = "New Yearly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -272,8 +269,7 @@ export const getEditYearly = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -324,8 +320,7 @@ export const postEditYearly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -442,8 +437,7 @@ export const getPreviousYearly = async (req, res) => {
   const pageTitle = "Previous Yearly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);

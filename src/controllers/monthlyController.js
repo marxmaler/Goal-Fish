@@ -13,8 +13,7 @@ export const getMonthlyHome = async (req, res) => {
   const pageTitle = "Monthly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -108,8 +107,7 @@ export const getNewMonthly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   return res.render("newGoal", {
@@ -127,8 +125,7 @@ export const postNewMonthly = async (req, res) => {
   const pageTitle = "New Monthly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -277,8 +274,7 @@ export const getEditMonthly = async (req, res) => {
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -329,8 +325,7 @@ export const postEditMonthly = async (req, res) => {
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
@@ -447,8 +442,7 @@ export const getPreviousMonthly = async (req, res) => {
   const pageTitle = "Previous Monthly";
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
-    req.session.destroy();
-    return res.redirect("/login");
+    return res.redirect("/user/logout");
   }
   timeDiff = isHeroku ? timeDiff : 0;
   const today = getToday(timeDiff);
