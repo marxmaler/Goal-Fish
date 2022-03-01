@@ -266,6 +266,7 @@ export const postNewYearly = async (req, res) => {
 
 export const getEditYearly = async (req, res) => {
   const pageTitle = "Edit Yearly";
+  const goalType = "yearly";
   const userId = req.session.user._id;
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
@@ -288,6 +289,7 @@ export const getEditYearly = async (req, res) => {
 
   return res.render("edit-goal", {
     goal,
+    goalType,
     pageTitle,
     termStart,
     termEnd,
@@ -305,18 +307,22 @@ export const postEditYearly = async (req, res) => {
     targetValues,
     eachAsIndepend,
   } = req.body;
+
   const rest = Object.keys(req.body); //기존 sub 정보
   rest.splice(rest.indexOf("termStart"), 1);
   if (deletedSubs) {
     rest.splice(rest.indexOf("deletedSubs"), 1);
   }
-  if (subs) {
-    rest.splice(rest.indexOf("subs"), 1);
-    rest.splice(rest.indexOf("importances"), 1);
-    rest.splice(rest.indexOf("useMeasures"), 1);
-    rest.splice(rest.indexOf("measureNames"), 1);
-    rest.splice(rest.indexOf("targetValues"), 1);
-    rest.splice(rest.indexOf("eachAsIndepend"), 1);
+
+  if (!(subs === undefined) || subs === null) {
+    [
+      "subs",
+      "importances",
+      "useMeasures",
+      "measureNames",
+      "targetValues",
+      "eachAsIndepend",
+    ].forEach((item) => rest.splice(rest.indexOf(item), 1));
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
@@ -350,7 +356,6 @@ export const postEditYearly = async (req, res) => {
     }
     yearly.save();
   }
-
   //기존 sub 내용 변경
   for (let i = 0; i < rest.length; i++) {
     const id = rest[i];
@@ -391,33 +396,38 @@ export const postEditYearly = async (req, res) => {
     } else {
       for (let i = 0; i < subs.length; i++) {
         if (typeof useMeasures !== "string") {
-          const newSub = await YearlySub.create({
-            yearly: yearly._id,
-            content: subs[i],
-            importance: importances[i],
-            useMeasure: useMeasures?.includes(String(i)) ? true : false,
-            measureName: useMeasures?.includes(String(i))
-              ? measureNames.splice(0, 1)[0]
-              : "",
-            targetValue: useMeasures?.includes(String(i))
-              ? targetValues.splice(0, 1)[0]
-              : 1,
-            eachAsIndepend: useMeasures?.includes(String(i))
-              ? eachAsIndepend.splice(0, 1)[0]
-              : false,
-          });
-          yearly.subs.push(newSub._id);
+          if (subs[i].replace(/ /gi, "").length > 0) {
+            const newSub = await YearlySub.create({
+              yearly: yearly._id,
+              content: subs[i],
+              importance: importances[i],
+              useMeasure: useMeasures?.includes(String(i)) ? true : false,
+              measureName: useMeasures?.includes(String(i))
+                ? measureNames.splice(0, 1)[0]
+                : "",
+              targetValue: useMeasures?.includes(String(i))
+                ? targetValues.splice(0, 1)[0]
+                : 1,
+              eachAsIndepend: useMeasures?.includes(String(i))
+                ? eachAsIndepend.splice(0, 1)[0]
+                : false,
+            });
+            yearly.subs.push(newSub._id);
+          }
         } else {
-          const newSub = await YearlySub.create({
-            yearly: yearly._id,
-            content: subs[i],
-            importance: importances[i],
-            useMeasure: useMeasures === String(i) ? true : false,
-            measureName: useMeasures === String(i) ? measureNames : "",
-            targetValue: useMeasures === String(i) ? targetValues : 1,
-            eachAsIndepend: useMeasures === String(i) ? eachAsIndepend : false,
-          });
-          yearly.subs.push(newSub._id);
+          if (subs[i].replace(/ /gi, "").length > 0) {
+            const newSub = await YearlySub.create({
+              yearly: yearly._id,
+              content: subs[i],
+              importance: importances[i],
+              useMeasure: useMeasures === String(i) ? true : false,
+              measureName: useMeasures === String(i) ? measureNames : "",
+              targetValue: useMeasures === String(i) ? targetValues : 1,
+              eachAsIndepend:
+                useMeasures === String(i) ? eachAsIndepend : false,
+            });
+            yearly.subs.push(newSub._id);
+          }
         }
       }
     }

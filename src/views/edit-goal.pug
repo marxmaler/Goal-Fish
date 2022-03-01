@@ -1,7 +1,7 @@
 extends base.pug
 
 block mainBlock
-    form(data-lang=lang, method="POST")
+    form(data-lang=lang||loggedInUser.lang, method="POST")
         div.editGoal__form__form-container
             if !pageTitle.includes("Daily")
                 div.editGoal__form__form-container__date-container

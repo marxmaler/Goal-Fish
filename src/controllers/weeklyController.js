@@ -311,13 +311,15 @@ export const postEditWeekly = async (req, res) => {
   if (deletedSubs) {
     rest.splice(rest.indexOf("deletedSubs"), 1);
   }
-  if (subs) {
-    rest.splice(rest.indexOf("subs"), 1);
-    rest.splice(rest.indexOf("importances"), 1);
-    rest.splice(rest.indexOf("useMeasures"), 1);
-    rest.splice(rest.indexOf("measureNames"), 1);
-    rest.splice(rest.indexOf("targetValues"), 1);
-    rest.splice(rest.indexOf("eachAsIndepend"), 1);
+  if (!(subs === undefined) || subs === null) {
+    [
+      "subs",
+      "importances",
+      "useMeasures",
+      "measureNames",
+      "targetValues",
+      "eachAsIndepend",
+    ].forEach((item) => rest.splice(rest.indexOf(item), 1));
   }
   let timeDiff = req.session.timeDiff;
   if (!timeDiff) {
@@ -392,33 +394,38 @@ export const postEditWeekly = async (req, res) => {
     } else {
       for (let i = 0; i < subs.length; i++) {
         if (typeof useMeasures !== "string") {
-          const newSub = await WeeklySub.create({
-            weekly: weekly._id,
-            content: subs[i],
-            importance: importances[i],
-            useMeasure: useMeasures?.includes(String(i)) ? true : false,
-            measureName: useMeasures?.includes(String(i))
-              ? measureNames.splice(0, 1)[0]
-              : "",
-            targetValue: useMeasures?.includes(String(i))
-              ? targetValues.splice(0, 1)[0]
-              : 1,
-            eachAsIndepend: useMeasures?.includes(String(i))
-              ? eachAsIndepend.splice(0, 1)[0]
-              : false,
-          });
-          weekly.subs.push(newSub._id);
+          if (subs[i].replace(/ /gi, "").length > 0) {
+            const newSub = await WeeklySub.create({
+              weekly: weekly._id,
+              content: subs[i],
+              importance: importances[i],
+              useMeasure: useMeasures?.includes(String(i)) ? true : false,
+              measureName: useMeasures?.includes(String(i))
+                ? measureNames.splice(0, 1)[0]
+                : "",
+              targetValue: useMeasures?.includes(String(i))
+                ? targetValues.splice(0, 1)[0]
+                : 1,
+              eachAsIndepend: useMeasures?.includes(String(i))
+                ? eachAsIndepend.splice(0, 1)[0]
+                : false,
+            });
+            weekly.subs.push(newSub._id);
+          }
         } else {
-          const newSub = await WeeklySub.create({
-            weekly: weekly._id,
-            content: subs[i],
-            importance: importances[i],
-            useMeasure: useMeasures === String(i) ? true : false,
-            measureName: useMeasures === String(i) ? measureNames : "",
-            targetValue: useMeasures === String(i) ? targetValues : 1,
-            eachAsIndepend: useMeasures === String(i) ? eachAsIndepend : false,
-          });
-          weekly.subs.push(newSub._id);
+          if (subs[i].replace(/ /gi, "").length > 0) {
+            const newSub = await WeeklySub.create({
+              weekly: weekly._id,
+              content: subs[i],
+              importance: importances[i],
+              useMeasure: useMeasures === String(i) ? true : false,
+              measureName: useMeasures === String(i) ? measureNames : "",
+              targetValue: useMeasures === String(i) ? targetValues : 1,
+              eachAsIndepend:
+                useMeasures === String(i) ? eachAsIndepend : false,
+            });
+            weekly.subs.push(newSub._id);
+          }
         }
       }
     }
