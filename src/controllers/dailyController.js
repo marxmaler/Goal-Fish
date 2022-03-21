@@ -1,7 +1,8 @@
 import Daily from "../models/Daily";
 import DailySub from "../models/DailySub";
-import { getToday, mmdd, yyyymmdd } from "../functions/time";
+import { getToday, mmdd } from "../functions/time";
 import { convertImp } from "../functions/convertImp";
+import { isHeroku } from "../init";
 
 export const getDailyHome = async (req, res) => {
   const pageTitle = "Daily";
@@ -9,7 +10,6 @@ export const getDailyHome = async (req, res) => {
   if (!timeDiff) {
     return res.redirect("/user/logout");
   }
-  const isHeroku = process.env.NODE_ENV === "production";
   timeDiff = isHeroku ? timeDiff : 0;
   const date = getToday(timeDiff);
   const userId = req.session.user._id;
@@ -445,77 +445,4 @@ export const postEditDaily = async (req, res) => {
   }
   daily.save();
   return res.redirect("/");
-};
-
-export const getPreviousDaily = async (req, res) => {
-  const pageTitle = "Previous Daily";
-  let timeDiff = req.session.timeDiff;
-  if (!timeDiff) {
-    return res.redirect("/user/logout");
-  }
-  const isHeroku = process.env.NODE_ENV === "production";
-  timeDiff = isHeroku ? timeDiff : 0;
-  const today = getToday(timeDiff);
-  const userId = req.session.user._id;
-
-  let date = req.params.date;
-
-  if (date && date === today) {
-    return res.redirect("/");
-  }
-
-  let goal = null;
-  if (!date) {
-    goal = await Daily.findOne({
-      owner: userId,
-      date: { $lt: new Date(today) },
-    }).sort({ date: -1 });
-    if (goal) {
-      return res.redirect(`/daily/${yyyymmdd(goal.date)}`);
-    }
-  } else {
-    goal = await Daily.findOne({ owner: userId, date }).populate("subs");
-  }
-
-  let prevTotal = 0;
-  let prevAvg = 0;
-  let prevGoals = null;
-  let prevGoalArr = [];
-  let prevGoalDates = [];
-
-  //평균 구하기
-  if (goal) {
-    prevGoalArr = [goal.total];
-    prevGoalDates = [mmdd(goal.date)];
-
-    prevGoals = await Daily.find({
-      owner: userId,
-      date: { $lt: new Date(date) },
-    })
-      .sort({ date: -1 })
-      .limit(7);
-
-    prevGoals &&
-      prevGoals.forEach((goal) => {
-        prevTotal += goal.total;
-        prevGoalArr.push(goal.total);
-        prevGoalDates.push(mmdd(goal.date));
-      });
-    prevTotal !== 0 && (prevAvg = prevTotal / prevGoals.length);
-
-    prevGoalArr.length > 7 && (prevGoalArr = prevGoalArr.slice(0, 7));
-    prevGoalDates.length > 7 && (prevGoalDates = prevGoalDates.slice(0, 7));
-
-    prevGoalArr = prevGoalArr.reverse();
-    prevGoalDates = prevGoalDates.reverse();
-  }
-
-  return res.render("previousGoal", {
-    goal,
-    date,
-    pageTitle,
-    prevAvg,
-    prevGoals: prevGoalArr,
-    prevGoalDates,
-  });
 };

@@ -6,8 +6,8 @@ import {
   getNewYearly,
   postEditYearly,
   postNewYearly,
-  getPreviousYearly,
 } from "../controllers/yearlyController";
+import { getPreviousGoal } from "../controllers/goalController";
 
 const yearlyRouter = express.Router();
 
@@ -22,12 +22,9 @@ yearlyRouter
   .all(protectorMiddleware)
   .get(getEditYearly)
   .post(postEditYearly);
-yearlyRouter
-  .route("/previous/")
-  .all(protectorMiddleware)
-  .get(getPreviousYearly);
+yearlyRouter.route("/previous/").all(protectorMiddleware).get(getPreviousGoal);
 yearlyRouter
   .route("/previous/:id")
   .all(protectorMiddleware)
-  .get(getPreviousYearly);
+  .get(getPreviousGoal);
 export default yearlyRouter;

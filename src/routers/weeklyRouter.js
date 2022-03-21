@@ -6,8 +6,8 @@ import {
   getNewWeekly,
   postEditWeekly,
   postNewWeekly,
-  getPreviousWeekly,
 } from "../controllers/weeklyController";
+import { getPreviousGoal } from "../controllers/goalController";
 
 const weeklyRouter = express.Router();
 
@@ -22,12 +22,9 @@ weeklyRouter
   .all(protectorMiddleware)
   .get(getEditWeekly)
   .post(postEditWeekly);
-weeklyRouter
-  .route("/previous/")
-  .all(protectorMiddleware)
-  .get(getPreviousWeekly);
+weeklyRouter.route("/previous/").all(protectorMiddleware).get(getPreviousGoal);
 weeklyRouter
   .route("/previous/:id")
   .all(protectorMiddleware)
-  .get(getPreviousWeekly);
+  .get(getPreviousGoal);
 export default weeklyRouter;

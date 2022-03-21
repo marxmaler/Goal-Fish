@@ -5,8 +5,8 @@ import {
   getNewDaily,
   postEditDaily,
   postNewDaily,
-  getPreviousDaily,
 } from "../controllers/dailyController";
+import { getPreviousGoal } from "../controllers/goalController";
 
 const dailyRouter = express.Router();
 
@@ -20,7 +20,7 @@ dailyRouter
   .all(protectorMiddleware)
   .get(getEditDaily)
   .post(postEditDaily);
-dailyRouter.route("/previous/").all(protectorMiddleware).get(getPreviousDaily);
-dailyRouter.route("/:date").all(protectorMiddleware).get(getPreviousDaily);
+dailyRouter.route("/previous/").all(protectorMiddleware).get(getPreviousGoal);
+dailyRouter.route("/:date").all(protectorMiddleware).get(getPreviousGoal);
 
 export default dailyRouter;

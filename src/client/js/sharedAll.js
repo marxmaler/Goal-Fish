@@ -82,6 +82,7 @@ export function addSub(ul, lang) {
     lang === "ko"
       ? [
           "시간",
+          "일",
           "회",
           "개",
           "쪽",
@@ -89,6 +90,7 @@ export function addSub(ul, lang) {
           "걸음",
           "km",
           "hours",
+          "days",
           "times",
           "pages",
           "books",
@@ -97,6 +99,7 @@ export function addSub(ul, lang) {
         ]
       : [
           "hours",
+          "days",
           "times",
           "pages",
           "books",
@@ -104,6 +107,7 @@ export function addSub(ul, lang) {
           "miles",
           "km",
           "시간",
+          "일",
           "회",
           "개",
           "쪽",

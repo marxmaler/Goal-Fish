@@ -6,8 +6,8 @@ import {
   getNewMonthly,
   postEditMonthly,
   postNewMonthly,
-  getPreviousMonthly,
 } from "../controllers/monthlyController";
+import { getPreviousGoal } from "../controllers/goalController";
 
 const monthlyRouter = express.Router();
 
@@ -22,12 +22,9 @@ monthlyRouter
   .all(protectorMiddleware)
   .get(getEditMonthly)
   .post(postEditMonthly);
-monthlyRouter
-  .route("/previous/")
-  .all(protectorMiddleware)
-  .get(getPreviousMonthly);
+monthlyRouter.route("/previous/").all(protectorMiddleware).get(getPreviousGoal);
 monthlyRouter
   .route("/previous/:id")
   .all(protectorMiddleware)
-  .get(getPreviousMonthly);
+  .get(getPreviousGoal);
 export default monthlyRouter;
