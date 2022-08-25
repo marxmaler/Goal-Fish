@@ -12,6 +12,7 @@ export const localsMiddleware = (req, res, next) => {
           "쪽",
           "권",
           "걸음",
+          "가지",
           "km",
           "hours",
           "days",
@@ -20,6 +21,7 @@ export const localsMiddleware = (req, res, next) => {
           "books",
           "steps",
           "miles",
+          "kinds",
         ]
       : [
           "hours",
@@ -28,6 +30,7 @@ export const localsMiddleware = (req, res, next) => {
           "pages",
           "books",
           "steps",
+          "kinds",
           "miles",
           "km",
           "시간",
@@ -37,6 +40,7 @@ export const localsMiddleware = (req, res, next) => {
           "쪽",
           "권",
           "걸음",
+          "가지",
         ];
   res.locals.langArr = ["ko", "en"];
   res.locals.lang = req.session.lang ?? req.session.passport?.lang;
